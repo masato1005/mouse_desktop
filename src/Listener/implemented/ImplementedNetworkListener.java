@@ -17,7 +17,7 @@ public class ImplementedNetworkListener implements NetworkListener {
     }
 
     @Override
-    public void serchNofitication() {
+    public void searchNofitication() {
         handler.serch();
     }
 

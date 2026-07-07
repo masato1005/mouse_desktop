@@ -30,7 +30,7 @@ public class UdpServer {
 
 	private void waitMessage(DatagramSocket socket, DatagramPacket packet) {
 		//サーバーを常に動作させる
-		netListener.serchNofitication();
+		netListener.searchNofitication();
 		System.out.println("待機中...");
 		while (true) {
 			//クライアントからのUDPパケットを受信

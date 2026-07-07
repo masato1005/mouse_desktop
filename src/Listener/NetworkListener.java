@@ -4,7 +4,7 @@ import Json.InputConvertedData;
 
 public interface NetworkListener {
 
-	void serchNofitication();
+	void searchNofitication();
 
 	void checkNofitication();
 
