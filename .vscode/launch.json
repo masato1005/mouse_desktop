@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "InvisibleWindow",
+      "request": "launch",
+      "mainClass": "gui.contents.InvisibleWindow",
+      "projectName": "mouse"
+    },
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "projectName": "mouse_524286ab"
+    },
+    {
+      "type": "java",
+      "name": "Launch Mouse",
+      "request": "launch",
+      "mainClass": "main.Main",
+      "projectName": "mouse"
+    }
+  ]
+}

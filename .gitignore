@@ -1,0 +1,12 @@
+out/
+bin/
+src/bin/
+
+*.class
+
+.vscode/.classpath
+.vscode/.project
+.vscode/.settings/
+
+.settings/
+(1).settings/

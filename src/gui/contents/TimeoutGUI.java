@@ -1,0 +1,59 @@
+package gui.contents;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import Listener.GUIListener;
+
+public class TimeoutGUI extends JFrame {
+	private GUIListener listener;
+
+	public TimeoutGUI(GUIListener listener) {
+		super("タイムアウト");
+		this.listener = listener;
+
+		JPanel pane = (JPanel) getContentPane();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+
+		pane.add(Box.createVerticalGlue());
+
+		JLabel label1 = new JLabel("タイムアウトしました。");
+		label1.setAlignmentX(CENTER_ALIGNMENT);
+		pane.add(label1);
+
+		JLabel label2 = new JLabel("再試行しますか？");
+		label2.setAlignmentX(CENTER_ALIGNMENT);
+		pane.add(label2);
+
+		JButton bt = new JButton("再試行");
+		bt.setAlignmentX(CENTER_ALIGNMENT);
+		ActionListener stac = new RetryAction();
+		bt.addActionListener(stac);
+		pane.add(bt);
+
+		pane.add(Box.createVerticalGlue());
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		pack();
+		setVisible(true);
+	}
+
+	class RetryAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("再試行");
+			dispose();
+			listener.retry();
+		}
+
+	}
+
+}

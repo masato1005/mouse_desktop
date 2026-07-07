@@ -1,0 +1,5 @@
+package EventType;
+
+public enum GUIEventType {
+	CHOISEAPPTYPE, STOPSERVER, RETRY, CHOICEWLL, PUSHSUCCESSOK,
+}
