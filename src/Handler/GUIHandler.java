@@ -51,4 +51,20 @@ public class GUIHandler {
     public void pushedSuccessOkButton() {
 		listener.onGUIEvent(new GUIEvent(GUIEventType.PUSHSUCCESSOK,null));
 	}
+
+	public void moveWheel(int amount) {
+		listener.onGUIEvent(new GUIEvent(GUIEventType.MOVEWHEEL, amount));
+	}
+
+	public void clickLeftMouse(boolean pressed) {
+		listener.onGUIEvent(new GUIEvent(GUIEventType.LEFTCLICK, pressed));
+	}
+
+	public void clickWheelMouse(boolean pressed) {
+		listener.onGUIEvent(new GUIEvent(GUIEventType.WHEELCLICK, pressed));
+	}
+
+	public void clickRightMouse(boolean pressed) {
+		listener.onGUIEvent(new GUIEvent(GUIEventType.RIGHTCLICK, pressed));
+	}
 }

@@ -53,7 +53,7 @@ public class GUIManager {
 
     public void initInvisibleWindow() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		invisibleWindow = new InvisibleWindow(screenSize.width, screenSize.height);
+		invisibleWindow = new InvisibleWindow(screenSize.width, screenSize.height, listener);
     }
 
     public void openInvisibleWindow() {

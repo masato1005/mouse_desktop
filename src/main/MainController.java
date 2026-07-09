@@ -162,6 +162,19 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 				if (appType == AppType.CLIENT) {
 					gui.viewChoiceWallTypeGui();
 				}
+				break;
+			case MOVEWHEEL:
+				mouse.moveWheel((int) e.getData());
+				break;
+			case LEFTCLICK:
+				mouse.clickMouse(MouseEventType.LEFTCLICK, (boolean) e.getData());
+				break;
+			case WHEELCLICK:
+				mouse.clickMouse(MouseEventType.WHEELCLICK, (boolean) e.getData());
+				break;
+			case RIGHTCLICK:
+				mouse.clickMouse(MouseEventType.RIGHTCLICK, (boolean) e.getData());
+				break;
 			default:
 				break;
 		}
@@ -170,17 +183,11 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 	@Override
 	public void onMouseEvent(OriginalMouseEvent e) {
 		switch (e.getType()) {
-			case MOVE:
-				network.sendData(e.getData());
-				break;
-			case SENDMOUSE:
-				gui.openInvisibleWindow();
-				break;
-			case CLOSEINVISIBLEWINDOW:
-				gui.closeInvisibleWindow();
-				break;
-			default:
-				break;
+			case MOVE -> network.sendData(e.getData());
+			case SENDMOUSE -> gui.openInvisibleWindow();
+			case CLOSEINVISIBLEWINDOW -> gui.closeInvisibleWindow();
+			default -> {
+                }
 		}
 	}
 

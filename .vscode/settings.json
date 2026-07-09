@@ -21,7 +21,19 @@
     "out": true
   },
   "cSpell.words": [
+    "ARGB",
     "apptype",
-    "Nofitication"
+    "databind",
+    "fasterxml",
+    "LEFTCLICK",
+    "MOVEWHEEL",
+    "PUSHSUCCESSOK",
+    "recv",
+    "RIGHTCLICK",
+    "SENDMOUSE",
+    "STOPSERVER",
+    "TOUCHWALL",
+    "WHEELCLICK",
+    "WHEELMOVE"
   ]
 }

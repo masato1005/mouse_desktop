@@ -54,4 +54,24 @@ public class ImplementedGUIListener implements GUIListener {
     public void pushedSuccessOkButton() {
         guiHandler.pushedSuccessOkButton();
     }
+
+    @Override
+    public void moveWheel(int amount) {
+        guiHandler.moveWheel(amount);
+    }
+
+    @Override
+    public void clickLeftMouse(boolean pressed) {
+        guiHandler.clickLeftMouse(pressed);
+    }
+
+    @Override
+    public void clickWheelMouse(boolean pressed) {
+        guiHandler.clickWheelMouse(pressed);
+    }
+
+    @Override
+    public void clickRightMouse(boolean pressed) {
+        guiHandler.clickRightMouse(pressed);
+    }
 }

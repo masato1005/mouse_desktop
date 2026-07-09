@@ -1,9 +1,10 @@
-package Mouse.Cntents;
+package Mouse.Contents;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
 
 import EventType.MouseEventType;
 import EventType.WallType;
@@ -37,6 +38,28 @@ public class MouseDrawer {
 	}
 
 	public void update(MouseData mouseData) {
+		if (mouseData.getMouseEventType() == MouseEventType.WHEELMOVE) {
+			robot.mouseWheel(mouseData.getWheelAmount());
+			return;
+		}
+
+		switch (mouseData.getMouseEventType()) {
+			case LEFTCLICK -> {
+				updateButton(InputEvent.BUTTON1_DOWN_MASK, mouseData.isPressed());
+				return;
+			}
+			case WHEELCLICK -> {
+				updateButton(InputEvent.BUTTON2_DOWN_MASK, mouseData.isPressed());
+				return;
+			}
+			case RIGHTCLICK -> {
+				updateButton(InputEvent.BUTTON3_DOWN_MASK, mouseData.isPressed());
+				return;
+			}
+			default -> {
+			}
+		}
+
 		if (haveMouse) {
 			mouseX = mouseX + mouseData.getDx();
 			mouseY = mouseY + mouseData.getDy();
@@ -78,6 +101,14 @@ public class MouseDrawer {
 
 	private void draw() {
 		robot.mouseMove(mouseX, mouseY);
+	}
+
+	private void updateButton(int buttonMask, boolean pressed) {
+		if (pressed) {
+			robot.mousePress(buttonMask);
+		} else {
+			robot.mouseRelease(buttonMask);
+		}
 	}
 
 	private void setHaveMouse(Boolean haveMouse) {

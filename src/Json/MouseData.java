@@ -12,7 +12,7 @@ public class MouseData {
     private int dy;
     private int WheelAmount; //上がマイナス
     
-    private boolean pressedLeftClick;
+    private boolean pressed;
 
     private Modifiers modifiers;
 
@@ -20,14 +20,14 @@ public class MouseData {
     }
 
     public MouseData(MouseEventType mouseEventType, int mouseX, int mouseY, int dx, int dy, int wheelAmount,
-            boolean pressedLeftClick, Modifiers modifiers) {
+            boolean pressed, Modifiers modifiers) {
         this.mouseEventType = mouseEventType;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
         this.dx = dx;
         this.dy = dy;
         this.WheelAmount = wheelAmount;
-        this.pressedLeftClick = pressedLeftClick;
+        this.pressed = pressed;
         this.modifiers = modifiers;
     }
 
@@ -79,12 +79,12 @@ public class MouseData {
         WheelAmount = wheelAmount;
     }
 
-    public boolean isPressedLeftClick() {
-        return pressedLeftClick;
+    public boolean isPressed() {
+        return pressed;
     }
 
-    public void setPressedLeftClick(boolean pressedLeftClick) {
-        this.pressedLeftClick = pressedLeftClick;
+    public void setPressed(boolean pressed) {
+        this.pressed = pressed;
     }
 
     public Modifiers getModifiers() {

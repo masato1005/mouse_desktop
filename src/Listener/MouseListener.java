@@ -3,17 +3,17 @@ package Listener;
 import Json.MouseData;
 
 public interface MouseListener {
-	void mouseLeftClicked();
+	void mouseLeftClicked(MouseData mouseData);
 
 	void mouseMoved(MouseData mousedata);
 
-	void mouseRightClicked();
+	void mouseRightClicked(MouseData mouseData);
 
 	void mouseDragged();
 
-	void mouseWheelClicked();
+	void mouseWheelClicked(MouseData mouseData);
 
-	void mouseWheelMoved();
+	void mouseWheelMoved(MouseData mouseData);
 
     void openInvisibleWindow();
 

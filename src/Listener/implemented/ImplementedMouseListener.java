@@ -14,22 +14,18 @@ public class ImplementedMouseListener implements MouseListener {
     }
 
     @Override
-    public void mouseLeftClicked() {
-        // TODO 自動生成されたメソッド・スタブ
-
+    public void mouseLeftClicked(MouseData mouseData) {
+        sendMouseData(mouseData);
     }
 
     @Override
     public void mouseMoved(MouseData mouseData) {
-        handler.mouseMoved(
-                new JsonConverter().dataConverter(
-                        DataType.MOUSE, mouseData));
+        sendMouseData(mouseData);
     }
 
     @Override
-    public void mouseRightClicked() {
-        // TODO 自動生成されたメソッド・スタブ
-
+    public void mouseRightClicked(MouseData mouseData) {
+        sendMouseData(mouseData);
     }
 
     @Override
@@ -39,15 +35,19 @@ public class ImplementedMouseListener implements MouseListener {
     }
 
     @Override
-    public void mouseWheelClicked() {
-        // TODO 自動生成されたメソッド・スタブ
-
+    public void mouseWheelClicked(MouseData mouseData) {
+        sendMouseData(mouseData);
     }
 
     @Override
-    public void mouseWheelMoved() {
-        // TODO 自動生成されたメソッド・スタブ
+    public void mouseWheelMoved(MouseData mouseData) {
+        sendMouseData(mouseData);
+    }
 
+    private void sendMouseData(MouseData mouseData) {
+        handler.mouseMoved(
+                new JsonConverter().dataConverter(
+                        DataType.MOUSE, mouseData));
     }
 
     @Override

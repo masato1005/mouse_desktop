@@ -1,11 +1,13 @@
 package Mouse;
 
+import EventType.MouseEventType;
 import EventType.WallType;
 import Handler.MouseHandler;
+import Json.Modifiers;
 import Json.MouseData;
 import Listener.implemented.ImplementedMouseListener;
-import Mouse.Cntents.MouseDrawer;
-import Mouse.Cntents.MouseScanner;
+import Mouse.Contents.MouseDrawer;
+import Mouse.Contents.MouseScanner;
 
 public class MouseManager {
 	private final ImplementedMouseListener listener = new ImplementedMouseListener();
@@ -20,6 +22,32 @@ public class MouseManager {
 
 	public void mouseMove(MouseData mouseData) {
 		listener.mouseMoved(mouseData);
+	}
+
+	public void moveWheel(int amount) {
+		MouseData mouseData = new MouseData(
+				MouseEventType.WHEELMOVE,
+				0, 0, 0, 0,
+				amount,
+				false,
+				new Modifiers());
+		listener.mouseWheelMoved(mouseData);
+	}
+
+	public void clickMouse(MouseEventType type, boolean pressed) {
+		MouseData mouseData = new MouseData(
+				type,
+				0, 0, 0, 0,
+				0,
+				pressed,
+				new Modifiers());
+
+		switch (type) {
+			case LEFTCLICK -> listener.mouseLeftClicked(mouseData);
+			case WHEELCLICK -> listener.mouseWheelClicked(mouseData);
+			case RIGHTCLICK -> listener.mouseRightClicked(mouseData);
+			default -> throw new IllegalArgumentException("クリック以外のイベントです: " + type);
+		}
 	}
 
 	public void returnMouse(MouseData mouseData){

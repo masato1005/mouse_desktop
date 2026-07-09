@@ -1,4 +1,4 @@
-package Mouse.Cntents;
+package Mouse.Contents;
 
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -204,4 +204,6 @@ public class MouseScanner {
 		setJustGetMouse(true);
 		listener.closeInvisibleWindow();
 	}
+
+
 }

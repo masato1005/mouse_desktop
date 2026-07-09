@@ -18,4 +18,12 @@ public interface GUIListener {
 	public void choiceEastWall();
 
     public void pushedSuccessOkButton();
+
+	public void moveWheel(int amount);
+
+	public void clickLeftMouse(boolean pressed);
+
+	public void clickWheelMouse(boolean pressed);
+
+	public void clickRightMouse(boolean pressed);
 }
