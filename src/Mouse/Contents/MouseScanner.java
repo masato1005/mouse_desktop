@@ -188,12 +188,23 @@ public class MouseScanner {
 	}
 
 	public void returnMouse(MouseData mouseData) {
-		if (wallType == WallType.EAST || wallType == WallType.WEST) {
-			mouseX = width - mouseData.getMouseX();
-			mouseY = mouseData.getMouseY();
-		} else {
-			mouseX = mouseData.getMouseX();
-			mouseY = height - mouseData.getMouseY();
+		switch (wallType) {
+			case NORTH -> {
+				mouseX = clamp(mouseData.getMouseX(), 0, width - 1);
+				mouseY = 0;
+			}
+			case SOUTH -> {
+				mouseX = clamp(mouseData.getMouseX(), 0, width - 1);
+				mouseY = height - 1;
+			}
+			case WEST -> {
+				mouseX = 0;
+				mouseY = clamp(mouseData.getMouseY(), 0, height - 1);
+			}
+			case EAST -> {
+				mouseX = width - 1;
+				mouseY = clamp(mouseData.getMouseY(), 0, height - 1);
+			}
 		}
 
 		robot.mouseMove(mouseX, mouseY);
@@ -203,6 +214,10 @@ public class MouseScanner {
 		setHaveMouse(true);
 		setJustGetMouse(true);
 		listener.closeInvisibleWindow();
+	}
+
+	private int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(value, max));
 	}
 
 
