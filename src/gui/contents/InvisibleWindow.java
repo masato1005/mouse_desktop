@@ -25,6 +25,7 @@ public class InvisibleWindow extends JFrame {
         this.width = width;
         this.height = height;
         this.listener = listener;
+        System.out.println(3);
 
         setUndecorated(true);
         setBackground(new Color(0, 0, 0, 1));
@@ -54,6 +55,7 @@ public class InvisibleWindow extends JFrame {
 
     public void openWindow() {
         setVisible(true);
+        System.out.println(4);
     }
 
     public void closeWindow() {

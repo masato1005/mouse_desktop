@@ -17,7 +17,7 @@ public class GUIManager {
 	private WaitingServerGUI waitingServerGUI;
 	private ImplementedGUIListener listener = new ImplementedGUIListener();
 	private AppType appType;
-	InvisibleWindow invisibleWindow = null;;
+	InvisibleWindow invisibleWindow = null;
 
 	public void showWaitingServerGUI() {
 		waitingServerGUI = new WaitingServerGUI(listener);
@@ -52,6 +52,7 @@ public class GUIManager {
     }
 
     public void initInvisibleWindow() {
+		System.out.println(2);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		invisibleWindow = new InvisibleWindow(screenSize.width, screenSize.height, listener);
     }
@@ -59,10 +60,7 @@ public class GUIManager {
     public void openInvisibleWindow() {
 		if (invisibleWindow == null) {
 			initInvisibleWindow();
-			System.out.println(1);
 		}
-			System.out.println(2);
-		
 		invisibleWindow.openWindow();
 
     }

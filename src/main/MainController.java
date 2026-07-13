@@ -89,6 +89,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 				switch (appType) {
 					case SERVER:
 						gui.removeWatingServer();
+						System.out.println(1);
 						gui.initInvisibleWindow();
 						gui.openInvisibleWindow();
 						gui.successConnectGUI();
