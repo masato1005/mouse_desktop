@@ -36,6 +36,7 @@ public class ChoiceWarpWall extends JFrame {
 		String[] location = { "上", "下", "右", "左" };
 		JComboBox<String> combo = new JComboBox<String>(location);
 		combo.addItemListener(new ItemHandler(leftPane, this, rect));
+		combo.setSelectedIndex(3);
 		rightPane.add(combo);
 
 		mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.X_AXIS));

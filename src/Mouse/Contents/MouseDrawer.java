@@ -9,6 +9,7 @@ import java.awt.event.InputEvent;
 import EventType.MouseEventType;
 import EventType.WallType;
 import Json.MouseData;
+import Listener.MouseListener;
 import Mouse.MouseManager;
 
 public class MouseDrawer {
@@ -25,11 +26,13 @@ public class MouseDrawer {
 	private boolean justGetMouse = false;
 
 	private final MouseManager manager;
+	private final MouseListener listener;
 	private WallType wallType = WallType.EAST;
 	private Robot robot;
 
-	public MouseDrawer(MouseManager manager) {
+	public MouseDrawer(MouseManager manager, MouseListener listener) {
 		this.manager = manager;
+		this.listener = listener;
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
@@ -73,21 +76,21 @@ public class MouseDrawer {
 			if (mouseY < 0)
 				mouseY = 0;
 
-			if(!checkTouchWall()){
+			if (!checkTouchWall()) {
 				MouseData sendMouseData = new MouseData();
 				sendMouseData.setMouseEventType(MouseEventType.TOUCHWALL);
 				sendMouseData.setMouseX(mouseX);
 				sendMouseData.setMouseY(mouseY);
 
 				manager.returnMouse(sendMouseData);
-				manager.openInvisibleWindow();
+				listener.openInvisibleWindow();
 				return;
 			}
 			draw();
 
 		} else {
 			setHaveMouse(true);
-			manager.closeInvisibleWindow();
+			listener.closeInvisibleWindow();
 			switch (wallType) {
 				case NORTH -> {
 					mouseX = clamp(mouseData.getMouseX(), 0, width - 1);

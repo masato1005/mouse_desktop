@@ -13,7 +13,7 @@ public class MouseManager {
 	private final ImplementedMouseListener listener = new ImplementedMouseListener();
 
 	private MouseScanner mouseScanner = new MouseScanner(this, listener);
-	private MouseDrawer mouseDrawer = new MouseDrawer(this);
+	private MouseDrawer mouseDrawer = new MouseDrawer(this,listener);
 	private MouseHandler handler;
 
 	public void start() {
