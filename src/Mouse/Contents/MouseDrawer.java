@@ -13,6 +13,8 @@ import Listener.MouseListener;
 import Mouse.MouseManager;
 
 public class MouseDrawer {
+	private static final long RETURN_MOVE_WAIT_NANOS = 16_000_000L;
+
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 	private final int width = screenSize.width;
@@ -24,6 +26,7 @@ public class MouseDrawer {
 	private int mouseY;
 	private boolean haveMouse = false;
 	private boolean justGetMouse = false;
+	private long ignoreMoveUntilNanos = 0L;
 
 	private final MouseManager manager;
 	private final MouseListener listener;
@@ -41,6 +44,12 @@ public class MouseDrawer {
 	}
 
 	public void update(MouseData mouseData) {
+		if (mouseData.getMouseEventType() == MouseEventType.MOVE
+				&& !haveMouse
+				&& System.nanoTime() < ignoreMoveUntilNanos) {
+			return;
+		}
+
 		if (mouseData.getMouseEventType() == MouseEventType.WHEELMOVE) {
 			robot.mouseWheel(mouseData.getWheelAmount());
 			return;
@@ -84,6 +93,7 @@ public class MouseDrawer {
 
 				manager.returnMouse(sendMouseData);
 				listener.openInvisibleWindow();
+				ignoreMoveUntilNanos = System.nanoTime() + RETURN_MOVE_WAIT_NANOS;
 				return;
 			}
 			draw();
