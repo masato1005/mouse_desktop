@@ -17,7 +17,7 @@ public class GUIManager {
 	private WaitingServerGUI waitingServerGUI;
 	private ImplementedGUIListener listener = new ImplementedGUIListener();
 	private AppType appType;
-	InvisibleWindow invisibleWindow;
+	InvisibleWindow invisibleWindow = null;;
 
 	public void showWaitingServerGUI() {
 		waitingServerGUI = new WaitingServerGUI(listener);
