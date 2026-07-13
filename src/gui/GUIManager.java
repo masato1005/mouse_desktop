@@ -59,7 +59,10 @@ public class GUIManager {
     public void openInvisibleWindow() {
 		if (invisibleWindow == null) {
 			initInvisibleWindow();
+			System.out.println(1);
 		}
+			System.out.println(2);
+		
 		invisibleWindow.openWindow();
 
     }
