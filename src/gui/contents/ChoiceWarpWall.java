@@ -6,11 +6,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Listener.GUIListener;
@@ -43,9 +46,24 @@ public class ChoiceWarpWall extends JFrame {
 		mainPane.add(leftPane);
 		mainPane.add(rightPane);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
 		setVisible(true);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				confirmExit();
+			}
+		});
+	}
+
+	private void confirmExit() {
+		String msg = "終了しますか？";
+		int ans = JOptionPane.showConfirmDialog(this, msg);
+		if (ans == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		}
 	}
 
 	class ItemHandler implements ItemListener {

@@ -67,4 +67,8 @@ public class GUIHandler {
 	public void clickRightMouse(boolean pressed) {
 		listener.onGUIEvent(new GUIEvent(GUIEventType.RIGHTCLICK, pressed));
 	}
+
+	public void systemExit(){
+		listener.onGUIEvent(new GUIEvent(GUIEventType.SystemExit, null));
+	}
 }

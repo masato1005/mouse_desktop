@@ -114,6 +114,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 							switch (data.getDataType()) {
 								case MOUSE -> mouse.updateDrawer(mapper.treeToValue(data.getData(), MouseData.class));
 								case WALLTYPE -> mouse.setDrawerWallType(mapper.treeToValue(data.getData(), WallType.class));
+								case SYSTEMEXIT -> System.exit(0);
 								default -> {
                                                 }
 							}
@@ -126,6 +127,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 										mouse.returnMouseToClient(mouseData);
 									}
 								}
+								case SYSTEMEXIT -> System.exit(0);
 								default -> {
 									
 								}
@@ -150,6 +152,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 				break;
 			case RETRY:
 				try {
+					network.setTimeout(false);
 					network.start();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -176,6 +179,8 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 			case RIGHTCLICK:
 				mouse.clickMouse(MouseEventType.RIGHTCLICK, (boolean) e.getData());
 				break;
+			case SystemExit:
+				network.systemExit();
 			default:
 				break;
 		}

@@ -9,10 +9,7 @@ public class InputConvertedData {
 	private static final ObjectMapper mapper = new ObjectMapper();
 
 	private DataType dataType;
-	private JsonNode data;	
-
-	public InputConvertedData() {
-	}
+	private JsonNode data;
 
 	public InputConvertedData(DataType dataType, Object data) {
 		this.dataType = dataType;

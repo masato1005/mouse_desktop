@@ -26,4 +26,6 @@ public interface GUIListener {
 	public void clickWheelMouse(boolean pressed);
 
 	public void clickRightMouse(boolean pressed);
+
+	public void systemExit();
 }

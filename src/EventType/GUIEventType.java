@@ -10,4 +10,5 @@ public enum GUIEventType {
 	LEFTCLICK,
 	WHEELCLICK,
 	RIGHTCLICK,
+	SystemExit,
 }

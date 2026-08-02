@@ -8,9 +8,12 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Listener.GUIListener;
 
@@ -36,8 +39,22 @@ public class InvisibleWindow extends JFrame {
         invisibleMouse();
         addMouseWheelListener(new MouseWheelListener());
         addMouseListener(new MyMouseListener());
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                confirmExit();
+            }
+        });
         setVisible(false);
 
+    }
+
+    private void confirmExit() {
+        String msg = "終了しますか？";
+        int ans = JOptionPane.showConfirmDialog(this, msg);
+        if (ans == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
 
     private void invisibleMouse() {

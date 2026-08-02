@@ -74,4 +74,10 @@ public class ImplementedGUIListener implements GUIListener {
     public void clickRightMouse(boolean pressed) {
         guiHandler.clickRightMouse(pressed);
     }
+
+    @Override
+    public void systemExit(){
+        guiHandler.systemExit();
+    }
+
 }
