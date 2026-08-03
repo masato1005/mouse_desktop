@@ -1,14 +1,4 @@
-{
-  "java.project.sourcePaths": [
-    "src"
-  ],
-  "java.project.outputPath": "out",
-  "java.project.referencedLibraries": [
-    "lib/jackson-annotations-2.17.0.jar",
-    "lib/jackson-core-2.17.0.jar",
-    "lib/jackson-databind-2.17.0.jar"
-  ],
-  "files.exclude": {
+{ "files.exclude": {
     "**/*.class": true,
     "bin": true,
     "src/bin": true,
