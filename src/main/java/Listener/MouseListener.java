@@ -5,7 +5,7 @@ import Json.MouseData;
 public interface MouseListener {
 	void mouseLeftClicked(MouseData mouseData);
 
-	void mouseMoved(MouseData mousedata);
+	void mouseMoved(MouseData mouseData);
 
 	void mouseRightClicked(MouseData mouseData);
 

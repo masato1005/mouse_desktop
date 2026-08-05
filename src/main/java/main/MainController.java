@@ -23,10 +23,10 @@ import Listener.MouseEventListener;
 import Listener.NetworkEventListener;
 import Mouse.MouseManager;
 import gui.GUIManager;
-import network.ConnectionManager;
+import network.NetworkManager;
 
 public class MainController implements NetworkEventListener, GUIEventListener, MouseEventListener {
-	private ConnectionManager network;
+	private NetworkManager network;
 	private NetworkHandler netHandler;
 	private GUIManager gui;
 	private GUIHandler guiHandler;
@@ -38,7 +38,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 	private JsonConverter jsonConverter = new JsonConverter();
 	private ObjectMapper mapper = new ObjectMapper();
 
-	public MainController(int portNumber, Main main, ConnectionManager network, GUIManager gui, MouseManager mouse) {
+	public MainController(int portNumber, Main main, NetworkManager network, GUIManager gui, MouseManager mouse) {
 		this.network = network;
 		netHandler = new NetworkHandler();
 		netHandler.setEventListener(this);

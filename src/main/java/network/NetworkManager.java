@@ -3,16 +3,16 @@ package network;
 import java.io.IOException;
 
 import EventType.AppType;
+import EventType.DataType;
 import Handler.NetworkHandler;
 import Json.JsonConverter;
-import EventType.DataType;
 import Listener.implemented.ImplementedNetworkListener;
 import network.contents.client.TcpClient;
 import network.contents.client.UdpClient;
-import network.contents.sever.TcpServer;
-import network.contents.sever.UdpServer;
+import network.contents.server.TcpServer;
+import network.contents.server.UdpServer;
 
-public class ConnectionManager {
+public class NetworkManager {
 	private int portNumber;
 	private AppType appType;
 	private String serverIP;
@@ -28,7 +28,7 @@ public class ConnectionManager {
 
 	private ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
-	public ConnectionManager(int portNumber) {
+	public NetworkManager(int portNumber) {
 		this.portNumber = portNumber;
 	}
 
@@ -53,7 +53,7 @@ public class ConnectionManager {
 					break;
 
 				case CLIENT:
-					udpC = new UdpClient(portNumber, listener);
+					if(udpC == null)udpC = new UdpClient(portNumber, listener);
 					udpC.makeConnection();
 
 					if (timeout) {
@@ -149,7 +149,6 @@ public class ConnectionManager {
 		this.timeout = timeout;
 	}
 
-	// リスナー
 	public void setListener(NetworkHandler handler) {
 		listener.setListener(handler);
 	}

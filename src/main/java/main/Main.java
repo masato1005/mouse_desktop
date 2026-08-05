@@ -12,21 +12,23 @@ import EventType.AppType;
 import Mouse.MouseManager;
 import gui.GUIManager;
 import gui.contents.choiceServerORClient;
+
 import java.io.IOException;
-import network.ConnectionManager;
+
+import network.NetworkManager;
 
 public class Main {
 	int portNumber = 5000;
 	AppType apptype = null;
 
-	ConnectionManager network;
+	NetworkManager network;
 	MainController controller;
 	GUIManager gui;
 	MouseManager mouse;
 
 	public void start() {
 		gui = new GUIManager();
-		network = new ConnectionManager(portNumber);
+		network = new NetworkManager(portNumber);
 		mouse = new MouseManager();
 		controller = new MainController(portNumber, this, network, gui, mouse);
 

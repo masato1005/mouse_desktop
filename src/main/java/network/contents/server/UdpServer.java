@@ -1,4 +1,4 @@
-package network.contents.sever;
+package network.contents.server;
 
 import Listener.NetworkListener;
 import java.io.IOException;

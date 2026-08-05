@@ -61,13 +61,13 @@ public class TcpClient {
 		try {
 			String Json = in.readLine();
 			if (Json != null)
-				ConvertJsonToData(Json);
+				convertJsonToData(Json);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void ConvertJsonToData(String Json) throws JsonMappingException, JsonProcessingException {
+	private void convertJsonToData(String Json) throws JsonMappingException, JsonProcessingException {
 		InputConvertedData data = mapper.readValue(Json, InputConvertedData.class);
 		listener.receiveData(data);
 	}
