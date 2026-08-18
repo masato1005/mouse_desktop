@@ -8,13 +8,13 @@ package main;
 
 */
 
+import java.io.IOException;
+
 import EventType.AppType;
 import Mouse.MouseManager;
 import gui.GUIManager;
+import gui.contents.ErrorExitGUI;
 import gui.contents.choiceServerORClient;
-
-import java.io.IOException;
-
 import network.NetworkManager;
 
 public class Main {
@@ -45,7 +45,7 @@ public class Main {
 		try {
 			controller.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("アプリの初期化に失敗しました");
 		}
 	}
 
@@ -54,7 +54,7 @@ public class Main {
 		try {
 			start.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			new ErrorExitGUI("アプリの起動に失敗しました");
 		}
 	}
 }

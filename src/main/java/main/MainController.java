@@ -23,6 +23,7 @@ import Listener.MouseEventListener;
 import Listener.NetworkEventListener;
 import Mouse.MouseManager;
 import gui.GUIManager;
+import gui.contents.ErrorExitGUI;
 import network.NetworkManager;
 
 public class MainController implements NetworkEventListener, GUIEventListener, MouseEventListener {
@@ -82,28 +83,28 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 				try {
 					main.start();
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					new ErrorExitGUI("正しくを起動できませんでした");
 				}
 			}
 			case SUCCESSCONNECT -> {
 				switch (appType) {
-					case SERVER:
-						gui.removeWaitingServer();
-						System.out.println(1);
-						gui.initInvisibleWindow();
-						gui.openInvisibleWindow();
-						gui.successConnectGUI();
-						break;
-					case CLIENT:
-						gui.initInvisibleWindow();
-						mouse.start();
-						gui.successConnectGUI();
-						break;
+					case SERVER -> {
+                                            gui.removeWaitingServer();
+                                            System.out.println(1);
+                                            gui.initInvisibleWindow();
+                                            gui.openInvisibleWindow();
+                                            gui.successConnectGUI();
+                        }
+					case CLIENT -> {
+                                            gui.initInvisibleWindow();
+                                            mouse.start();
+                                            gui.successConnectGUI();
+                        }
 				}
 				try {
 					update();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					new ErrorExitGUI("接続処理が正しく処理されませんでした");
 				}
 			}
 			case RECEIVEDATA -> {
@@ -137,7 +138,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 					}
 
 				} catch (JsonProcessingException | IllegalArgumentException e1) {
-					e1.printStackTrace();
+					new ErrorExitGUI("Jsonへの変換でエラーが発生しました");
 				}
 			}
 
@@ -155,7 +156,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 					network.setTimeout(false);
 					network.start();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					new ErrorExitGUI("再検索が正しく行われませんでした。");
 				}
 				break;
 			case CHOICEWLL:

@@ -1,6 +1,5 @@
 package network.contents.client;
 
-import Listener.NetworkListener;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -8,6 +7,9 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+
+import Listener.NetworkListener;
+import gui.contents.ErrorExitGUI;
 
 public class UdpClient {
 	private int portNumber;
@@ -22,7 +24,7 @@ public class UdpClient {
 		try {
 			local = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ホストのIPアドレスを取得できませんでした");
 		}
 		this.clientIP = local.getHostAddress();
 		this.netListener = netListener;
@@ -32,21 +34,20 @@ public class UdpClient {
 		try {
 			socket = new DatagramSocket();
 		} catch (SocketException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ソケットの生成で不具合が発生しました");
 		}
 		// ブロードキャスト送信を許可
 		try {
 			socket.setBroadcast(true);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ブロードキャストの送信に失敗しました");
 		}
 
 		// 三秒でタイムアウト
 		try {
 			socket.setSoTimeout(3000);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("タイムアウトしました");
 		}
 
 		// DISCOVER_SERVERをバイト列に変換
@@ -61,15 +62,13 @@ public class UdpClient {
 					InetAddress.getByName("255.255.255.255"), // 宛先
 					portNumber);
 		} catch (UnknownHostException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("ホストのIPアドレスを取得できませんでした");
 		} // サーバーのポート番号
 
 		try {
 			socket.send(sendPacket);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("メッセージの送信に失敗しました");
 		} // UDPパケットを送信
 		System.out.println("探索送信");
 
@@ -84,8 +83,7 @@ public class UdpClient {
 		} catch (SocketTimeoutException e) {
 			netListener.checkTimeout();
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("メッセージの受信に失敗しました");
 		}
 
 		// リソースの解放

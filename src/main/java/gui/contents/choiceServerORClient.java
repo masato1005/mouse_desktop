@@ -13,15 +13,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JOptionPane;
 
 import Listener.GUIListener;
 
 public class choiceServerORClient extends JFrame {
 	private int option = -1;
-	private GUIListener guiListener;
+	private final GUIListener guiListener;
 
 	JPanel pane;
 
@@ -84,6 +84,7 @@ public class choiceServerORClient extends JFrame {
 	}
 
 	class decisionAction implements ActionListener {
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			if (option != -1) {
 				try {
@@ -93,7 +94,7 @@ public class choiceServerORClient extends JFrame {
 					if (option == 0)
 						guiListener.choiseClient();
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					new ErrorExitGUI("Client・Server選択処理で不具合が発生しました");
 				}
 			}
 		}

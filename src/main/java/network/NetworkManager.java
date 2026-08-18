@@ -7,13 +7,14 @@ import EventType.DataType;
 import Handler.NetworkHandler;
 import Json.JsonConverter;
 import Listener.implemented.ImplementedNetworkListener;
+import gui.contents.ErrorExitGUI;
 import network.contents.client.TcpClient;
 import network.contents.client.UdpClient;
 import network.contents.server.TcpServer;
 import network.contents.server.UdpServer;
 
 public class NetworkManager {
-	private int portNumber;
+	private final int portNumber;
 	private AppType appType;
 	private String serverIP;
 	private boolean timeout = false;
@@ -26,7 +27,7 @@ public class NetworkManager {
 	private TcpServer tcpS;
 	private TcpClient tcpC;
 
-	private ImplementedNetworkListener listener = new ImplementedNetworkListener();
+	private final ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
 	public NetworkManager(int portNumber) {
 		this.portNumber = portNumber;
@@ -35,51 +36,48 @@ public class NetworkManager {
 	public void start() throws IOException {
 		new Thread(() -> {
 			switch (appType) {
-				case SERVER:
-					udpS = new UdpServer(portNumber, listener);
-					try {
-						udpS.makeServer();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					if (stopServer)
-						break;
-					udpConnection = true;
-					tcpS = new TcpServer(portNumber, listener);
-					tcpS.makeServer();
+				case SERVER -> {
+                                    udpS = new UdpServer(portNumber, listener);
+                                    try {
+                                        udpS.makeServer();
+                                    } catch (IOException e) {
+										System.out.println("UDPサーバーの作成に失敗しました");
+										System.out.println("アプリを終了します");
+										new ErrorExitGUI("UDPサーバーの作成に失敗しました");
+                                    }
+                                    if (stopServer)
+                                        break;
+                                    udpConnection = true;
+                                    tcpS = new TcpServer(portNumber, listener);
+                                    tcpS.makeServer();
+                                    
+                                    listener.successConnect();
+                                    tcpConnection = true;
+                        }
 
-					listener.successConnect();
-					tcpConnection = true;
-					break;
-
-				case CLIENT:
-					if(udpC == null)udpC = new UdpClient(portNumber, listener);
-					udpC.makeConnection();
-
-					if (timeout) {
-						System.out.println("接続失敗");
-					} else {
-						udpConnection = true;
-						serverIP = udpC.getServerIP();
-						tcpC = new TcpClient(serverIP, portNumber, listener);
-						tcpC.connect();
-						listener.successConnect();
-						tcpConnection = true;
-					}
-					break;
+				case CLIENT -> {
+                                    if(udpC == null)udpC = new UdpClient(portNumber, listener);
+                                    udpC.makeConnection();
+                                    
+                                    if (timeout) {
+                                        System.out.println("接続失敗");
+                                    } else {
+                                        udpConnection = true;
+                                        serverIP = udpC.getServerIP();
+                                        tcpC = new TcpClient(serverIP, portNumber, listener);
+                                        tcpC.connect();
+                                        listener.successConnect();
+                                        tcpConnection = true;
+                                    }
+                        }
 			}
 		}).start();
 	}
 
 	public void loop() throws IOException {
 		switch (appType) {
-			case SERVER:
-				tcpS.loop();
-				break;
-
-			case CLIENT:
-				tcpC.loop();
-				break;
+			case SERVER -> tcpS.loop();
+			case CLIENT -> tcpC.loop();
 		}
 
 	}
@@ -90,12 +88,8 @@ public class NetworkManager {
 		} else {
 			String json = data.toString();
 			switch (appType) {
-				case SERVER:
-					tcpS.send(json);
-					break;
-				case CLIENT:
-					tcpC.send(json);
-					break;
+				case SERVER -> tcpS.send(json);
+				case CLIENT -> tcpC.send(json);
 			}
 		}
 	}
@@ -113,7 +107,6 @@ public class NetworkManager {
 			String json = converter.dataConverter(DataType.SYSTEMEXIT, null);
 			sendData(json);
 			closeTcp();
-			return;
 		}
 	}
 

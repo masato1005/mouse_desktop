@@ -1,15 +1,17 @@
 package network.contents.server;
 
-import Listener.NetworkListener;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import Listener.NetworkListener;
+import gui.contents.ErrorExitGUI;
+
 public class UdpServer {
-	private int portNumber;
-	private NetworkListener netListener;
+	private final int portNumber;
+	private final NetworkListener netListener;
 	DatagramSocket socket;
 
 	public UdpServer(int portNumber, NetworkListener netListener) {
@@ -29,33 +31,34 @@ public class UdpServer {
 	}
 
 	private void waitMessage(DatagramSocket socket, DatagramPacket packet) {
-		//サーバーを常に動作させる
-		netListener.searchNofitication();
-		System.out.println("待機中...");
-		while (true) {
-			//クライアントからのUDPパケットを受信
-			try {
-				socket.receive(packet);
-			} catch (IOException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-			}
-			//受信したバイト列を文字列に変換
-			String msg = new String(packet.getData(), 0, packet.getLength());
-			System.out.println("受信: " + msg);
-
-			//受信した文字列がクライアントと同じだったら
-			if (msg.equals("DISCOVER_SERVER")) {
-				sendMessage(packet);
-				break;
-			}
-			
-			if(msg.equals("STOP")) {
-				netListener.checkStopSever();
-				break;
-			}
-		}
-		socket.close();
+            //サーバーを常に動作させる
+            try (socket) {
+                //サーバーを常に動作させる
+                netListener.searchNofitication();
+                System.out.println("待機中...");
+                while (true) {
+                    //クライアントからのUDPパケットを受信
+                    try {
+                        socket.receive(packet);
+                    } catch (IOException e) {
+                        new ErrorExitGUI("メッセージの取得に失敗しました");
+                    }
+                    //受信したバイト列を文字列に変換
+                    String msg = new String(packet.getData(), 0, packet.getLength());
+                    System.out.println("受信: " + msg);
+                    
+                    //受信した文字列がクライアントと同じだったら
+                    if (msg.equals("DISCOVER_SERVER")) {
+                        sendMessage(packet);
+                        break;
+                    }
+                    
+                    if(msg.equals("STOP")) {
+                        netListener.checkStopSever();
+                        break;
+                    }
+                }
+            }
 	}
 
 	private void sendMessage(DatagramPacket packet) {
@@ -73,8 +76,7 @@ public class UdpServer {
 		try {
 			socket.send(reply);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("送信に失敗しました");
 		}
 		System.out.println("返信した");
 		socket.close();
@@ -86,8 +88,7 @@ public class UdpServer {
 		try {
 			address = InetAddress.getByName("localhost");
 		} catch (UnknownHostException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("終了処理の");
 		}
 		
 		DatagramPacket stopMassage = new DatagramPacket(
@@ -99,8 +100,7 @@ public class UdpServer {
 		try {
 			socket.send(stopMassage);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+			new ErrorExitGUI("メッセージの送信に失敗しました");
 		}
 	}
 

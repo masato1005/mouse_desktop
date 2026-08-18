@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Json.InputConvertedData;
 import Listener.NetworkListener;
+import gui.contents.ErrorExitGUI;
 
 public class TcpServer {
 	private int portNumber;
@@ -34,7 +35,7 @@ public class TcpServer {
 		try {
 			server = new ServerSocket(portNumber);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ソケットの生成で不具合が発生しました");
 		}
 		System.out.println("接続待機中...");
 
@@ -42,7 +43,7 @@ public class TcpServer {
 		try {
 			socket = server.accept();
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("接続が中断されました");
 		}
 		System.out.println("接続されました");
 
@@ -50,14 +51,14 @@ public class TcpServer {
 			in = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ソケットの受信機能の起動に失敗しました");
 		}
 
 		try {
 			out = new PrintWriter(
 					socket.getOutputStream(), true);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ソケットの送信機能の起動に失敗しました");
 		}
 	}
 
@@ -72,7 +73,7 @@ public class TcpServer {
 				convertJsonToData(Json);
 			
 		}catch(IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("メッセージの受信に失敗しました");
 		}
 	}
 
@@ -91,8 +92,7 @@ public class TcpServer {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ErrorExitGUI("終了処理で失敗しました");
 		}
 	}
 }

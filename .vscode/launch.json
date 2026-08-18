@@ -3,24 +3,10 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Main",
+      "name": "ErrorExitGUI",
       "request": "launch",
-      "mainClass": "main.Main",
-      "projectName": "mouse_"
-    },
-    {
-      "type": "java",
-      "name": "InvisibleWindow",
-      "request": "launch",
-      "mainClass": "gui.contents.InvisibleWindow",
+      "mainClass": "gui.contents.ErrorExitGUI",
       "projectName": "mouse"
-    },
-    {
-      "type": "java",
-      "name": "Main",
-      "request": "launch",
-      "mainClass": "main.Main",
-      "projectName": "mouse_524286ab"
     },
     {
       "type": "java",

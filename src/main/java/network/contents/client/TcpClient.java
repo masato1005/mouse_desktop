@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Json.InputConvertedData;
 import Listener.NetworkListener;
+import gui.contents.ErrorExitGUI;
 
 public class TcpClient {
 	private final String serverIP;
@@ -34,7 +35,7 @@ public class TcpClient {
 		try {
 			socket = new Socket(serverIP, portNumber);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("ソケットの生成で不具合が発生しました");
 		}
 		System.out.println("接続完了");
 
@@ -42,14 +43,14 @@ public class TcpClient {
 			in = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("受信機能の起動に失敗しました");
 		}
 
 		try {
 			out = new PrintWriter(
 					socket.getOutputStream(), true);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("送信機能の起動に失敗しました");
 		}
 	}
 
@@ -63,7 +64,7 @@ public class TcpClient {
 			if (Json != null)
 				convertJsonToData(Json);
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("Jsonの変換に失敗しました");
 		}
 	}
 
@@ -82,8 +83,7 @@ public class TcpClient {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ErrorExitGUI("終了処理に失敗しました");
 		}
 	}
 }

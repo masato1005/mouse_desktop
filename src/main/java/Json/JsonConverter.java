@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import EventType.DataType;
+import gui.contents.ErrorExitGUI;
 
 public class JsonConverter {
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -13,7 +14,7 @@ public class JsonConverter {
 		try {
 			return mapper.writeValueAsString(sendData);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("Json処理で不具合が発生しました");
 			return null;
 		}
 	}

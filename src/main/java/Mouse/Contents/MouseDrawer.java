@@ -11,6 +11,7 @@ import EventType.WallType;
 import Json.MouseData;
 import Listener.MouseListener;
 import Mouse.MouseManager;
+import gui.contents.ErrorExitGUI;
 
 public class MouseDrawer {
 	private static final long RETURN_MOVE_WAIT_NANOS = 16_000_000L;
@@ -39,7 +40,7 @@ public class MouseDrawer {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			e.printStackTrace();
+			new ErrorExitGUI("Robotクラスの生成に失敗しました");
 		}
 	}
 
