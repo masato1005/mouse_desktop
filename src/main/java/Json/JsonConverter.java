@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import EventType.DataType;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class JsonConverter {
 	private final ObjectMapper mapper = new ObjectMapper();
 
@@ -18,5 +19,4 @@ public class JsonConverter {
 			return null;
 		}
 	}
-
 }

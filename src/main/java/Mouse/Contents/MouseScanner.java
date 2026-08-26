@@ -16,7 +16,7 @@ import Listener.MouseListener;
 import Mouse.MouseManager;
 
 public class MouseScanner {
-	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private final int starttime = 0;
 	private final int rate = 16;
 	private final int wallMoveRange = 3;

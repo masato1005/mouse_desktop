@@ -13,9 +13,10 @@ import gui.contents.SuccessConnectGUI;
 import gui.contents.TimeoutGUI;
 import gui.contents.WaitingServerGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class GUIManager {
 	private WaitingServerGUI waitingServerGUI;
-	private ImplementedGUIListener listener = new ImplementedGUIListener();
+	private final ImplementedGUIListener listener = new ImplementedGUIListener();
 	private AppType appType;
 	InvisibleWindow invisibleWindow = null;
 

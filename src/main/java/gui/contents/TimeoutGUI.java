@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import Listener.GUIListener;
 
 public class TimeoutGUI extends JFrame {
-	private GUIListener listener;
+	private final GUIListener listener;
 
 	public TimeoutGUI(GUIListener listener) {
 		super("タイムアウト");

@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class SuccessConnectGUI extends JFrame{
-	private GUIListener listener;
+	private final GUIListener listener;
 
 	public SuccessConnectGUI(GUIListener listener) {
 		super("Success");

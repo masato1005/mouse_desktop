@@ -14,6 +14,7 @@ import Json.InputConvertedData;
 import Listener.NetworkListener;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpClient {
 	private final String serverIP;
 	private final int portNumber;
@@ -60,11 +61,13 @@ public class TcpClient {
 
 	private void receive() {
 		try {
-			String Json = in.readLine();
-			if (Json != null)
-				convertJsonToData(Json);
+			String json = in.readLine();
+			if (json != null)
+				System.out.println("受信JSON: " + json);
+				convertJsonToData(json);
 		} catch (IOException e) {
 			new ErrorExitGUI("Jsonの変換に失敗しました");
+			listener.receiveError();
 		}
 	}
 

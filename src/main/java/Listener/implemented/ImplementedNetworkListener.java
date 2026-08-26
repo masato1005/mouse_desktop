@@ -42,4 +42,9 @@ public class ImplementedNetworkListener implements NetworkListener {
     public void receiveData(InputConvertedData data) {
         handler.receiveData(data);
     }
+
+    @Override
+    public void receiveError(){
+        handler.receiveError();
+    }
 }

@@ -11,11 +11,12 @@ import java.net.UnknownHostException;
 import Listener.NetworkListener;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpClient {
-	private int portNumber;
+	private final int portNumber;
 	private String serverIP;
-	private String clientIP;
-	private NetworkListener netListener;
+	private final String clientIP;
+	private final NetworkListener netListener;
 	private DatagramSocket socket = null;
 
 	public UdpClient(int portNumber, NetworkListener netListener) {

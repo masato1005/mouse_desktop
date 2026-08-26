@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import Listener.GUIListener;
 
 public class WaitingServerGUI extends JFrame{
-	private GUIListener listener;
+	private final GUIListener listener;
 	//private JPanel pane;
 	//private JLabel label;
 	

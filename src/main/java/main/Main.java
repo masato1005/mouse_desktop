@@ -11,28 +11,52 @@ package main;
 import java.io.IOException;
 
 import EventType.AppType;
+import Keyboard.KeyboardManager;
 import Mouse.MouseManager;
 import gui.GUIManager;
 import gui.contents.ErrorExitGUI;
 import gui.contents.choiceServerORClient;
 import network.NetworkManager;
+import platform.WindowsExitHotkey;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class Main {
-	int portNumber = 5000;
+	final int portNumber = 5000;
 	AppType apptype = null;
 
 	NetworkManager network;
 	MainController controller;
 	GUIManager gui;
 	MouseManager mouse;
+	KeyboardManager keyboard;
+	WindowsExitHotkey exitHotkey;
 
 	public void start() {
 		gui = new GUIManager();
-		network = new NetworkManager(portNumber);
-		mouse = new MouseManager();
-		controller = new MainController(portNumber, this, network, gui, mouse);
+	network = new NetworkManager(portNumber);
+	mouse = new MouseManager();
+	keyboard = new KeyboardManager();
+	controller = new MainController(portNumber, this, network, gui, mouse, keyboard);
+		startExitHotkey();
 
 		new choiceServerORClient(gui.getListener());
+	}
+
+	private void startExitHotkey() {
+		if (exitHotkey == null) {
+			exitHotkey = new WindowsExitHotkey(this::forceExit);
+			exitHotkey.start();
+		}
+	}
+
+	private void forceExit() {
+		try {
+			gui.getListener().systemExit();
+		} catch (RuntimeException e) {
+			System.err.println("終了通知の送信に失敗しました: " + e.getMessage());
+		} finally {
+			System.exit(0);
+		}
 	}
 
 	public void setAppType(AppType apptype) {

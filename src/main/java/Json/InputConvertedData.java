@@ -11,6 +11,8 @@ public class InputConvertedData {
 	private DataType dataType;
 	private JsonNode data;
 
+	public InputConvertedData(){}
+
 	public InputConvertedData(DataType dataType, Object data) {
 		this.dataType = dataType;
 		this.data = mapper.valueToTree(data);

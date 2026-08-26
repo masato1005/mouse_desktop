@@ -13,12 +13,15 @@ import EventType.DataType;
 import EventType.MouseEventType;
 import EventType.WallType;
 import Handler.GUIHandler;
+import Handler.KeyboardHandler;
 import Handler.MouseHandler;
 import Handler.NetworkHandler;
 import Json.InputConvertedData;
 import Json.JsonConverter;
 import Json.MouseData;
+import Keyboard.KeyboardManager;
 import Listener.GUIEventListener;
+import Listener.KeyboardEventListener;
 import Listener.MouseEventListener;
 import Listener.NetworkEventListener;
 import Mouse.MouseManager;
@@ -26,20 +29,26 @@ import gui.GUIManager;
 import gui.contents.ErrorExitGUI;
 import network.NetworkManager;
 
-public class MainController implements NetworkEventListener, GUIEventListener, MouseEventListener {
-	private NetworkManager network;
-	private NetworkHandler netHandler;
-	private GUIManager gui;
-	private GUIHandler guiHandler;
-	private MouseManager mouse;
-	private MouseHandler mouseHandler;
-	private Main main;
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
+public class MainController implements NetworkEventListener, GUIEventListener, MouseEventListener, KeyboardEventListener {
+	private final NetworkManager network;
+	private final NetworkHandler netHandler;
+	private final GUIManager gui;
+	private final GUIHandler guiHandler;
+	private final MouseManager mouse;
+	private final MouseHandler mouseHandler;
+	private final KeyboardManager keyboard;
+	private final KeyboardHandler keyboardHandler;
+	private final Main main;
 	private AppType appType;
 
-	private JsonConverter jsonConverter = new JsonConverter();
+	private final JsonConverter jsonConverter = new JsonConverter();
 	private ObjectMapper mapper = new ObjectMapper();
 
-	public MainController(int portNumber, Main main, NetworkManager network, GUIManager gui, MouseManager mouse) {
+	private Boolean updating = true;
+
+	public MainController(int portNumber, Main main, NetworkManager network, GUIManager gui, MouseManager mouse,
+			KeyboardManager keyboard) {
 		this.network = network;
 		netHandler = new NetworkHandler();
 		netHandler.setEventListener(this);
@@ -55,6 +64,11 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 		mouseHandler = new MouseHandler();
 		mouseHandler.setEventListener(this);
 		mouse.setListener(mouseHandler);
+
+		this.keyboard = keyboard;
+		keyboardHandler = new KeyboardHandler();
+		keyboardHandler.setEventListener(this);
+		keyboard.setListener(keyboardHandler);
 	}
 
 	public void start() throws IOException {
@@ -62,7 +76,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 	}
 
 	public void update() throws IOException {
-		while (true) {
+		while (updating) {
 			network.loop();
 		}
 	}
@@ -141,7 +155,7 @@ public class MainController implements NetworkEventListener, GUIEventListener, M
 					new ErrorExitGUI("Jsonへの変換でエラーが発生しました");
 				}
 			}
-
+			case ERROR -> updating = false;
 		}
 	}
 

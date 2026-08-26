@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ErrorExitGUI extends JFrame {
     private final String massage;
 

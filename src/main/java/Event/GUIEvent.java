@@ -3,8 +3,8 @@ package Event;
 import EventType.GUIEventType;
 
 public class GUIEvent {
-	private GUIEventType type;
-	private Object data;
+	private final GUIEventType type;
+	private final Object data;
 	
 	public GUIEvent(GUIEventType type, Object data) {
 		this.type = type;

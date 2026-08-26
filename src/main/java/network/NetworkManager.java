@@ -13,6 +13,7 @@ import network.contents.client.UdpClient;
 import network.contents.server.TcpServer;
 import network.contents.server.UdpServer;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class NetworkManager {
 	private final int portNumber;
 	private AppType appType;

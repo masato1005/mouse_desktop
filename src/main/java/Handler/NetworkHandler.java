@@ -32,4 +32,8 @@ public class NetworkHandler {
     public void receiveData(InputConvertedData data) {
         listener.onNetworkEvent(new NetworkEvent(NetworkEventType.RECEIVEDATA, data));
     }
+
+    public void receiveError() {
+		listener.onNetworkEvent(new NetworkEvent(NetworkEventType.ERROR,null));
+    }
 }

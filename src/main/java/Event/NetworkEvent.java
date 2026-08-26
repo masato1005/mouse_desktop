@@ -3,8 +3,8 @@ package Event;
 import EventType.NetworkEventType;
 
 public class NetworkEvent {
-	private NetworkEventType type;
-	private Object data;
+	private final NetworkEventType type;
+	private final Object data;
 	
 	public NetworkEvent(NetworkEventType type, Object data){
 		this.type = type;

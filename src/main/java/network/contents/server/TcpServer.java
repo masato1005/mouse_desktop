@@ -15,15 +15,16 @@ import Json.InputConvertedData;
 import Listener.NetworkListener;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpServer {
-	private int portNumber;
+	private final int portNumber;
 	private BufferedReader in;
 	private PrintWriter out;
-	private ObjectMapper mapper = new ObjectMapper();
+	private final ObjectMapper mapper = new ObjectMapper();
 	private Socket socket = null;
 	private ServerSocket server;
 
-	private NetworkListener listener;
+	private final NetworkListener listener;
 
 	public TcpServer(int portNumber, NetworkListener listener) {
 		this.portNumber = portNumber;

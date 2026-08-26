@@ -19,11 +19,12 @@ import javax.swing.JRadioButton;
 
 import Listener.GUIListener;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class choiceServerORClient extends JFrame {
 	private int option = -1;
 	private final GUIListener guiListener;
 
-	JPanel pane;
+	final JPanel pane;
 
 	public choiceServerORClient(GUIListener guiListener) {
 		super("choiceServerORClient");

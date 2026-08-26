@@ -12,8 +12,8 @@ import Mouse.Contents.MouseScanner;
 public class MouseManager {
 	private final ImplementedMouseListener listener = new ImplementedMouseListener();
 
-	private MouseScanner mouseScanner = new MouseScanner(this, listener);
-	private MouseDrawer mouseDrawer = new MouseDrawer(this,listener);
+	private final MouseScanner mouseScanner = new MouseScanner(this, listener);
+	private final MouseDrawer mouseDrawer = new MouseDrawer(this,listener);
 	private MouseHandler handler;
 
 	public void start() {

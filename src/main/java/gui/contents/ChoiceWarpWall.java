@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import Listener.GUIListener;
 
 public class ChoiceWarpWall extends JFrame {
-	private GUIListener listener;
+	private final GUIListener listener;
 
 	public ChoiceWarpWall(GUIListener listener) {
 		super();
@@ -68,8 +68,8 @@ public class ChoiceWarpWall extends JFrame {
 	}
 
 	class ItemHandler implements ItemListener {
-		JPanel leftPane;
-		ChoiceWarpWall wall;
+		final JPanel leftPane;
+		final ChoiceWarpWall wall;
 		RectDrawer rect;
 
 		public ItemHandler(JPanel leftPane, ChoiceWarpWall wall, RectDrawer rect) {
@@ -110,7 +110,7 @@ public class ChoiceWarpWall extends JFrame {
 	}
 
 	class RectDrawer extends JPanel {
-		private boolean currentPC;
+		private final boolean currentPC;
 
 		public RectDrawer(boolean currentPC) {
 			this.currentPC = currentPC;

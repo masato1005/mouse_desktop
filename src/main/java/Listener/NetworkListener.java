@@ -15,4 +15,6 @@ public interface NetworkListener {
 	void successConnect();
 
     void receiveData(InputConvertedData data);
+
+    void receiveError();
 }

@@ -13,10 +13,11 @@ import Listener.MouseListener;
 import Mouse.MouseManager;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class MouseDrawer {
 	private static final long RETURN_MOVE_WAIT_NANOS = 16_000_000L;
 
-	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 	private final int width = screenSize.width;
 	private final int height = screenSize.height;

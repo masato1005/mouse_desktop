@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import Listener.NetworkListener;
 import gui.contents.ErrorExitGUI;
 
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpServer {
 	private final int portNumber;
 	private final NetworkListener netListener;
