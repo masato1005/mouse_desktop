@@ -1,13 +1,10 @@
 package network;
 
-import java.io.IOException;
-
 import EventType.AppType;
 import EventType.DataType;
-import Handler.NetworkHandler;
 import Json.JsonConverter;
+import Listener.NetworkEventListener;
 import Listener.implemented.ImplementedNetworkListener;
-import gui.contents.ErrorExitGUI;
 import network.contents.client.TcpClient;
 import network.contents.client.UdpClient;
 import network.contents.server.TcpServer;
@@ -19,7 +16,6 @@ public class NetworkManager {
 	private AppType appType;
 	private String serverIP;
 	private boolean timeout = false;
-	private boolean stopServer = false;
 	private boolean udpConnection = false;
 	private boolean tcpConnection = false;
 
@@ -27,6 +23,7 @@ public class NetworkManager {
 	private UdpClient udpC;
 	private TcpServer tcpS;
 	private TcpClient tcpC;
+	private Thread networkThread;
 
 	private final ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
@@ -34,48 +31,61 @@ public class NetworkManager {
 		this.portNumber = portNumber;
 	}
 
-	public void start() throws IOException {
+	public void setListener(NetworkEventListener eventListener) {
+		listener.setListener(eventListener);
+	}
+
+	public void setAppType(AppType appType) {
+		this.appType = appType;
+	}
+
+	public void start() {
+		if(appType == null)
+			return;
 		new Thread(() -> {
 			switch (appType) {
 				case SERVER -> {
-                                    udpS = new UdpServer(portNumber, listener);
-                                    try {
-                                        udpS.makeServer();
-                                    } catch (IOException e) {
-										System.out.println("UDPサーバーの作成に失敗しました");
-										System.out.println("アプリを終了します");
-										new ErrorExitGUI("UDPサーバーの作成に失敗しました");
-                                    }
-                                    if (stopServer)
-                                        break;
-                                    udpConnection = true;
-                                    tcpS = new TcpServer(portNumber, listener);
-                                    tcpS.makeServer();
-                                    
-                                    listener.successConnect();
-                                    tcpConnection = true;
-                        }
+					boolean udpConnectSuccess = makeUdpServe();
+					if (!udpConnectSuccess)
+						break;
+
+					makeTcpServer();
+
+					listener.successConnect();
+					tcpConnection = true;
+				}
 
 				case CLIENT -> {
-                                    if(udpC == null)udpC = new UdpClient(portNumber, listener);
-                                    udpC.makeConnection();
-                                    
-                                    if (timeout) {
-                                        System.out.println("接続失敗");
-                                    } else {
-                                        udpConnection = true;
-                                        serverIP = udpC.getServerIP();
-                                        tcpC = new TcpClient(serverIP, portNumber, listener);
-                                        tcpC.connect();
-                                        listener.successConnect();
-                                        tcpConnection = true;
-                                    }
-                        }
+					if (udpC == null)
+						udpC = new UdpClient(portNumber, listener);
+					udpC.makeConnection();
+
+					if (timeout) {
+						System.out.println("接続失敗");
+					} else {
+						udpConnection = true;
+						serverIP = udpC.getServerIP();
+						tcpC = new TcpClient(serverIP, portNumber, listener);
+						tcpC.connect();
+						listener.successConnect();
+						tcpConnection = true;
+					}
+				}
 			}
 		}).start();
 	}
 
-	public void loop() throws IOException {
+	private boolean makeUdpServe() {
+		udpS = new UdpServer(portNumber, listener);
+		return udpS.makeServer();
+	}
+
+	private void makeTcpServer() {
+		tcpS = new TcpServer(portNumber, listener);
+		tcpS.makeServer();
+	}
+
+	public void loop() {
 		switch (appType) {
 			case SERVER -> tcpS.loop();
 			case CLIENT -> tcpC.loop();
@@ -95,6 +105,15 @@ public class NetworkManager {
 		}
 	}
 
+	public void stopUdpServer() {
+		udpS.setRunning(false);
+		udpS.close();
+	}
+
+	public void setTimeout(boolean timeout) {
+		this.timeout = timeout;
+	}
+
 	public void systemExit() {
 		if (udpConnection == false & tcpConnection == false) {
 			return;
@@ -105,46 +124,24 @@ public class NetworkManager {
 		}
 		if (tcpConnection == true) {
 			JsonConverter converter = new JsonConverter();
-			String json = converter.dataConverter(DataType.SYSTEMEXIT, null);
+			String json = converter.dataConverter(DataType.SYSTEM_EXIT, null);
 			sendData(json);
 			closeTcp();
 		}
 	}
 
 	private void closeUdp() {
-		switch(appType){
+		switch (appType) {
 			case CLIENT -> udpC.close();
 			case SERVER -> udpS.close();
 		}
 	}
 
-	private void closeTcp(){
-		switch(appType){
+	private void closeTcp() {
+		switch (appType) {
 			case CLIENT -> tcpC.close();
 			case SERVER -> tcpS.close();
-		} 
-	}
-
-
-	public void stopUdpServer() {
-		udpS.sendStopMassage();
-		setStopServer(true);
-	}
-
-	public void setAppType(AppType appType) {
-		this.appType = appType;
-	}
-
-	public void setStopServer(boolean stopServer) {
-		this.stopServer = stopServer;
-	}
-
-	public void setTimeout(boolean timeout) {
-		this.timeout = timeout;
-	}
-
-	public void setListener(NetworkHandler handler) {
-		listener.setListener(handler);
+		}
 	}
 
 }

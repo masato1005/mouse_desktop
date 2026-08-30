@@ -4,11 +4,9 @@ import Json.InputConvertedData;
 
 public interface NetworkListener {
 
-	void searchNofitication();
+	void waitingClient();
 
 	void checkNofitication();
-
-	void checkStopSever();
 
 	void checkTimeout();
 

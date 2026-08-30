@@ -16,12 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import Listener.GUIListener;
+import Listener.GuiListener;
 
 public class ChoiceWarpWall extends JFrame {
-	private final GUIListener listener;
+	private final GuiListener listener;
 
-	public ChoiceWarpWall(GUIListener listener) {
+	public ChoiceWarpWall(GuiListener listener) {
 		super();
 		this.listener = listener;
 		JPanel mainPane = (JPanel) getContentPane();

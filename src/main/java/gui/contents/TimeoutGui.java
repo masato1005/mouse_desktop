@@ -13,12 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import Listener.GUIListener;
+import Listener.GuiListener;
 
-public class TimeoutGUI extends JFrame {
-	private final GUIListener listener;
+public class TimeoutGui extends JFrame {
+	private final GuiListener listener;
 
-	public TimeoutGUI(GUIListener listener) {
+	public TimeoutGui(GuiListener listener) {
 		super("タイムアウト");
 		this.listener = listener;
 

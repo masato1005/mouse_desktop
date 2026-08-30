@@ -1,6 +1,7 @@
 package Keyboard;
 
-import Handler.KeyboardHandler;
+import EventType.AppType;
+import Listener.KeyboardEventListener;
 import Listener.implemented.ImplementedKeyboardListener;
 
 
@@ -60,8 +61,13 @@ TCP
  */
 public class KeyboardManager {
 	private final ImplementedKeyboardListener listener = new ImplementedKeyboardListener();
+    private AppType appType;
 
-	public void setListener(KeyboardHandler keyboardHandler) {
-		listener.setListener(keyboardHandler);
+	public void setListener(KeyboardEventListener eventListener) {
+		listener.setListener(eventListener);
 	}
+
+    public void setAppType(AppType appType) {
+        this.appType = appType;
+    }
 }

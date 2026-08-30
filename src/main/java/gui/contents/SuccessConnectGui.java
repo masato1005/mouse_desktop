@@ -1,11 +1,10 @@
 package gui.contents;
 
+import Listener.GuiListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,35 +12,24 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import Listener.GUIListener;
+public class SuccessConnectGui extends JFrame{
+	private final GuiListener listener;
 
-public class WaitingServerGUI extends JFrame{
-	private final GUIListener listener;
-	//private JPanel pane;
-	//private JLabel label;
-	
-	public WaitingServerGUI(GUIListener listener) {
-		super("待機中");
+	public SuccessConnectGui(GuiListener listener) {
+		super("Success");
 		this.listener = listener;
-		
-		JPanel pane  = (JPanel) getContentPane();
+
+		JPanel pane = (JPanel) getContentPane();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		
-		pane.add(Box.createVerticalGlue()); 
-		
-		JLabel label = new JLabel("サーバー待機中");
+		JLabel label = new JLabel("接続が完了しました。");
 		label.setAlignmentX(CENTER_ALIGNMENT);
 		pane.add(label);
-		
-		
-		JButton bt = new JButton("停止");
+
+		JButton bt = new JButton("OK");
+		bt.addActionListener(new OkAction());
 		bt.setAlignmentX(CENTER_ALIGNMENT);
-		ActionListener stac = new StopAction();
-		bt.addActionListener(stac);
 		pane.add(bt);
-		
-		pane.add(Box.createVerticalGlue()); 
-		
+
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -63,15 +51,13 @@ public class WaitingServerGUI extends JFrame{
 		}
 	}
 	
-	class StopAction implements ActionListener{
+	class OkAction implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("停止");
 			dispose();
-			listener.pushStop();
+			listener.pushedSuccessOkButton();
 		}
-		
+
 	}
-	
 }

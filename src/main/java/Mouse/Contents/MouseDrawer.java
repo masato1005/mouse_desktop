@@ -11,7 +11,7 @@ import EventType.WallType;
 import Listener.MouseListener;
 import Mouse.MouseManager;
 import data.MouseData;
-import gui.contents.ErrorExitGUI;
+import gui.contents.ErrorExitGui;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class MouseDrawer {
@@ -41,8 +41,19 @@ public class MouseDrawer {
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
-			new ErrorExitGUI("Robotクラスの生成に失敗しました");
+			new ErrorExitGui("Robotクラスの生成に失敗しました");
 		}
+	}
+
+	public void setWallType(WallType wallType) {
+		if (wallType == WallType.NORTH)
+			this.wallType = WallType.SOUTH;
+		if (wallType == WallType.SOUTH)
+			this.wallType = WallType.NORTH;
+		if (wallType == WallType.WEST)
+			this.wallType = WallType.EAST;
+		if (wallType == WallType.EAST)
+			this.wallType = WallType.WEST;
 	}
 
 	public void update(MouseData mouseData) {
@@ -52,21 +63,21 @@ public class MouseDrawer {
 			return;
 		}
 
-		if (mouseData.getMouseEventType() == MouseEventType.WHEELMOVE) {
+		if (mouseData.getMouseEventType() == MouseEventType.WHEEL_MOVE) {
 			robot.mouseWheel(mouseData.getWheelAmount());
 			return;
 		}
 
 		switch (mouseData.getMouseEventType()) {
-			case LEFTCLICK -> {
+			case LEFT_CLICK -> {
 				updateButton(InputEvent.BUTTON1_DOWN_MASK, mouseData.isPressed());
 				return;
 			}
-			case WHEELCLICK -> {
+			case WHEEL_CLICK -> {
 				updateButton(InputEvent.BUTTON2_DOWN_MASK, mouseData.isPressed());
 				return;
 			}
-			case RIGHTCLICK -> {
+			case RIGHT_CLICK -> {
 				updateButton(InputEvent.BUTTON3_DOWN_MASK, mouseData.isPressed());
 				return;
 			}
@@ -89,7 +100,7 @@ public class MouseDrawer {
 
 			if (!checkTouchWall()) {
 				MouseData sendMouseData = new MouseData();
-				sendMouseData.setMouseEventType(MouseEventType.TOUCHWALL);
+				sendMouseData.setMouseEventType(MouseEventType.TOUCH_WALL);
 				sendMouseData.setMouseX(mouseX);
 				sendMouseData.setMouseY(mouseY);
 
@@ -125,39 +136,12 @@ public class MouseDrawer {
 		}
 	}
 
-	private int clamp(int value, int min, int max) {
-		return Math.max(min, Math.min(value, max));
-	}
-
-	private void draw() {
-		robot.mouseMove(mouseX, mouseY);
-	}
-
 	private void updateButton(int buttonMask, boolean pressed) {
 		if (pressed) {
 			robot.mousePress(buttonMask);
 		} else {
 			robot.mouseRelease(buttonMask);
 		}
-	}
-
-	private void setHaveMouse(Boolean haveMouse) {
-		this.haveMouse = haveMouse;
-	}
-
-	private void setJustGetMouse(boolean justGetMouse) {
-		this.justGetMouse = justGetMouse;
-	}
-
-	public void setWallType(WallType wallType) {
-		if (wallType == WallType.NORTH)
-			this.wallType = WallType.SOUTH;
-		if (wallType == WallType.SOUTH)
-			this.wallType = WallType.NORTH;
-		if (wallType == WallType.WEST)
-			this.wallType = WallType.EAST;
-		if (wallType == WallType.EAST)
-			this.wallType = WallType.WEST;
 	}
 
 	private boolean checkTouchWall() {
@@ -213,5 +197,21 @@ public class MouseDrawer {
 			}
 		}
 		return haveMouse;
+	}
+
+	private void setHaveMouse(Boolean haveMouse) {
+		this.haveMouse = haveMouse;
+	}
+
+	private void setJustGetMouse(boolean justGetMouse) {
+		this.justGetMouse = justGetMouse;
+	}
+
+	private void draw() {
+		robot.mouseMove(mouseX, mouseY);
+	}
+
+	private int clamp(int value, int min, int max) {
+		return Math.max(min, Math.min(value, max));
 	}
 }

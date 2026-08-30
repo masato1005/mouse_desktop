@@ -15,15 +15,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Listener.GUIListener;
+import Listener.GuiListener;
 
 public class InvisibleWindow extends JFrame {
 
     private final int width;
     private final int height;
-    private final GUIListener listener;
+    private final GuiListener listener;
 
-    public InvisibleWindow(int width, int height, GUIListener listener) {
+    public InvisibleWindow(int width, int height, GuiListener listener) {
         super();
         this.width = width;
         this.height = height;
@@ -49,15 +49,6 @@ public class InvisibleWindow extends JFrame {
 
     }
 
-    private void confirmExit() {
-        String msg = "終了しますか？";
-        int ans = JOptionPane.showConfirmDialog(this, msg);
-        if (ans == JOptionPane.YES_OPTION) {
-            listener.systemExit();
-            System.exit(0);
-        }
-    }
-
     private void invisibleMouse() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
 
@@ -69,6 +60,15 @@ public class InvisibleWindow extends JFrame {
 
         setCursor(invisibleCursor);
         getContentPane().setCursor(invisibleCursor);
+    }
+
+    private void confirmExit() {
+        String msg = "終了しますか？";
+        int ans = JOptionPane.showConfirmDialog(this, msg);
+        if (ans == JOptionPane.YES_OPTION) {
+            listener.systemExit();
+            System.exit(0);
+        }
     }
 
     public void openWindow() {

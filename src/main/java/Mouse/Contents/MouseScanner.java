@@ -49,49 +49,8 @@ public class MouseScanner {
 		}
 	}
 
-	private void setJustGetMouse(boolean justGetMouse) {
-		this.justGetMouse = justGetMouse;
-	}
-
-	private int getMovementX() {
-		return dx = mouseX - preMouseX;
-	}
-
-	private int getMovementY() {
-		return dy = mouseY - preMouseY;
-	}
-
-	private int getMouseX() {
-		return mouseX;
-	}
-
-	private void setMouseX(int mouseX) {
-		this.mouseX = mouseX;
-	}
-
-	private int getMouseY() {
-		return mouseY;
-	}
-
-	private void setMouseY(int mouseY) {
-		this.mouseY = mouseY;
-	}
-
-	private void setMouseCenter() {
-		int centerX = width / 2;
-		int centerY = height / 2;
-		robot.mouseMove(centerX, centerY);
-		mouseX = centerX;
-		mouseY = centerY;
-		preMouseX = mouseX;
-		preMouseY = mouseY;
-	}
-
-	private void nowMousePosition() {
-		preMouseX = mouseX;
-		preMouseY = mouseY;
-		this.mouseX = MouseInfo.getPointerInfo().getLocation().x;
-		this.mouseY = MouseInfo.getPointerInfo().getLocation().y;
+	public void setWallType(WallType type) {
+		this.wallType = type;
 	}
 
 	public void start() {
@@ -123,6 +82,21 @@ public class MouseScanner {
 			}
 		};
 		timer.scheduleAtFixedRate(task, starttime, rate);
+	}
+
+	private void nowMousePosition() {
+		preMouseX = mouseX;
+		preMouseY = mouseY;
+		this.mouseX = MouseInfo.getPointerInfo().getLocation().x;
+		this.mouseY = MouseInfo.getPointerInfo().getLocation().y;
+	}
+
+	private int getMovementX() {
+		return dx = mouseX - preMouseX;
+	}
+
+	private int getMovementY() {
+		return dy = mouseY - preMouseY;
 	}
 
 	private void checkTouchWall() {
@@ -183,8 +157,18 @@ public class MouseScanner {
 		this.haveMouse = haveMouse;
 	}
 
-	public void setWallType(WallType type) {
-		this.wallType = type;
+	private void setJustGetMouse(boolean justGetMouse) {
+		this.justGetMouse = justGetMouse;
+	}
+
+	private void setMouseCenter() {
+		int centerX = width / 2;
+		int centerY = height / 2;
+		robot.mouseMove(centerX, centerY);
+		mouseX = centerX;
+		mouseY = centerY;
+		preMouseX = mouseX;
+		preMouseY = mouseY;
 	}
 
 	public void returnMouse(MouseData mouseData) {
@@ -218,6 +202,22 @@ public class MouseScanner {
 
 	private int clamp(int value, int min, int max) {
 		return Math.max(min, Math.min(value, max));
+	}
+
+	private int getMouseX() {
+		return mouseX;
+	}
+
+	private void setMouseX(int mouseX) {
+		this.mouseX = mouseX;
+	}
+
+	private int getMouseY() {
+		return mouseY;
+	}
+
+	private void setMouseY(int mouseY) {
+		this.mouseY = mouseY;
 	}
 
 

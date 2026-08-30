@@ -1,12 +1,12 @@
 package Listener.implemented;
 
-import Handler.KeyboardHandler;
+import Listener.KeyboardEventListener;
 import Listener.KeyboardListener;
 
 public class ImplementedKeyboardListener implements KeyboardListener {
-	private KeyboardHandler handler;
+	private KeyboardEventListener eventListener;
 
-	public void setListener(KeyboardHandler keyboardHandler) {
-		this.handler = keyboardHandler;
+	public void setListener(KeyboardEventListener eventListener) {
+		this.eventListener = eventListener;
 	}
 }

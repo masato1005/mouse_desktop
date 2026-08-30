@@ -1,14 +1,12 @@
 package Listener;
 
-public interface GUIListener {
-	public void choiseServer();
+public interface GuiListener {
+	public void chooseServer();
 
-	public void choiseClient();
+	public void chooseClient();
 
-	public void pushStop();
+    public void pushedSuccessOkButton();
 
-	public void retry();
-	
 	public void choiceNorthWall();
 	
 	public void choiceSouthWall();
@@ -16,8 +14,10 @@ public interface GUIListener {
 	public void choiceWestWall();
 	
 	public void choiceEastWall();
+	
+	public void pushStop();
 
-    public void pushedSuccessOkButton();
+	public void retry();
 
 	public void moveWheel(int amount);
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import EventType.DataType;
-import gui.contents.ErrorExitGUI;
+import gui.contents.ErrorExitGui;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class JsonConverter {
@@ -15,7 +15,7 @@ public class JsonConverter {
 		try {
 			return mapper.writeValueAsString(sendData);
 		} catch (JsonProcessingException e) {
-			new ErrorExitGUI("Json処理で不具合が発生しました");
+			new ErrorExitGui("Json処理で不具合が発生しました");
 			return null;
 		}
 	}

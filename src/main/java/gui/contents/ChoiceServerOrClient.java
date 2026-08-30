@@ -17,18 +17,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import Listener.GUIListener;
+import Listener.GuiListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class choiceServerORClient extends JFrame {
+public class ChoiceServerOrClient extends JFrame {
 	private int option = -1;
-	private final GUIListener guiListener;
+	private final GuiListener listener;
 
 	final JPanel pane;
 
-	public choiceServerORClient(GUIListener guiListener) {
-		super("choiceServerORClient");
-		this.guiListener = guiListener;
+	public ChoiceServerOrClient(GuiListener listener) {
+		super("ChoiceServerOrClient");
+		this.listener = listener;
 		// メインパネル
 		pane = (JPanel) getContentPane();
 		pane.setLayout(new BorderLayout());
@@ -67,6 +67,7 @@ public class choiceServerORClient extends JFrame {
 		setVisible(true);
 
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				confirmExit();
 			}
@@ -78,7 +79,7 @@ public class choiceServerORClient extends JFrame {
 		String msg = "終了しますか？";
 		int ans = JOptionPane.showConfirmDialog(pane, msg);
 		if(ans == 0){
-			guiListener.systemExit();
+			listener.systemExit();
 			System.exit(0);
 		}
 
@@ -91,17 +92,18 @@ public class choiceServerORClient extends JFrame {
 				try {
 					dispose();
 					if (option == 1)
-						guiListener.choiseServer();
+						listener.chooseServer();
 					if (option == 0)
-						guiListener.choiseClient();
+						listener.chooseClient();
 				} catch (Exception e1) {
-					new ErrorExitGUI("Client・Server選択処理で不具合が発生しました");
+					new ErrorExitGui("Client・Server選択処理で不具合が発生しました");
 				}
 			}
 		}
 	}
 
 	class RadioAction implements ActionListener {
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			String cmd = e.getActionCommand();
 			if (cmd.equals("サーバー")) {

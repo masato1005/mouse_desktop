@@ -8,14 +8,11 @@ package main;
 
 */
 
-import java.io.IOException;
-
 import EventType.AppType;
 import Keyboard.KeyboardManager;
 import Mouse.MouseManager;
-import gui.GUIManager;
-import gui.contents.ErrorExitGUI;
-import gui.contents.choiceServerORClient;
+import gui.GuiManager;
+import gui.contents.ErrorExitGui;
 import network.NetworkManager;
 import platform.WindowsExitHotkey;
 
@@ -26,27 +23,37 @@ public class Main {
 
 	NetworkManager network;
 	MainController controller;
-	GUIManager gui;
+	GuiManager gui;
 	MouseManager mouse;
 	KeyboardManager keyboard;
 	WindowsExitHotkey exitHotkey;
 
-	public void start() {
-		gui = new GUIManager();
-	network = new NetworkManager(portNumber);
-	mouse = new MouseManager();
-	keyboard = new KeyboardManager();
-	controller = new MainController(portNumber, this, network, gui, mouse, keyboard);
-		startExitHotkey();
-
-		new choiceServerORClient(gui.getListener());
+	public static void main(String[] args) {
+		Main start = new Main();
+		try {
+			start.start();
+		} catch (Exception e) {
+			new ErrorExitGui("アプリの起動に失敗しました");
+		}
 	}
 
-	private void startExitHotkey() {
-		if (exitHotkey == null) {
-			exitHotkey = new WindowsExitHotkey(this::forceExit);
-			exitHotkey.start();
-		}
+	public void start() {
+		createManagers();
+		startProcessing();
+	}
+
+	private void createManagers() {
+		gui = new GuiManager();
+		network = new NetworkManager(portNumber);
+		mouse = new MouseManager();
+		keyboard = new KeyboardManager();
+		controller = new MainController(portNumber, network, gui, mouse, keyboard);
+		exitHotkey = new WindowsExitHotkey(this::forceExit);
+	}
+
+	private void startProcessing() {
+		exitHotkey.start();
+		controller.start();
 	}
 
 	private void forceExit() {
@@ -56,29 +63,6 @@ public class Main {
 			System.err.println("終了通知の送信に失敗しました: " + e.getMessage());
 		} finally {
 			System.exit(0);
-		}
-	}
-
-	public void setAppType(AppType apptype) {
-		this.apptype = apptype;
-
-		gui.setAppType(apptype);
-		network.setAppType(apptype);
-		controller.setAppType(apptype);
-
-		try {
-			controller.start();
-		} catch (IOException e) {
-			new ErrorExitGUI("アプリの初期化に失敗しました");
-		}
-	}
-
-	public static void main(String[] args) {
-		Main start = new Main();
-		try {
-			start.start();
-		} catch (Exception e) {
-			new ErrorExitGUI("アプリの起動に失敗しました");
 		}
 	}
 }

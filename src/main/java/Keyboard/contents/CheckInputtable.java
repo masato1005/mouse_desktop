@@ -149,16 +149,6 @@ public final class CheckInputtable implements AutoCloseable {
         }
     }
 
-    public InputState getCurrentState() {
-        return currentState.get();
-    }
-
-    public boolean canUseRobot() {
-        return currentState
-                .get()
-                .allowsRobotInput();
-    }
-
     private void runMonitor() {
         UiaAutomation automation = null;
         FocusChangedHandler handler = null;
@@ -295,36 +285,6 @@ public final class CheckInputtable implements AutoCloseable {
         }
     }
 
-    /*
-     * UI Automationのコールバック内で実行される。
-     *
-     * senderはコールバック中だけ使用し、
-     * 別スレッドへPointerを渡さない。
-     */
-    private void handleFocusChanged(Pointer sender) {
-        if (sender == null) {
-            publish(InputState.UNKNOWN);
-            return;
-        }
-
-        try {
-            UiaElement element = new UiaElement(sender);
-
-            /*
-             * senderはUI Automation側が所有しているため、
-             * ここではReleaseしない。
-             */
-            publish(classify(element));
-
-        } catch (Throwable e) {
-            /*
-             * JNAのネイティブコールバック外へ
-             * 例外を出さない
-             */
-            publish(InputState.UNKNOWN);
-        }
-    }
-
     private InputState classify(UiaElement element) {
         try {
             boolean enabled = element.booleanProperty(
@@ -406,6 +366,46 @@ public final class CheckInputtable implements AutoCloseable {
         }
     }
 
+    /*
+     * UI Automationのコールバック内で実行される。
+     *
+     * senderはコールバック中だけ使用し、
+     * 別スレッドへPointerを渡さない。
+     */
+    private void handleFocusChanged(Pointer sender) {
+        if (sender == null) {
+            publish(InputState.UNKNOWN);
+            return;
+        }
+
+        try {
+            UiaElement element = new UiaElement(sender);
+
+            /*
+             * senderはUI Automation側が所有しているため、
+             * ここではReleaseしない。
+             */
+            publish(classify(element));
+
+        } catch (Throwable e) {
+            /*
+             * JNAのネイティブコールバック外へ
+             * 例外を出さない
+             */
+            publish(InputState.UNKNOWN);
+        }
+    }
+
+    public InputState getCurrentState() {
+        return currentState.get();
+    }
+
+    public boolean canUseRobot() {
+        return currentState
+                .get()
+                .allowsRobotInput();
+    }
+
     @Override
     public void close() {
         stopRequested.countDown();
@@ -439,18 +439,6 @@ public final class CheckInputtable implements AutoCloseable {
             super(pointer);
         }
 
-        private HRESULT getFocusedElement(
-                PointerByReference result) {
-
-            return (HRESULT) _invokeNativeObject(
-                    8,
-                    new Object[] {
-                            getPointer(),
-                            result
-                    },
-                    HRESULT.class);
-        }
-
         private HRESULT addFocusChangedEventHandler(
                 Pointer handler) {
 
@@ -460,6 +448,18 @@ public final class CheckInputtable implements AutoCloseable {
                             getPointer(),
                             null, // CacheRequest
                             handler
+                    },
+                    HRESULT.class);
+        }
+
+        private HRESULT getFocusedElement(
+                PointerByReference result) {
+
+            return (HRESULT) _invokeNativeObject(
+                    8,
+                    new Object[] {
+                            getPointer(),
+                            result
                     },
                     HRESULT.class);
         }
@@ -500,16 +500,6 @@ public final class CheckInputtable implements AutoCloseable {
             }
         }
 
-        private int intProperty(int propertyId) {
-            Variant.VARIANT value = getCurrentPropertyValue(propertyId);
-
-            try {
-                return value.intValue();
-            } finally {
-                OleAuto.INSTANCE.VariantClear(value);
-            }
-        }
-
         private Variant.VARIANT getCurrentPropertyValue(
                 int propertyId) {
 
@@ -533,6 +523,16 @@ public final class CheckInputtable implements AutoCloseable {
             value.read();
 
             return value;
+        }
+
+        private int intProperty(int propertyId) {
+            Variant.VARIANT value = getCurrentPropertyValue(propertyId);
+
+            try {
+                return value.intValue();
+            } finally {
+                OleAuto.INSTANCE.VariantClear(value);
+            }
         }
     }
 
@@ -669,6 +669,17 @@ public final class CheckInputtable implements AutoCloseable {
             return WinError.S_OK;
         }
 
+        private static boolean sameGuid(
+                Guid.GUID first,
+                Guid.GUID second) {
+
+            return first != null &&
+                    second != null &&
+                    Arrays.equals(
+                            first.toByteArray(),
+                            second.toByteArray());
+        }
+
         private int addRef(Pointer thisPointer) {
             return referenceCount.incrementAndGet();
         }
@@ -689,17 +700,6 @@ public final class CheckInputtable implements AutoCloseable {
             }
 
             return WinError.S_OK;
-        }
-
-        private static boolean sameGuid(
-                Guid.GUID first,
-                Guid.GUID second) {
-
-            return first != null &&
-                    second != null &&
-                    Arrays.equals(
-                            first.toByteArray(),
-                            second.toByteArray());
         }
     }
 }

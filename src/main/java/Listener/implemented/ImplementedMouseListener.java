@@ -1,16 +1,28 @@
 package Listener.implemented;
 
+import Event.OriginalMouseEvent;
 import EventType.DataType;
-import Handler.MouseHandler;
+import EventType.MouseEventType;
 import Json.JsonConverter;
+import Listener.MouseEventListener;
 import Listener.MouseListener;
 import data.MouseData;
 
 public class ImplementedMouseListener implements MouseListener {
-    private MouseHandler handler;
+    private MouseEventListener eventListener;
 
-    public void setListener(MouseHandler mouseHandler) {
-        this.handler = mouseHandler;
+    public void setListener(MouseEventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    @Override
+    public void mouseMoved(MouseData mouseData) {
+        sendMouseData(mouseData);
+    }
+
+    private void sendMouseData(MouseData mouseData) {
+        String json = new JsonConverter().dataConverter(DataType.MOUSE, mouseData);
+        eventListener.onMouseEvent(new OriginalMouseEvent(MouseEventType.MOVE, json));
     }
 
     @Override
@@ -19,19 +31,8 @@ public class ImplementedMouseListener implements MouseListener {
     }
 
     @Override
-    public void mouseMoved(MouseData mouseData) {
-        sendMouseData(mouseData);
-    }
-
-    @Override
     public void mouseRightClicked(MouseData mouseData) {
         sendMouseData(mouseData);
-    }
-
-    @Override
-    public void mouseDragged() {
-        // TODO 自動生成されたメソッド・スタブ
-
     }
 
     @Override
@@ -44,19 +45,19 @@ public class ImplementedMouseListener implements MouseListener {
         sendMouseData(mouseData);
     }
 
-    private void sendMouseData(MouseData mouseData) {
-        handler.mouseMoved(
-                new JsonConverter().dataConverter(
-                        DataType.MOUSE, mouseData));
+    @Override
+    public void mouseDragged() {
+        // TODO 自動生成されたメソッド・スタブ
+
     }
 
     @Override
     public void openInvisibleWindow() {
-        handler.openInvisibleWindow();
+        eventListener.onMouseEvent(new OriginalMouseEvent(MouseEventType.SEND_MOUSE, null));
     }
 
     @Override
     public void closeInvisibleWindow() {
-        handler.closeInvisibleWindow();
+        eventListener.onMouseEvent(new OriginalMouseEvent(MouseEventType.CLOSE_INVISIBLE_WINDOW, null));
     }
 }

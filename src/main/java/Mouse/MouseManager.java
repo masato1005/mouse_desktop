@@ -2,7 +2,7 @@ package Mouse;
 
 import EventType.MouseEventType;
 import EventType.WallType;
-import Handler.MouseHandler;
+import Listener.MouseEventListener;
 import Listener.implemented.ImplementedMouseListener;
 import Mouse.Contents.MouseDrawer;
 import Mouse.Contents.MouseScanner;
@@ -14,7 +14,18 @@ public class MouseManager {
 
 	private final MouseScanner mouseScanner = new MouseScanner(this, listener);
 	private final MouseDrawer mouseDrawer = new MouseDrawer(this,listener);
-	private MouseHandler handler;
+
+	public void setListener(MouseEventListener eventListener) {
+		listener.setListener(eventListener);
+	}
+
+	public void setScannerWallType(WallType type) {
+		mouseScanner.setWallType(type);
+	}
+
+    public void setDrawerWallType(WallType wallType) {
+		mouseDrawer.setWallType(wallType);
+    }
 
 	public void start() {
 		mouseScanner.start();
@@ -22,16 +33,6 @@ public class MouseManager {
 
 	public void mouseMove(MouseData mouseData) {
 		listener.mouseMoved(mouseData);
-	}
-
-	public void moveWheel(int amount) {
-		MouseData mouseData = new MouseData(
-				MouseEventType.WHEELMOVE,
-				0, 0, 0, 0,
-				amount,
-				false,
-				new Modifiers());
-		listener.mouseWheelMoved(mouseData);
 	}
 
 	public void clickMouse(MouseEventType type, boolean pressed) {
@@ -43,15 +44,33 @@ public class MouseManager {
 				new Modifiers());
 
 		switch (type) {
-			case LEFTCLICK -> listener.mouseLeftClicked(mouseData);
-			case WHEELCLICK -> listener.mouseWheelClicked(mouseData);
-			case RIGHTCLICK -> listener.mouseRightClicked(mouseData);
+			case LEFT_CLICK -> listener.mouseLeftClicked(mouseData);
+			case WHEEL_CLICK -> listener.mouseWheelClicked(mouseData);
+			case RIGHT_CLICK -> listener.mouseRightClicked(mouseData);
 			default -> throw new IllegalArgumentException("クリック以外のイベントです: " + type);
 		}
 	}
 
+	public void moveWheel(int amount) {
+		MouseData mouseData = new MouseData(
+				MouseEventType.WHEEL_MOVE,
+				0, 0, 0, 0,
+				amount,
+				false,
+				new Modifiers());
+		listener.mouseWheelMoved(mouseData);
+	}
+
+    public void updateDrawer(MouseData mouseData) {
+        mouseDrawer.update(mouseData);
+    }
+
 	public void returnMouse(MouseData mouseData){
 		listener.mouseMoved(mouseData);
+	}
+
+	public void returnMouseToClient(MouseData mouseData){
+		mouseScanner.returnMouse(mouseData);
 	}
 
 	public void openInvisibleWindow() {
@@ -60,25 +79,5 @@ public class MouseManager {
 
 	public void closeInvisibleWindow() {
 		listener.closeInvisibleWindow();
-	}
-
-	public void setScannerWallType(WallType type) {
-		mouseScanner.setWallType(type);
-	}
-
-	public void setListener(MouseHandler mouseHandler) {
-		listener.setListener(mouseHandler);
-	}
-
-    public void updateDrawer(MouseData mouseData) {
-        mouseDrawer.update(mouseData);
-    }
-
-    public void setDrawerWallType(WallType wallType) {
-		mouseDrawer.setWallType(wallType);
-    }
-
-	public void returnMouseToClient(MouseData mouseData){
-		mouseScanner.returnMouse(mouseData);
 	}
 }

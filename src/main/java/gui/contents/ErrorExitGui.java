@@ -10,10 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class ErrorExitGUI extends JFrame {
+public class ErrorExitGui extends JFrame {
     private final String massage;
 
-    public ErrorExitGUI(String massage) {
+    public ErrorExitGui(String massage) {
         super("error");
         this.massage = massage;
 
@@ -42,9 +42,5 @@ public class ErrorExitGUI extends JFrame {
         Timer timer = new Timer(10000, e -> System.exit(0));
         timer.setRepeats(false);
         timer.start();
-    }
-
-    public static void main(String[] args) {
-        new ErrorExitGUI("test");
     }
 }
