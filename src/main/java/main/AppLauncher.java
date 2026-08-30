@@ -11,19 +11,17 @@ package main;
 import Keyboard.KeyboardManager;
 import Mouse.MouseManager;
 import gui.GuiManager;
+import gui.contents.ChoiceServerOrClient;
 import gui.contents.ErrorExitGui;
-import network.NetworkManager;
+import network.ClientManager;
+import network.ServerManager;
 import platform.WindowsExitHotkey;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class AppLauncher {
+public class AppLauncher implements AppCallback{
 	final int portNumber = 5000;
-
-	NetworkManager network;
-	MainController controller;
 	GuiManager gui;
-	MouseManager mouse;
-	KeyboardManager keyboard;
+	Controller controller;
 	WindowsExitHotkey exitHotkey;
 
 	public static void main(String[] args) {
@@ -36,17 +34,7 @@ public class AppLauncher {
 	}
 
 	public void start() {
-		createManagers();
-		startProcessing();
-	}
-
-	private void createManagers() {
-		gui = new GuiManager();
-		network = new NetworkManager(portNumber);
-		mouse = new MouseManager();
-		keyboard = new KeyboardManager();
-		controller = new MainController(portNumber, network, gui, mouse, keyboard);
-		exitHotkey = new WindowsExitHotkey(this::forceExit);
+		new ChoiceServerOrClient(this);
 	}
 
 	private void startProcessing() {
@@ -63,4 +51,38 @@ public class AppLauncher {
 			System.exit(0);
 		}
 	}
+
+	public void chooseServer() {
+		createServerManagers();
+		startProcessing();
+	}
+
+	public void chooseClient() {
+		createClientManagers();
+		startProcessing();
+	}
+
+	private void createClientManagers() {
+		gui = new GuiManager();
+		ClientManager network = new ClientManager(portNumber);
+		MouseManager mouse = new MouseManager();
+		KeyboardManager keyboard = new KeyboardManager();
+		controller = new ClientController(portNumber, network, gui, mouse, keyboard);
+		exitHotkey = new WindowsExitHotkey(this::forceExit);
+	}
+
+	private void createServerManagers() {
+		gui = new GuiManager();
+		ServerManager network = new ServerManager(portNumber);
+		MouseManager mouse = new MouseManager();
+		KeyboardManager keyboard = new KeyboardManager();
+		controller = new ServerController(portNumber, network, gui, mouse, keyboard,this);
+		exitHotkey = new WindowsExitHotkey(this::forceExit);
+	}
+
+	@Override
+	public void returnToAppSelection(){
+		new ChoiceServerOrClient(this);
+	}
+
 }

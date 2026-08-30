@@ -1,31 +1,19 @@
 package network;
 
-import EventType.AppType;
-import EventType.DataType;
-import Json.JsonConverter;
 import Listener.NetworkEventListener;
 import Listener.implemented.ImplementedNetworkListener;
-import network.contents.client.TcpClient;
-import network.contents.client.UdpClient;
-import network.contents.server.TcpServer;
-import network.contents.server.UdpServer;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class NetworkManager {
-	private final int portNumber;
-	private AppType appType;
-	private String serverIP;
-	private boolean timeout = false;
-	private boolean udpConnection = false;
-	private boolean tcpConnection = false;
+public abstract class NetworkManager {
+	protected final int portNumber;
+	protected String serverIP;
+	protected boolean timeout = false;
+	protected boolean udpConnection = false;
+	boolean tcpConnection = false;
 
-	private UdpServer udpS;
-	private UdpClient udpC;
-	private TcpServer tcpS;
-	private TcpClient tcpC;
-	private Thread networkThread;
+	protected Thread networkThread;
 
-	private final ImplementedNetworkListener listener = new ImplementedNetworkListener();
+	protected final ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
 	public NetworkManager(int portNumber) {
 		this.portNumber = portNumber;
@@ -35,70 +23,7 @@ public class NetworkManager {
 		listener.setListener(eventListener);
 	}
 
-	public void setAppType(AppType appType) {
-		this.appType = appType;
-	}
-
 	public void start() {
-		if (appType == null)
-			return;
-		new Thread(() -> {
-			switch (appType) {
-				case SERVER -> {
-					makeServer();
-
-				}
-
-				case CLIENT -> {
-					if (udpC == null)
-						udpC = new UdpClient(portNumber, listener);
-					udpC.makeConnection();
-
-					if (timeout) {
-						System.out.println("接続失敗");
-					} else {
-						udpConnection = true;
-						serverIP = udpC.getServerIP();
-						tcpC = new TcpClient(serverIP, portNumber, listener);
-						tcpC.connect();
-						listener.successConnect();
-						tcpConnection = true;
-					}
-				}
-			}
-		}).start();
-	}
-
-	private void makeServer() {
-		new Thread(() -> {
-			boolean udpConnectSuccess = makeUdpServe();
-			if (!udpConnectSuccess)
-				return;
-
-			makeTcpServer();
-
-			listener.successConnect();
-			tcpConnection = true;
-		}).start();
-
-	}
-
-	private boolean makeUdpServe() {
-		udpS = new UdpServer(portNumber, listener);
-		return udpS.makeServer();
-	}
-
-	private void makeTcpServer() {
-		tcpS = new TcpServer(portNumber, listener);
-		tcpS.makeServer();
-	}
-
-	public void loop() {
-		switch (appType) {
-			case SERVER -> tcpS.loop();
-			case CLIENT -> tcpC.loop();
-		}
-
 	}
 
 	public void sendData(Object data) {
@@ -106,16 +31,11 @@ public class NetworkManager {
 			System.out.println("dataの内容が適切な形になっていません");
 		} else {
 			String json = data.toString();
-			switch (appType) {
-				case SERVER -> tcpS.send(json);
-				case CLIENT -> tcpC.send(json);
-			}
+			send(json);
 		}
 	}
 
-	public void stopUdpServer() {
-		udpS.setRunning(false);
-		udpS.close();
+	protected void send(String json) {
 	}
 
 	public void setTimeout(boolean timeout) {
@@ -123,33 +43,12 @@ public class NetworkManager {
 	}
 
 	public void systemExit() {
-		if (udpConnection == false & tcpConnection == false) {
-			return;
-		}
-		if (udpConnection == true & tcpConnection == false) {
-			closeUdp();
-			return;
-		}
-		if (tcpConnection == true) {
-			JsonConverter converter = new JsonConverter();
-			String json = converter.dataConverter(DataType.SYSTEM_EXIT, null);
-			sendData(json);
-			closeTcp();
-		}
-	}
+    }
 
-	private void closeUdp() {
-		switch (appType) {
-			case CLIENT -> udpC.close();
-			case SERVER -> udpS.close();
-		}
+	protected void allClose(Udp udp, Tcp tcp) {
+		if (udp != null)
+			udp.close();
+		if (tcp != null)
+			tcp.close();
 	}
-
-	private void closeTcp() {
-		switch (appType) {
-			case CLIENT -> tcpC.close();
-			case SERVER -> tcpS.close();
-		}
-	}
-
 }

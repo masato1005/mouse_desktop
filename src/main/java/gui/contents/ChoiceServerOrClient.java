@@ -17,16 +17,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import Listener.GuiListener;
+import main.AppLauncher;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ChoiceServerOrClient extends JFrame {
 	private int option = -1;
-	private final GuiListener listener;
+	private final AppLauncher listener;
 
 	final JPanel pane;
 
-	public ChoiceServerOrClient(GuiListener listener) {
+	public ChoiceServerOrClient(AppLauncher listener) {
 		super("ChoiceServerOrClient");
 		this.listener = listener;
 		// メインパネル
@@ -79,7 +79,6 @@ public class ChoiceServerOrClient extends JFrame {
 		String msg = "終了しますか？";
 		int ans = JOptionPane.showConfirmDialog(pane, msg);
 		if(ans == 0){
-			listener.systemExit();
 			System.exit(0);
 		}
 

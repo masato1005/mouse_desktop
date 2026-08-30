@@ -1,153 +1,57 @@
 package main;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Event.GuiEvent;
-import Event.NetworkEvent;
-import Event.OriginalMouseEvent;
-import EventType.AppType;
-import EventType.DataType;
 import EventType.MouseEventType;
-import EventType.WallType;
 import Json.InputConvertedData;
-import Json.JsonConverter;
 import Keyboard.KeyboardManager;
-import Listener.GuiEventListener;
-import Listener.KeyboardEventListener;
-import Listener.MouseEventListener;
-import Listener.NetworkEventListener;
 import Mouse.MouseManager;
 import data.MouseData;
 import gui.GuiManager;
 import gui.contents.ErrorExitGui;
-import network.NetworkManager;
+import network.ClientManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class ClientController extends Controller
-        implements NetworkEventListener, GuiEventListener, MouseEventListener, KeyboardEventListener {
-    private final NetworkManager network;
-    private final GuiManager gui;
-    private final MouseManager mouse;
-    private final KeyboardManager keyboard;
-    private AppType appType;
-
-    private final JsonConverter jsonConverter = new JsonConverter();
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    private Boolean updating = true;
-
-    public ClientController(int portNumber, NetworkManager network, GuiManager gui, MouseManager mouse,
+public class ClientController extends Controller {
+    private final ClientManager client;
+    
+    public ClientController(int portNumber, ClientManager network, GuiManager gui, MouseManager mouse,
             KeyboardManager keyboard) {
-        this.network = network;
-        this.gui = gui;
-        this.mouse = mouse;
-        this.keyboard = keyboard;
-    }
-
-    public void start() {
-        initializeListeners();
-        gui.showChoiceServerOrClient();
-    }
-
-    private void initializeListeners() {
-        network.setListener(this);
-        gui.setListener(this);
-        mouse.setListener(this);
-        keyboard.setListener(this);
-    }
-
-    public void setAppType(AppType appType) {
-        this.appType = appType;
-        network.setAppType(appType);
-        keyboard.setAppType(appType);
+        super(portNumber, network, gui, mouse, keyboard);
+        this.client = network;
     }
 
     @Override
-    public void onGuiEvent(GuiEvent e) {
-        switch (e.getType()) {
-            case CHOOSE_APPTYPE -> {
-                setAppType((AppType) e.getData());
-                network.start();
-            }
-            case STOP_UDP_SERVER -> {
-                network.stopUdpServer();
-                gui.showChoiceServerOrClient();
-            }
-            case RETRY -> {
-                network.setTimeout(false);
-                network.start();
-                new ErrorExitGui("再検索が正しく行われませんでした。");
-            }
-            case CHOOSE_WALL -> {
-                mouse.setScannerWallType((WallType) e.getData());
-                network.sendData(jsonConverter.dataConverter(DataType.WALL_TYPE, (WallType) e.getData()));
-            }
-            case PUSH_SUCCESS_OK -> {
-                if (appType == AppType.CLIENT) {
-                    gui.viewChoiceWallTypeGui();
-                }
-            }
-            case MOVE_WHEEL -> mouse.moveWheel((int) e.getData());
-            case LEFT_CLICK -> mouse.clickMouse(MouseEventType.LEFT_CLICK, (boolean) e.getData());
-            case WHEEL_CLICK -> mouse.clickMouse(MouseEventType.WHEEL_CLICK, (boolean) e.getData());
-            case RIGHT_CLICK -> mouse.clickMouse(MouseEventType.RIGHT_CLICK, (boolean) e.getData());
-            case SYSTEM_EXIT -> network.systemExit();
-            default -> {
-            }
-        }
+    protected void viewChoiceWallTypeGui() {
+        gui.viewChoiceWallTypeGui();
     }
 
     @Override
-    public void onNetworkEvent(NetworkEvent e) {
-        switch (e.getType()) {
-            case WAITING_CLIENT -> gui.showWaitingServerGui();
-            case TIMEOUT -> {
-                network.setTimeout(true);
-                gui.showTimeout();
-            }
-            case SUCCESSCONNECT -> {
-                gui.initInvisibleWindow();
-                mouse.start();
-                gui.successConnectGui();
-                update();
-            }
-            case RECEIVEDATA -> {
-                InputConvertedData data = (InputConvertedData) e.getData();
+    protected void successConnect() {
+        gui.initInvisibleWindow();
+        mouse.start();
+        gui.successConnectGui();
+    }
+
+    @Override
+    protected void receiveData(InputConvertedData data) {
+        switch (data.getDataType()) {
+            case MOUSE -> {
+                MouseData mouseData;
                 try {
-                    switch (data.getDataType()) {
-                        case MOUSE -> {
-                            MouseData mouseData = mapper.treeToValue(data.getData(), MouseData.class);
-                            if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL) {
-                                mouse.returnMouseToClient(mouseData);
-                            }
-                        }
-                        case SYSTEM_EXIT -> System.exit(0);
-                        default -> {
-                        }
+                    mouseData = mapper.treeToValue(data.getData(), MouseData.class);
+                    if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL) {
+                        mouse.returnMouseToClient(mouseData);
                     }
-                } catch (JsonProcessingException | IllegalArgumentException e1) {
+                } catch (JsonProcessingException | IllegalArgumentException e) {
                     new ErrorExitGui("Jsonへの変換でエラーが発生しました");
                 }
+
             }
-            case ERROR -> updating = false;
-        }
-    }
-
-    public void update() {
-        while (updating) {
-            network.loop();
-        }
-    }
-
-    @Override
-    public void onMouseEvent(OriginalMouseEvent e) {
-        switch (e.getType()) {
-            case MOVE -> network.sendData(e.getData());
-            case SEND_MOUSE -> gui.openInvisibleWindow();
-            case CLOSE_INVISIBLE_WINDOW -> gui.closeInvisibleWindow();
+            case SYSTEM_EXIT -> System.exit(0);
             default -> {
             }
         }
     }
+
 }

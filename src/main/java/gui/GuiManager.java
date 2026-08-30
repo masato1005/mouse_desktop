@@ -6,7 +6,6 @@ import java.awt.Toolkit;
 import Listener.GuiEventListener;
 import Listener.GuiListener;
 import Listener.implemented.ImplementedGuiListener;
-import gui.contents.ChoiceServerOrClient;
 import gui.contents.ChoiceWarpWall;
 import gui.contents.InvisibleWindow;
 import gui.contents.SuccessConnectGui;
@@ -26,10 +25,6 @@ public class GuiManager {
     public GuiListener getListener() {
         return listener;
     }
-
-	public void showChoiceServerOrClient(){
-		new ChoiceServerOrClient(listener);
-	}
 
 	public void showWaitingServerGui() {
 		waitingServerGui = new WaitingServerGui(listener);
