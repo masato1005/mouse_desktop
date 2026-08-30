@@ -24,13 +24,12 @@ import gui.contents.ErrorExitGui;
 import network.NetworkManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class MainController
+public abstract class MainController
 		implements NetworkEventListener, GuiEventListener, MouseEventListener, KeyboardEventListener {
 	private final NetworkManager network;
 	private final GuiManager gui;
 	private final MouseManager mouse;
 	private final KeyboardManager keyboard;
-	private AppType appType;
 
 	private final JsonConverter jsonConverter = new JsonConverter();
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -47,7 +46,7 @@ public class MainController
 
 	public void start() {
 		initializeListeners();
-		gui.showChoiceServerORClient();
+		gui.showChoiceServerOrClient();
 	}
 
 	private void initializeListeners() {
@@ -55,12 +54,6 @@ public class MainController
 		gui.setListener(this);
 		mouse.setListener(this);
 		keyboard.setListener(this);
-	}
-
-	public void setAppType(AppType appType) {
-		this.appType = appType;
-		network.setAppType(appType);
-		keyboard.setAppType(appType);
 	}
 
 	@Override
@@ -72,7 +65,7 @@ public class MainController
 			}
 			case STOP_UDP_SERVER -> {
 				network.stopUdpServer();
-				gui.showChoiceServerORClient();
+				gui.showChoiceServerOrClient();
 			}
 			case RETRY -> {
 				network.setTimeout(false);

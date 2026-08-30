@@ -40,19 +40,13 @@ public class NetworkManager {
 	}
 
 	public void start() {
-		if(appType == null)
+		if (appType == null)
 			return;
 		new Thread(() -> {
 			switch (appType) {
 				case SERVER -> {
-					boolean udpConnectSuccess = makeUdpServe();
-					if (!udpConnectSuccess)
-						break;
+					makeServer();
 
-					makeTcpServer();
-
-					listener.successConnect();
-					tcpConnection = true;
 				}
 
 				case CLIENT -> {
@@ -73,6 +67,20 @@ public class NetworkManager {
 				}
 			}
 		}).start();
+	}
+
+	private void makeServer() {
+		new Thread(() -> {
+			boolean udpConnectSuccess = makeUdpServe();
+			if (!udpConnectSuccess)
+				return;
+
+			makeTcpServer();
+
+			listener.successConnect();
+			tcpConnection = true;
+		}).start();
+
 	}
 
 	private boolean makeUdpServe() {

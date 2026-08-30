@@ -27,7 +27,7 @@ public class GuiManager {
         return listener;
     }
 
-	public void showChoiceServerORClient(){
+	public void showChoiceServerOrClient(){
 		new ChoiceServerOrClient(listener);
 	}
 
