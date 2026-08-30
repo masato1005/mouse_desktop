@@ -21,5 +21,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("main.Main")
+    mainClass.set("common.main.AppLauncher")
 }

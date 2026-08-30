@@ -1,0 +1,22 @@
+package common.Json;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import common.EventType.DataType;
+import common.gui.contents.ErrorExitGui;
+
+@SuppressWarnings("ResultOfObjectAllocationIgnored")
+public class JsonConverter {
+	private final ObjectMapper mapper = new ObjectMapper();
+
+	public String dataConverter(DataType dataType, Object data) {
+		InputConvertedData sendData = new InputConvertedData(dataType, data);
+		try {
+			return mapper.writeValueAsString(sendData);
+		} catch (JsonProcessingException e) {
+			new ErrorExitGui("Json処理で不具合が発生しました");
+			return null;
+		}
+	}
+}

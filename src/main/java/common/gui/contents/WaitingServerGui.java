@@ -1,0 +1,76 @@
+package common.gui.contents;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import common.Listener.GuiListener;
+
+public class WaitingServerGui extends JFrame{
+	private final GuiListener listener;
+	//private JPanel pane;
+	//private JLabel label;
+	
+	public WaitingServerGui(GuiListener listener) {
+		super("待機中");
+		this.listener = listener;
+		
+		JPanel pane  = (JPanel) getContentPane();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		
+		pane.add(Box.createVerticalGlue()); 
+		
+		JLabel label = new JLabel("サーバー待機中");
+		label.setAlignmentX(CENTER_ALIGNMENT);
+		pane.add(label);
+		
+		
+		JButton bt = new JButton("停止");
+		bt.setAlignmentX(CENTER_ALIGNMENT);
+		ActionListener stac = new StopAction();
+		bt.addActionListener(stac);
+		pane.add(bt);
+		
+		pane.add(Box.createVerticalGlue()); 
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		pack();
+		setVisible(true);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				confirmExit();
+			}
+		});
+	}
+
+	private void confirmExit() {
+		String msg = "終了しますか？";
+		int ans = JOptionPane.showConfirmDialog(this, msg);
+		if (ans == JOptionPane.YES_OPTION) {
+			listener.systemExit();
+			System.exit(0);
+		}
+	}
+	
+	class StopAction implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("停止");
+			dispose();
+			listener.pushStop();
+		}
+		
+	}
+	
+}
