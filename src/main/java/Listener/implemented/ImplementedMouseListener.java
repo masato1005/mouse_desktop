@@ -3,8 +3,8 @@ package Listener.implemented;
 import EventType.DataType;
 import Handler.MouseHandler;
 import Json.JsonConverter;
-import Json.MouseData;
 import Listener.MouseListener;
+import data.MouseData;
 
 public class ImplementedMouseListener implements MouseListener {
     private MouseHandler handler;

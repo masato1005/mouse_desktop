@@ -1,6 +1,6 @@
 package Listener;
 
-import Json.MouseData;
+import data.MouseData;
 
 public interface MouseListener {
 	void mouseLeftClicked(MouseData mouseData);
@@ -17,5 +17,5 @@ public interface MouseListener {
 
     void openInvisibleWindow();
 
-    void closeInvisibleWindow();
+	void closeInvisibleWindow();
 }

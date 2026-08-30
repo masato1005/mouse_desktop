@@ -3,11 +3,11 @@ package Mouse;
 import EventType.MouseEventType;
 import EventType.WallType;
 import Handler.MouseHandler;
-import Json.Modifiers;
-import Json.MouseData;
 import Listener.implemented.ImplementedMouseListener;
 import Mouse.Contents.MouseDrawer;
 import Mouse.Contents.MouseScanner;
+import data.Modifiers;
+import data.MouseData;
 
 public class MouseManager {
 	private final ImplementedMouseListener listener = new ImplementedMouseListener();

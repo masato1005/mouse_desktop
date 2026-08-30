@@ -1,4 +1,4 @@
-package Json;
+package data;
 
 public class Modifiers {
 	private boolean ctrl = false;

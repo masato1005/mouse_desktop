@@ -8,9 +8,9 @@ import java.awt.event.InputEvent;
 
 import EventType.MouseEventType;
 import EventType.WallType;
-import Json.MouseData;
 import Listener.MouseListener;
 import Mouse.MouseManager;
+import data.MouseData;
 import gui.contents.ErrorExitGUI;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")

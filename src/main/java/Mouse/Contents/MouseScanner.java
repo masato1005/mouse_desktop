@@ -10,10 +10,10 @@ import java.util.TimerTask;
 
 import EventType.MouseEventType;
 import EventType.WallType;
-import Json.Modifiers;
-import Json.MouseData;
 import Listener.MouseListener;
 import Mouse.MouseManager;
+import data.Modifiers;
+import data.MouseData;
 
 public class MouseScanner {
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
