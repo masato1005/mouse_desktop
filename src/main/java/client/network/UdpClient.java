@@ -8,8 +8,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import common.Listener.NetworkListener;
-import common.gui.contents.ErrorExitGui;
-import common.network.ErrorCallback;
+import common.main.ErrorListener;
 import common.network.Udp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
@@ -19,7 +18,7 @@ public class UdpClient extends Udp {
 	private final TimeoutCallback timeoutCallback;
 
 	public UdpClient(int portNumber, NetworkListener listener, TimeoutCallback timeoutCallback,
-			ErrorCallback errorCallback) {
+			ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
 		this.timeoutCallback = timeoutCallback;
 	}
@@ -29,8 +28,7 @@ public class UdpClient extends Udp {
 			InetAddress local = InetAddress.getLocalHost();
 			this.clientIP = local.getHostAddress();
 		} catch (UnknownHostException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("ホストのIPアドレスを取得できませんでした");
+			errorListener.happenError("ホストのIPアドレスを取得できませんでした");
 			throw e;
 		}
 	}
@@ -39,8 +37,7 @@ public class UdpClient extends Udp {
 		try {
 			socket.setBroadcast(true);
 		} catch (SocketException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("ブロードキャストの送信に失敗しました");
+			errorListener.happenError("ブロードキャストの送信に失敗しました");
 			throw e;
 		}
 	}
@@ -49,8 +46,7 @@ public class UdpClient extends Udp {
 		try {
 			socket.setSoTimeout(3000);
 		} catch (IOException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("タイムアウトの設定に失敗しました");
+			errorListener.happenError("タイムアウトの設定に失敗しました");
 			throw e;
 		}
 	}
@@ -66,8 +62,7 @@ public class UdpClient extends Udp {
 			timeoutCallback.timeoutCallback();
 			throw e;
 		} catch (IOException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("メッセージの受信に失敗しました");
+			errorListener.happenError("メッセージの受信に失敗しました");
 			throw e;
 		}
 	}

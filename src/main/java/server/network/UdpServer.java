@@ -5,8 +5,7 @@ import java.net.DatagramPacket;
 import java.net.SocketException;
 
 import common.Listener.NetworkListener;
-import common.gui.contents.ErrorExitGui;
-import common.network.ErrorCallback;
+import common.main.ErrorListener;
 import common.network.Udp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
@@ -14,7 +13,7 @@ public class UdpServer extends Udp {
 
 	private volatile boolean running = false;
 
-	public UdpServer(int portNumber, NetworkListener listener, ErrorCallback errorCallback) {
+	public UdpServer(int portNumber, NetworkListener listener, ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
 	}
 
@@ -23,13 +22,7 @@ public class UdpServer extends Udp {
 		try {
 			socket.receive(receivePacket);
 		} catch (IOException e) {
-			boolean wasRunning = running;
-			if (wasRunning)
-				errorCallback.happenError();
-			else
-				close();
-			if (wasRunning)
-				new ErrorExitGui("メッセージの取得に失敗しました");
+			errorListener.happenError("メッセージの取得に失敗しました");
 			throw e;
 		}
 	}
@@ -52,7 +45,7 @@ public class UdpServer extends Udp {
 
 				String msg = convertReceivePacketToString(receivePacket);
 				String password = "DISCOVER_SERVER";
-				if (checkConnectMassage(password,msg)) {
+				if (checkConnectMassage(password, msg)) {
 					byte[] sendData = makeMassageData("SERVER_HERE");
 					DatagramPacket sendPacket = makeSendPacket(sendData, receivePacket.getAddress());
 					send(sendPacket);

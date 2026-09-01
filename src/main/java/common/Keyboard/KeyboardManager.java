@@ -1,8 +1,9 @@
 package common.Keyboard;
 
-import common.EventType.AppType;
 import common.Listener.KeyboardEventListener;
 import common.Listener.implemented.ImplementedKeyboardListener;
+import common.main.ErrorHandle;
+import common.main.ErrorListener;
 
 
 /*
@@ -59,15 +60,22 @@ TCP
     ↓
 実際の入力欄へ入力
  */
-public class KeyboardManager {
+public class KeyboardManager implements ErrorHandle {
 	private final ImplementedKeyboardListener listener = new ImplementedKeyboardListener();
-    private AppType appType;
+    private ErrorListener errorListener;
 
-	public void setListener(KeyboardEventListener eventListener) {
+	public void setEventListener(KeyboardEventListener eventListener) {
 		listener.setListener(eventListener);
 	}
 
-    public void setAppType(AppType appType) {
-        this.appType = appType;
+
+
+    @Override
+    public void errorHandle() {
+        
+    }
+
+    public void setErrorListener(ErrorListener errorListener) {
+        this.errorListener = errorListener;
     }
 }

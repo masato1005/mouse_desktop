@@ -34,12 +34,12 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
     }
 
     private boolean makeUdpClient() {
-        udp = new UdpClient(portNumber, listener, this, this);
+        udp = new UdpClient(portNumber, listener, this, errorListener);
         return udp.makeConnection();
     }
 
     private boolean makeTcpClient() {
-        tcp = new TcpClient(portNumber, listener, serverIP,this);
+        tcp = new TcpClient(portNumber, listener, serverIP,errorListener);
         return tcp.connect();
     }
 
@@ -49,7 +49,7 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
     }
 
     @Override
-    protected void allClose() {
+    protected void closeUdpAndTcp() {
         if (udp != null)
             udp.close();
         if (tcp != null)

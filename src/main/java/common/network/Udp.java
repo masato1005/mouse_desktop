@@ -7,27 +7,26 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 import common.Listener.NetworkListener;
-import common.gui.contents.ErrorExitGui;
+import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Udp {
     protected final int portNumber;
     protected final NetworkListener listener;
-    protected final ErrorCallback errorCallback;
+    protected final ErrorListener errorListener;
     protected DatagramSocket socket;
 
-    public Udp(int portNumber, NetworkListener netListener, ErrorCallback errorCallback) {
+    public Udp(int portNumber, NetworkListener netListener, ErrorListener errorCallback) {
         this.portNumber = portNumber;
         this.listener = netListener;
-        this.errorCallback = errorCallback;
+        this.errorListener = errorCallback;
     }
 
     protected void makeSocket() throws SocketException {
         try {
             socket = new DatagramSocket(portNumber);
         } catch (SocketException e) {
-            errorCallback.happenError();
-            new ErrorExitGui("ソケット生成に失敗しました");
+            errorListener.happenError("ソケット生成に失敗しました");
             throw e;
         }
     }
@@ -44,8 +43,7 @@ public abstract class Udp {
         try {
             socket.send(sendPacket);
         } catch (IOException e) {
-            errorCallback.happenError();
-            new ErrorExitGui("メッセージの送信に失敗しました");
+            errorListener.happenError("メッセージの送信に失敗しました");
             throw e;
         }
         System.out.println("探索送信");

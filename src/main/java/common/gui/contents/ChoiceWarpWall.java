@@ -37,7 +37,7 @@ public class ChoiceWarpWall extends JFrame {
 		rightPane.add(new JLabel("接続するモニターの位置を決めてください。"));
 
 		String[] location = { "上", "下", "右", "左" };
-		JComboBox<String> combo = new JComboBox<String>(location);
+		JComboBox<String> combo = new JComboBox<>(location);
 		combo.addItemListener(new ItemHandler(leftPane, this, rect));
 		combo.setSelectedIndex(3);
 		rightPane.add(combo);
@@ -86,22 +86,22 @@ public class ChoiceWarpWall extends JFrame {
 			leftPane.remove(rect);
 			rect = new RectDrawer(false);
 			switch (location) {
-			case "上":
-				leftPane.add(rect, BorderLayout.NORTH);
-				listener.choiceNorthWall();
-				break;
-			case "下":
-				leftPane.add(rect, BorderLayout.SOUTH);
-				listener.choiceSouthWall();
-				break;
-			case "右":
-				leftPane.add(rect, BorderLayout.EAST);
-				listener.choiceEastWall();
-				break;
-			case "左":
-				leftPane.add(rect, BorderLayout.WEST);
-				listener.choiceWestWall();
-				break;
+			case "上" -> {
+                            leftPane.add(rect, BorderLayout.NORTH);
+                            listener.choiceNorthWall();
+                        }
+			case "下" -> {
+                            leftPane.add(rect, BorderLayout.SOUTH);
+                            listener.choiceSouthWall();
+                        }
+			case "右" -> {
+                            leftPane.add(rect, BorderLayout.EAST);
+                            listener.choiceEastWall();
+                        }
+			case "左" -> {
+                            leftPane.add(rect, BorderLayout.WEST);
+                            listener.choiceWestWall();
+                        }
 			}
 			wall.pack();
 			leftPane.revalidate();
@@ -118,6 +118,7 @@ public class ChoiceWarpWall extends JFrame {
 			setOpaque(false);
 		}
 
+                @Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 

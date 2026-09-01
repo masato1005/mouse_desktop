@@ -4,15 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 import common.Listener.NetworkListener;
-import common.gui.contents.ErrorExitGui;
-import common.network.ErrorCallback;
+import common.main.ErrorListener;
 import common.network.Tcp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpServer extends Tcp {
 	private ServerSocket server;
 
-	public TcpServer(int portNumber, NetworkListener listener, ErrorCallback errorCallback) {
+	public TcpServer(int portNumber, NetworkListener listener, ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
 	}
 
@@ -32,8 +31,7 @@ public class TcpServer extends Tcp {
 		try {
 			server = new ServerSocket(portNumber);
 		} catch (IOException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("ソケットの生成で不具合が発生しました");
+			errorListener.happenError("ソケットの生成で不具合が発生しました");
 			return false;
 		}
 		System.out.println("接続待機中...");
@@ -42,8 +40,7 @@ public class TcpServer extends Tcp {
 		try {
 			socket = server.accept();
 		} catch (IOException e) {
-			errorCallback.happenError();
-			new ErrorExitGui("接続が中断されました");
+			errorListener.happenError("接続が中断されました");
 			return false;
 		}
 		System.out.println("接続されました");

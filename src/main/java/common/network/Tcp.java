@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import common.Json.InputConvertedData;
 import common.Listener.NetworkListener;
-import common.gui.contents.ErrorExitGui;
+import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Tcp {
@@ -22,12 +22,12 @@ public abstract class Tcp {
     protected final ObjectMapper mapper = new ObjectMapper();
     protected Socket socket = null;
     protected final NetworkListener listener;
-    protected final ErrorCallback errorCallback;
+    protected final ErrorListener errorListener;
 
-    public Tcp(int portNumber, NetworkListener listener, ErrorCallback errorCallback) {
+    public Tcp(int portNumber, NetworkListener listener, ErrorListener errorListener) {
         this.portNumber = portNumber;
         this.listener = listener;
-        this.errorCallback = errorCallback;
+        this.errorListener = errorListener;
     }
 
     public void receive() {
@@ -35,8 +35,7 @@ public abstract class Tcp {
             while (true) {
                 String json = in.readLine();
                 if (json == null) {
-                    errorCallback.happenError();
-                    new ErrorExitGui("通信が切断されました");
+                    errorListener.happenError("通信が切断されました");
                     listener.receiveError();
                     break;
                 }
@@ -44,8 +43,7 @@ public abstract class Tcp {
                 convertJsonToData(json);
             }
         } catch (IOException e) {
-            errorCallback.happenError();
-            new ErrorExitGui("Jsonの変換に失敗しました");
+            errorListener.happenError("Jsonの変換に失敗しました");
             listener.receiveError();
         }
     }
@@ -58,8 +56,7 @@ public abstract class Tcp {
     public boolean send(String msg) {
         out.println(msg);
         if (out.checkError()) {
-            errorCallback.happenError();
-            new ErrorExitGui("メッセージの送信に失敗しました");
+            errorListener.happenError("メッセージの送信に失敗しました");
             return false;
         }
         return true;
@@ -91,8 +88,7 @@ public abstract class Tcp {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             return true;
         } catch (IOException e) {
-            errorCallback.happenError();
-            new ErrorExitGui("受信機能の起動に失敗しました");
+            errorListener.happenError("受信機能の起動に失敗しました");
             return false;
         }
     }
@@ -102,8 +98,7 @@ public abstract class Tcp {
             out = new PrintWriter(socket.getOutputStream(), true);
             return true;
         } catch (IOException e) {
-            errorCallback.happenError();
-            new ErrorExitGui("送信機能の起動に失敗しました");
+            errorListener.happenError("送信機能の起動に失敗しました");
             return false;
         }
     }

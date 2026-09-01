@@ -26,7 +26,7 @@ public class ServerController extends Controller {
     }
 
     @Override
-    protected void startNet() {
+    protected void startManagers() {
         serverNetwork.start();
 	}
 

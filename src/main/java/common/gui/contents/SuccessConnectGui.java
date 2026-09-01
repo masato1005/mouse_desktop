@@ -1,16 +1,18 @@
 package common.gui.contents;
 
-import common.Listener.GuiListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import common.Listener.GuiListener;
 
 public class SuccessConnectGui extends JFrame{
 	private final GuiListener listener;
@@ -52,12 +54,10 @@ public class SuccessConnectGui extends JFrame{
 	}
 	
 	class OkAction implements ActionListener{
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dispose();
 			listener.pushedSuccessOkButton();
 		}
-
 	}
 }

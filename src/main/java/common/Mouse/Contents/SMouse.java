@@ -14,8 +14,9 @@ import common.Listener.MouseListener;
 import common.Mouse.MouseManager;
 import common.data.Modifiers;
 import common.data.MouseData;
+import common.main.ErrorListener;
 
-public class MouseScanner {
+public class SMouse {
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private final int starttime = 0;
 	private final int rate = 16;
@@ -37,15 +38,17 @@ public class MouseScanner {
 
 	private final MouseManager manager;
 	private final MouseListener listener;
+	private ErrorListener errorListener;
 	private Robot robot;
 
-	public MouseScanner(MouseManager manager, MouseListener listener) {
+	public SMouse(MouseManager manager, MouseListener listener,ErrorListener errorListener) {
 		this.manager = manager;
 		this.listener = listener;
+		this.errorListener = errorListener;
 		try {
 			robot = new Robot();
 		} catch (AWTException ex) {
-			System.getLogger(MouseScanner.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+			System.getLogger(SMouse.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
 		}
 	}
 
@@ -78,7 +81,6 @@ public class MouseScanner {
 					manager.mouseMove(mouseData);
 					setMouseCenter();
 				}
-
 			}
 		};
 		timer.scheduleAtFixedRate(task, starttime, rate);

@@ -21,7 +21,7 @@ import common.network.NetworkManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Controller
-		implements NetworkEventListener, GuiEventListener, MouseEventListener, KeyboardEventListener {
+		implements NetworkEventListener, GuiEventListener, MouseEventListener, KeyboardEventListener, ErrorListener {
 	protected final NetworkManager network;
 	protected final GuiManager gui;
 	protected final MouseManager mouse;
@@ -42,17 +42,22 @@ public abstract class Controller
 
 	public void start() {
 		initializeListeners();
-		startNet();
+		startManagers();
 	}
 
-	protected void startNet() {
+	protected void startManagers() {
 	}
 
 	private void initializeListeners() {
-		network.setListener(this);
-		gui.setListener(this);
-		mouse.setListener(this);
-		keyboard.setListener(this);
+		network.setEventListener(this);
+		gui.setEventListener(this);
+		mouse.setEventListener(this);
+		keyboard.setEventListener(this);
+
+		network.setErrorListener(this);
+		gui.setErrorListener(this);
+		mouse.setErrorListener(this);
+		keyboard.setErrorListener(this);
 	}
 
 	@Override
@@ -128,5 +133,13 @@ public abstract class Controller
 			default -> {
 			}
 		}
+	}
+
+	@Override
+	public void happenError(String errorMassage) {
+		network.errorHandle();
+		gui.errorHandle(errorMassage);
+		mouse.errorHandle();
+		keyboard.errorHandle();
 	}
 }

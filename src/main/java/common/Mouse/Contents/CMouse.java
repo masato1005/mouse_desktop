@@ -12,9 +12,10 @@ import common.Listener.MouseListener;
 import common.Mouse.MouseManager;
 import common.data.MouseData;
 import common.gui.contents.ErrorExitGui;
+import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public class MouseDrawer {
+public class CMouse {
 	private static final long RETURN_MOVE_WAIT_NANOS = 16_000_000L;
 
 	private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -34,10 +35,12 @@ public class MouseDrawer {
 	private final MouseListener listener;
 	private WallType wallType = WallType.EAST;
 	private Robot robot;
+	private ErrorListener errorListener;
 
-	public MouseDrawer(MouseManager manager, MouseListener listener) {
+	public CMouse(MouseManager manager, MouseListener listener,ErrorListener errorListener) {
 		this.manager = manager;
 		this.listener = listener;
+		this.errorListener = errorListener;
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {

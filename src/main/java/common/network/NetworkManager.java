@@ -5,14 +5,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import common.Listener.NetworkEventListener;
 import common.Listener.implemented.ImplementedNetworkListener;
+import common.main.ErrorHandle;
+import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public abstract class NetworkManager implements ErrorCallback, ThreadStopper {
+public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 	protected final int portNumber;
 
 	private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
 	private boolean threadRunning = false;
 	private boolean acceptAddTask = false;
+
+	protected ErrorListener errorListener;
 
 	private final Thread networkThread = new Thread(() -> {
 		while (threadRunning) {
@@ -26,6 +30,10 @@ public abstract class NetworkManager implements ErrorCallback, ThreadStopper {
 			}
 		}
 	});
+
+	public void setErrorListener(ErrorListener errorListener) {
+		this.errorListener = errorListener;
+	}
 
 	protected final ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
@@ -47,7 +55,7 @@ public abstract class NetworkManager implements ErrorCallback, ThreadStopper {
 		networkThread.interrupt();
 	}
 
-	public void setListener(NetworkEventListener eventListener) {
+	public void setEventListener(NetworkEventListener eventListener) {
 		listener.setListener(eventListener);
 	}
 
@@ -77,14 +85,14 @@ public abstract class NetworkManager implements ErrorCallback, ThreadStopper {
 
 	public final void close() {
 		threadStop();
-		allClose();
+		closeUdpAndTcp();
 	}
 
-	protected void allClose() {
+	protected void closeUdpAndTcp() {
 	}
 
 	@Override
-	public void happenError() {
+	public void errorHandle() {
 		close();
 	}
 

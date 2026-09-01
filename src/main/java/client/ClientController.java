@@ -23,7 +23,7 @@ public class ClientController extends Controller {
     }
 
     @Override
-    protected void startNet() {
+    protected void startManagers() {
         clientNetwork.start();
 	}
 

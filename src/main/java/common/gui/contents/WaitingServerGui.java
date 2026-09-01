@@ -36,11 +36,11 @@ public class WaitingServerGui extends JFrame{
 		
 		JButton bt = new JButton("停止");
 		bt.setAlignmentX(CENTER_ALIGNMENT);
-		ActionListener stac = new StopAction();
-		bt.addActionListener(stac);
+		ActionListener stop = new StopAction();
+		bt.addActionListener(stop);
 		pane.add(bt);
 		
-		pane.add(Box.createVerticalGlue()); 
+		pane.add(Box.createVerticalGlue());
 		
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		pack();
@@ -70,7 +70,5 @@ public class WaitingServerGui extends JFrame{
 			dispose();
 			listener.pushStop();
 		}
-		
 	}
-	
 }

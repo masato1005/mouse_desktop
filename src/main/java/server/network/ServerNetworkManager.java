@@ -30,12 +30,12 @@ public class ServerNetworkManager extends NetworkManager {
     }
 
     private boolean makeUdpServe() {
-        udp = new UdpServer(portNumber, listener, this);
+        udp = new UdpServer(portNumber, listener, errorListener);
         return udp.makeServer();
     }
 
     private boolean makeTcpServer() {
-        tcp = new TcpServer(portNumber, listener, this);
+        tcp = new TcpServer(portNumber, listener, errorListener);
         return tcp.makeServer();
     }
 
@@ -50,7 +50,7 @@ public class ServerNetworkManager extends NetworkManager {
     }
 
     @Override
-    protected void allClose() {
+    protected void closeUdpAndTcp() {
         if (udp != null)
             udp.close();
         if (tcp != null)
