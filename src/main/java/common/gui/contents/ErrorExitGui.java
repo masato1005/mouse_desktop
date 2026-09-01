@@ -11,6 +11,7 @@ import javax.swing.Timer;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ErrorExitGui extends JFrame {
+    @SuppressWarnings("unused")
     private final String massage;
 
     public ErrorExitGui(String massage) {

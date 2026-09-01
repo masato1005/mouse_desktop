@@ -2,32 +2,30 @@ package common.network;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import common.Listener.NetworkEventListener;
 import common.Listener.implemented.ImplementedNetworkListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public abstract class NetworkManager implements ErrorCallback, NetworkThreadStopper {
+public abstract class NetworkManager implements ErrorCallback, ThreadStopper {
 	protected final int portNumber;
 
 	private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
-	private final AtomicBoolean closed = new AtomicBoolean();
-	private volatile boolean threadRunning = false;
+	private boolean threadRunning = false;
+	private boolean acceptAddTask = false;
+
 	private final Thread networkThread = new Thread(() -> {
 		while (threadRunning) {
 			try {
 				Runnable task = tasks.take();
 				task.run();
+				if (!threadRunning)
+					break;
 			} catch (InterruptedException e) {
-				threadStop();
+				break;
 			}
 		}
 	});
-
-	private void exitThread() throws InterruptedException {
-		throw new InterruptedException();
-	}
 
 	protected final ImplementedNetworkListener listener = new ImplementedNetworkListener();
 
@@ -38,13 +36,14 @@ public abstract class NetworkManager implements ErrorCallback, NetworkThreadStop
 
 	private void threadStart() {
 		threadRunning = true;
+		acceptAddTask = true;
 		networkThread.start();
 	}
 
 	private void threadStop() {
 		threadRunning = false;
+		acceptAddTask = false;
 		tasks.clear();
-		addTask(this::threadStart);
 		networkThread.interrupt();
 	}
 
@@ -55,8 +54,8 @@ public abstract class NetworkManager implements ErrorCallback, NetworkThreadStop
 	public void start() {
 	}
 
-	protected synchronized void addTask(Runnable task) {
-		if (!closed.get() && threadRunning)
+	protected void addTask(Runnable task) {
+		if (acceptAddTask)
 			tasks.add(task);
 	}
 
@@ -90,7 +89,7 @@ public abstract class NetworkManager implements ErrorCallback, NetworkThreadStop
 	}
 
 	@Override
-	public void networkThreadStopper() {
+	public void threadStopper() {
 		close();
 	}
 }
