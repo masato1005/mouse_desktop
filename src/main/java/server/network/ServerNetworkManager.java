@@ -4,8 +4,8 @@ import common.network.NetworkManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ServerNetworkManager extends NetworkManager {
-    UdpServer udp;
-    TcpServer tcp;
+    private UdpServer udp;
+    private TcpServer tcp;
 
     public ServerNetworkManager(int portNumber) {
         super(portNumber);
@@ -13,30 +13,30 @@ public class ServerNetworkManager extends NetworkManager {
 
     @Override
     public void start() {
-        makeServer();
+        addTask(this::makeServer);
     }
 
     private void makeServer() {
-        new Thread(() -> {
-            boolean udpConnectSuccess = makeUdpServe();
-            if (!udpConnectSuccess)
-                return;
+        boolean udpSuccessConnect = makeUdpServe();
+        if (!udpSuccessConnect)
+            return;
 
-            makeTcpServer();
+        boolean tcpSuccessConnect = makeTcpServer();
+        if (!tcpSuccessConnect)
+            return;
 
-            listener.successConnect();
-            tcpConnection = true;
-        }).start();
+        listener.successConnect();
+        addTask(tcp::receive);
     }
 
     private boolean makeUdpServe() {
-        udp = new UdpServer(portNumber, listener);
+        udp = new UdpServer(portNumber, listener, this);
         return udp.makeServer();
     }
 
-    private void makeTcpServer() {
-        tcp = new TcpServer(portNumber, listener);
-        tcp.makeServer();
+    private boolean makeTcpServer() {
+        tcp = new TcpServer(portNumber, listener, this);
+        return tcp.makeServer();
     }
 
     public void stopUdpServer() {
@@ -50,8 +50,10 @@ public class ServerNetworkManager extends NetworkManager {
     }
 
     @Override
-    public void systemExit() {
-        allClose(udp,tcp);
+    protected void allClose() {
+        if (udp != null)
+            udp.close();
+        if (tcp != null)
+            tcp.close();
     }
-
 }

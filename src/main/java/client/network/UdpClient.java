@@ -9,32 +9,37 @@ import java.net.UnknownHostException;
 
 import common.Listener.NetworkListener;
 import common.gui.contents.ErrorExitGui;
+import common.network.ErrorCallback;
 import common.network.Udp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpClient extends Udp {
 	private String serverIP;
 	private String clientIP;
+	private final TimeoutCallback timeoutCallback;
 
-	public UdpClient(int portNumber, NetworkListener listener) {
-		super(portNumber, listener);
-		getIpAddress();
+	public UdpClient(int portNumber, NetworkListener listener, TimeoutCallback timeoutCallback,
+			ErrorCallback errorCallback) {
+		super(portNumber, listener, errorCallback);
+		this.timeoutCallback = timeoutCallback;
 	}
 
-	private void getIpAddress() {
+	private void getIpAddress() throws UnknownHostException {
 		try {
 			InetAddress local = InetAddress.getLocalHost();
 			this.clientIP = local.getHostAddress();
 		} catch (UnknownHostException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("ホストのIPアドレスを取得できませんでした");
+			throw e;
 		}
-
 	}
 
 	private void allowBroadcast() throws SocketException {
 		try {
 			socket.setBroadcast(true);
 		} catch (SocketException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("ブロードキャストの送信に失敗しました");
 			throw e;
 		}
@@ -44,6 +49,7 @@ public class UdpClient extends Udp {
 		try {
 			socket.setSoTimeout(3000);
 		} catch (IOException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("タイムアウトの設定に失敗しました");
 			throw e;
 		}
@@ -56,8 +62,11 @@ public class UdpClient extends Udp {
 			serverIP = receivePacket.getAddress().getHostAddress();
 			System.out.println("サーバー発見: " + serverIP);
 		} catch (SocketTimeoutException e) {
-			netListener.checkTimeout();
+			close();
+			timeoutCallback.timeoutCallback();
+			throw e;
 		} catch (IOException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("メッセージの受信に失敗しました");
 			throw e;
 		}
@@ -65,12 +74,13 @@ public class UdpClient extends Udp {
 
 	public boolean makeConnection() {
 		try {
+			getIpAddress();
 			makeSocket();
 			allowBroadcast();
 			setTimeout();
 
-			String msg = "DISCOVER_SERVER";
-			byte[] sendData = makeMassageData(msg);
+			String sendMsg = "DISCOVER_SERVER";
+			byte[] sendData = makeMassageData(sendMsg);
 			String opponentName = "255.255.255.255";
 			DatagramPacket sendPacket = makeSendPacket(sendData, InetAddress.getByName(opponentName));
 
@@ -78,14 +88,18 @@ public class UdpClient extends Udp {
 
 			byte[] ReceiveBuffer = makeReceiveBuffer();
 			DatagramPacket receivePacket = makeReceivePacket(ReceiveBuffer);
-
 			receive(receivePacket);
+			String msg = convertReceivePacketToString(receivePacket);
+			String password = "SERVER_HERE";
+			if (!checkConnectMassage(password,msg))
+				return false;
+			return true;
 
-			socket.close();
 		} catch (IOException e) {
 			return false;
+		} finally {
+			close();
 		}
-		return true;
 	}
 
 	public String getServerIP() {

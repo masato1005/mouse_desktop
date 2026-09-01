@@ -15,12 +15,17 @@ import common.main.Controller;
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ClientController extends Controller {
     private final ClientNetworkManager clientNetwork;
-    
+
     public ClientController(int portNumber, ClientNetworkManager network, GuiManager gui, MouseManager mouse,
             KeyboardManager keyboard) {
         super(portNumber, network, gui, mouse, keyboard);
         this.clientNetwork = network;
     }
+
+    @Override
+    protected void startNet() {
+        clientNetwork.start();
+	}
 
     @Override
     protected void viewChoiceWallTypeGui() {
@@ -55,4 +60,18 @@ public class ClientController extends Controller {
         }
     }
 
+    @Override
+    protected void retryProcess() {
+        try {
+            clientNetwork.start();
+        } catch (Exception e) {
+            new ErrorExitGui("再検索が正しく行われませんでした。");
+        }
+
+    }
+
+    @Override
+    protected void timeoutProcess() {
+        gui.showTimeout();
+    }
 }

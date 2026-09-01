@@ -6,15 +6,16 @@ import java.net.SocketException;
 
 import common.Listener.NetworkListener;
 import common.gui.contents.ErrorExitGui;
+import common.network.ErrorCallback;
 import common.network.Udp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpServer extends Udp {
 
-	private boolean running = false;
+	private volatile boolean running = false;
 
-	public UdpServer(int portNumber, NetworkListener listener) {
-		super(portNumber, listener);
+	public UdpServer(int portNumber, NetworkListener listener, ErrorCallback errorCallback) {
+		super(portNumber, listener, errorCallback);
 	}
 
 	@Override
@@ -22,25 +23,20 @@ public class UdpServer extends Udp {
 		try {
 			socket.receive(receivePacket);
 		} catch (IOException e) {
-			if (running)
+			boolean wasRunning = running;
+			if (wasRunning)
+				errorCallback.happenError();
+			else
+				close();
+			if (wasRunning)
 				new ErrorExitGui("メッセージの取得に失敗しました");
 			throw e;
 		}
 	}
 
-	private String convertReceivePacketToString(DatagramPacket packet) {
-		String msg = new String(packet.getData(), 0, packet.getLength());
-		System.out.println("受信: " + msg);
-		return msg;
-	}
-
-	private Boolean checkConnectMassage(String msg) {
-		return msg.equals("DISCOVER_SERVER");
-	}
-
 	private void waitingClient() {
 		running = true;
-		netListener.waitingClient();
+		listener.waitingClient();
 		System.out.println("待機中...");
 	}
 
@@ -55,8 +51,8 @@ public class UdpServer extends Udp {
 				receive(receivePacket);
 
 				String msg = convertReceivePacketToString(receivePacket);
-
-				if (checkConnectMassage(msg)) {
+				String password = "DISCOVER_SERVER";
+				if (checkConnectMassage(password,msg)) {
 					byte[] sendData = makeMassageData("SERVER_HERE");
 					DatagramPacket sendPacket = makeSendPacket(sendData, receivePacket.getAddress());
 					send(sendPacket);
@@ -85,6 +81,12 @@ public class UdpServer extends Udp {
 
 	public boolean isRunning() {
 		return running;
+	}
+
+	@Override
+	public void close() {
+		running = false;
+		super.close();
 	}
 
 	public void setRunning(boolean running) {

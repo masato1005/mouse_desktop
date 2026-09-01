@@ -1,29 +1,40 @@
 package server.network;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 
 import common.Listener.NetworkListener;
 import common.gui.contents.ErrorExitGui;
+import common.network.ErrorCallback;
 import common.network.Tcp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpServer extends Tcp {
 	private ServerSocket server;
 
-	public TcpServer(int portNumber, NetworkListener listener) {
-		super(portNumber, listener);
+	public TcpServer(int portNumber, NetworkListener listener, ErrorCallback errorCallback) {
+		super(portNumber, listener, errorCallback);
 	}
 
-	public void makeServer() {
+	public boolean makeServer() {
+		boolean successMakeSocket = makeSocket();
+		if (!successMakeSocket)
+			return false;
+		boolean successMakeIn = makeIn();
+		if (!successMakeIn)
+			return false;
+		boolean successMakeOut = makeOut();
+		return successMakeOut;
+	}
+
+	private boolean makeSocket() {
 		server = null;
 		try {
 			server = new ServerSocket(portNumber);
 		} catch (IOException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("ソケットの生成で不具合が発生しました");
+			return false;
 		}
 		System.out.println("接続待機中...");
 
@@ -31,22 +42,27 @@ public class TcpServer extends Tcp {
 		try {
 			socket = server.accept();
 		} catch (IOException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("接続が中断されました");
+			return false;
 		}
 		System.out.println("接続されました");
+		return true;
+	}
 
+	@Override
+	public void close() {
+		boolean closeFailed = false;
 		try {
-			in = new BufferedReader(
-					new InputStreamReader(socket.getInputStream()));
+			if (server != null)
+				server.close();
 		} catch (IOException e) {
-			new ErrorExitGui("ソケットの受信機能の起動に失敗しました");
+			closeFailed = true;
+		} finally {
+			super.close();
 		}
-
-		try {
-			out = new PrintWriter(
-					socket.getOutputStream(), true);
-		} catch (IOException e) {
-			new ErrorExitGui("ソケットの送信機能の起動に失敗しました");
+		if (closeFailed) {
+			System.err.println("TCP待受ソケットの終了処理に失敗しました");
 		}
 	}
 }

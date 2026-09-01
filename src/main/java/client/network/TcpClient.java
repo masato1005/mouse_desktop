@@ -1,45 +1,43 @@
 package client.network;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import common.Listener.NetworkListener;
 import common.gui.contents.ErrorExitGui;
+import common.network.ErrorCallback;
 import common.network.Tcp;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpClient extends Tcp {
 	private final String serverIP;
 
-	public TcpClient(int portNumber, NetworkListener listener, String serverIP) {
-		super(portNumber, listener);
+	public TcpClient(int portNumber, NetworkListener listener, String serverIP, ErrorCallback errorCallback) {
+		super(portNumber, listener, errorCallback);
 		this.serverIP = serverIP;
 	}
 
-	public void connect() {
+	public boolean connect() {
+		boolean successMakeSocket = makeSocket();
+		if (!successMakeSocket)
+			return false;
+		boolean successMakeIn = makeIn();
+		if (!successMakeIn)
+			return false;
+		boolean successMakeOut = makeOut();
+		return successMakeOut;
+	}
+
+	private boolean makeSocket() {
 		socket = null;
 		try {
 			socket = new Socket(serverIP, portNumber);
 		} catch (IOException e) {
+			errorCallback.happenError();
 			new ErrorExitGui("ソケットの生成で不具合が発生しました");
+			return false;
 		}
 		System.out.println("接続完了");
-
-		try {
-			in = new BufferedReader(
-					new InputStreamReader(socket.getInputStream()));
-		} catch (IOException e) {
-			new ErrorExitGui("受信機能の起動に失敗しました");
-		}
-
-		try {
-			out = new PrintWriter(
-					socket.getOutputStream(), true);
-		} catch (IOException e) {
-			new ErrorExitGui("送信機能の起動に失敗しました");
-		}
+		return true;
 	}
 }

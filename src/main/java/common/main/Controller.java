@@ -17,7 +17,6 @@ import common.Listener.MouseEventListener;
 import common.Listener.NetworkEventListener;
 import common.Mouse.MouseManager;
 import common.gui.GuiManager;
-import common.gui.contents.ErrorExitGui;
 import common.network.NetworkManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
@@ -43,6 +42,10 @@ public abstract class Controller
 
 	public void start() {
 		initializeListeners();
+		startNet();
+	}
+
+	protected void startNet() {
 	}
 
 	private void initializeListeners() {
@@ -61,11 +64,8 @@ public abstract class Controller
 			case STOP_UDP_SERVER -> {
 				stopUdpServer();
 			}
-			case RETRY -> {
-				network.setTimeout(false);
-				network.start();
-				new ErrorExitGui("再検索が正しく行われませんでした。");
-			}
+			case RETRY -> retryProcess();
+
 			case CHOOSE_WALL -> {
 				mouse.setScannerWallType((WallType) e.getData());
 				network.sendData(jsonConverter.dataConverter(DataType.WALL_TYPE, (WallType) e.getData()));
@@ -82,6 +82,12 @@ public abstract class Controller
 		}
 	}
 
+	protected void retryProcess() {
+	}
+
+	protected void timeoutProcess() {
+	}
+
 	protected void stopUdpServer() {
 	}
 
@@ -92,10 +98,8 @@ public abstract class Controller
 	public void onNetworkEvent(NetworkEvent e) {
 		switch (e.getType()) {
 			case WAITING_CLIENT -> gui.showWaitingServerGui();
-			case TIMEOUT -> {
-				network.setTimeout(true);
-				gui.showTimeout();
-			}
+			case TIMEOUT -> timeoutProcess();
+
 			case SUCCESSCONNECT -> {
 				successConnect();
 			}

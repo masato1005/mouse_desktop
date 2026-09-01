@@ -8,7 +8,7 @@ public interface NetworkListener {
 
 	void checkNofitication();
 
-	void checkTimeout();
+	void timeout();
 
 	void successConnect();
 

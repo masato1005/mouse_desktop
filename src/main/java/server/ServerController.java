@@ -26,6 +26,11 @@ public class ServerController extends Controller {
     }
 
     @Override
+    protected void startNet() {
+        serverNetwork.start();
+	}
+
+    @Override
     protected void successConnect() {
         gui.removeWaitingServer();
         gui.initInvisibleWindow();

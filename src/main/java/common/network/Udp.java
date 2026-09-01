@@ -12,18 +12,21 @@ import common.gui.contents.ErrorExitGui;
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Udp {
     protected final int portNumber;
-    protected final NetworkListener netListener;
+    protected final NetworkListener listener;
+    protected final ErrorCallback errorCallback;
     protected DatagramSocket socket;
 
-    public Udp(int portNumber, NetworkListener netListener) {
+    public Udp(int portNumber, NetworkListener netListener, ErrorCallback errorCallback) {
         this.portNumber = portNumber;
-        this.netListener = netListener;
+        this.listener = netListener;
+        this.errorCallback = errorCallback;
     }
 
     protected void makeSocket() throws SocketException {
         try {
             socket = new DatagramSocket(portNumber);
         } catch (SocketException e) {
+            errorCallback.happenError();
             new ErrorExitGui("ソケット生成に失敗しました");
             throw e;
         }
@@ -41,6 +44,7 @@ public abstract class Udp {
         try {
             socket.send(sendPacket);
         } catch (IOException e) {
+            errorCallback.happenError();
             new ErrorExitGui("メッセージの送信に失敗しました");
             throw e;
         }
@@ -66,5 +70,15 @@ public abstract class Udp {
         if (socket != null)
             socket.close();
     }
+
+    protected String convertReceivePacketToString(DatagramPacket packet) {
+		String msg = new String(packet.getData(), 0, packet.getLength());
+		System.out.println("受信: " + msg);
+		return msg;
+	}
+
+	protected Boolean checkConnectMassage(String password,String msg) {
+		return msg.equals(password);
+	}
 
 }

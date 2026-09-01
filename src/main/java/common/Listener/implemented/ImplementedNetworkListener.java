@@ -24,7 +24,7 @@ public class ImplementedNetworkListener implements NetworkListener {
     }
 
     @Override
-    public void checkTimeout() {
+    public void timeout() {
         eventListener.onNetworkEvent(new NetworkEvent(NetworkEventType.TIMEOUT, null));
     }
 
