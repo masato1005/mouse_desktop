@@ -36,6 +36,8 @@ public class ServerController extends Controller {
         gui.initInvisibleWindow();
         gui.openInvisibleWindow();
         gui.successConnectGui();
+
+        
     }
 
     @Override

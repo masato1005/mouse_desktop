@@ -9,7 +9,7 @@ import common.Listener.MouseListener;
 import common.data.MouseData;
 import common.main.ErrorListener;
 
-public class CursorLocater {
+public class ServerCursorLocater {
     private final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
     private final MouseListener listener;
     private final ErrorListener errorListener;
@@ -30,7 +30,7 @@ public class CursorLocater {
     private boolean justGetMouse = false;
     private WallType wallType = WallType.WEST;
 
-    public CursorLocater(MouseListener listener, ErrorListener errorListener, MouseCallback mouseCallback) {
+    public ServerCursorLocater(MouseListener listener, ErrorListener errorListener, MouseCallback mouseCallback) {
         this.listener = listener;
         this.errorListener = errorListener;
         this.mouseCallback = mouseCallback;
@@ -51,7 +51,7 @@ public class CursorLocater {
 
         boolean touchWall = checkTouchWall();
         if(touchWall){
-            mouseCallback.touchWall();
+            mouseCallback.touchWall(new MouseData(mouseX,mouseY));
             return;
         }
 
@@ -72,9 +72,7 @@ public class CursorLocater {
     }
 
     private boolean checkEscapeCoolTimeArea() {
-        MouseData mouseData = new MouseData();
-        mouseData.setMouseX(mouseX);
-        mouseData.setMouseY(mouseY);
+        MouseData mouseData = new MouseData(mouseX, mouseY);
         boolean escape = wallType.checkEscapeCoolTimeArea(mouseData, WALL_COOL_TIME_RANGE, SCREEN_SIZE);
         if (escape) {
             justGetMouse = false;
@@ -86,9 +84,7 @@ public class CursorLocater {
     private boolean checkTouchWall() {
         if (justGetMouse)
             return false;
-        MouseData mouseData = new MouseData();
-        mouseData.setMouseX(mouseX);
-        mouseData.setMouseY(mouseY);
+        MouseData mouseData = new MouseData(mouseX, mouseY);
         boolean touchWall = wallType.isTouchWall(mouseData, WALL_RANGE, SCREEN_SIZE);
         if (touchWall) {
             haveMouse = false;

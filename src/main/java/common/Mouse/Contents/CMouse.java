@@ -102,10 +102,8 @@ public class CMouse {
 				mouseY = 0;
 
 			if (!checkTouchWall()) {
-				MouseData sendMouseData = new MouseData();
+				MouseData sendMouseData = new MouseData(mouseX, mouseY);
 				sendMouseData.setMouseEventType(MouseEventType.TOUCH_WALL);
-				sendMouseData.setMouseX(mouseX);
-				sendMouseData.setMouseY(mouseY);
 
 				manager.returnMouse(sendMouseData);
 				listener.openInvisibleWindow();

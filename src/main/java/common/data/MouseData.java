@@ -19,6 +19,11 @@ public class MouseData {
     public MouseData() {
     }
 
+    public MouseData(int mouseX, int mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
+
     public MouseData(MouseEventType mouseEventType, int mouseX, int mouseY, int dx, int dy, int wheelAmount,
             boolean pressed, Modifiers modifiers) {
         this.mouseEventType = mouseEventType;

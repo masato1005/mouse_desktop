@@ -1,7 +1,4 @@
-package server.mouse;
-
-import java.util.Timer;
-import java.util.TimerTask;
+package client.mouse;
 
 import common.EventType.WallType;
 import common.Listener.MouseEventListener;
@@ -9,16 +6,12 @@ import common.Listener.implemented.ImplementedMouseListener;
 import common.data.MouseData;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
+import server.mouse.MouseCallback;
 
-public class ServerMouseManager implements ErrorHandle, MouseCallback {
+public class ClientMouseManager implements ErrorHandle, MouseCallback{
     private final ImplementedMouseListener eventListener = new ImplementedMouseListener();
-    private final int START_TIME = 0;
-    private final int TIMER_RATE = 16;
-
-    @SuppressWarnings("FieldMayBeFinal")
-    private Timer mouseTimer = new Timer(true);
-
-    private ServerCursorLocater serverMouse;
+    
+    private ClientCursorLocater clientMouse;
     private ErrorListener errorListener;
 
     public void setEventListener(MouseEventListener eventListener) {
@@ -30,56 +23,46 @@ public class ServerMouseManager implements ErrorHandle, MouseCallback {
     }
 
     public void setWallType(WallType wallType) {
-        serverMouse.setWallType(wallType);
+        clientMouse.setWallType(wallType);
     }
 
     public void start() {
-        serverMouse = new ServerCursorLocater(eventListener, errorListener, this);
-        startTimer(serverMouse::updateAndCheck);
+        clientMouse = new ClientCursorLocater(eventListener, errorListener,this);
     }
 
-    private void startTimer(Runnable task) {
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                task.run();
-            }
-        };
-        mouseTimer.scheduleAtFixedRate(timerTask, START_TIME, TIMER_RATE);
-    }
-
-    private void stopTimer() {
-        mouseTimer.cancel();
+    public void receiveData(MouseData mouseData){
+        clientMouse.update(mouseData);
     }
 
     @Override
     public void errorHandle() {
-        stopTimer();
+        
     }
 
     @Override
     public void receivedCursor() {
-
+        
     }
 
     @Override
-    public void touchWall(MouseData mouseData) {
-
+    public void touchWall(MouseData mouseData){
+        
     }
 
     @Override
     public void mouseMoved(MouseData mouseData) {
-
+        
     }
 
     @Override
     public void buttonPressed(int buttonNumber) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void buttonReleased(int buttonNumber) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
 
 }
