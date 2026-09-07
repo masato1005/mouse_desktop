@@ -63,12 +63,12 @@ public class MouseHandler implements MouseListener {
 
     @Override
     public void closeInvisibleWindow() {
-        
+        gui.closeInvisibleWindow();
     }
 
     @Override
     public void mouseTouchWall(MouseData mouseData) {
-        gui.closeInvisibleWindow();
+        gui.openInvisibleWindow();
         network.touchWall(mouseData);
     }
 }
