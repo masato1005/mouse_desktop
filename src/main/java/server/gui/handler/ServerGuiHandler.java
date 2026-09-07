@@ -23,4 +23,9 @@ public class ServerGuiHandler extends GuiHandler {
         serverNetwork.stopUdpServer();
         appCallback.returnToAppSelection();
     }
+
+    @Override
+    public void pushedSuccessOkButton() {
+        // The client selects the shared screen wall.
+    }
 }

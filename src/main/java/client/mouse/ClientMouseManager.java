@@ -1,26 +1,50 @@
 package client.mouse;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import common.data.MouseData;
 import common.eventtype.WallType;
 import common.mouse.MouseManager;
 import common.mouse.listener.MouseCallback;
 
-public class ClientMouseManager extends MouseManager implements MouseCallback{
-    private ClientCursorLocater clientMouse;
+public class ClientMouseManager extends MouseManager implements MouseCallback {
+    private final int START_TIME = 0;
+    private final int TIMER_RATE = 16;
+
+    @SuppressWarnings("FieldMayBeFinal")
+    private Timer mouseTimer = new Timer(true);
+
+    private ClientCursorLocater cursorLocater;
 
     @Override
     public void start() {
-        clientMouse = new ClientCursorLocater(listener, errorListener,this);
+        cursorLocater = new ClientCursorLocater(listener, errorListener, this);
+        startTimer(cursorLocater::updateAndCheck);
+    }
+
+    private void startTimer(Runnable task) {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                task.run();
+            }
+        };
+        mouseTimer.scheduleAtFixedRate(timerTask, START_TIME, TIMER_RATE);
     }
 
     @Override
     public void setWallType(WallType wallType) {
-        clientMouse.setWallType(wallType);
+        cursorLocater.setWallType(wallType);
     }
 
     @Override
-    public void receiveData(MouseData mouseData){
-        clientMouse.update(mouseData);
+    public void errorHandle() {
+        stopTimer();
+    }
+
+    private void stopTimer() {
+        mouseTimer.cancel();
     }
 
     @Override
@@ -30,23 +54,18 @@ public class ClientMouseManager extends MouseManager implements MouseCallback{
 
     @Override
     public void buttonPressed(int buttonNumber) {
-        robotExecutor.buttonPressed(buttonNumber);
     }
 
     @Override
     public void buttonReleased(int buttonNumber) {
-        robotExecutor.buttonReleased(buttonNumber);
     }
 
     @Override
-    public void errorHandle() {
-
+    public void receiveData(MouseData mouseData) {
+        cursorLocater.receiveCursor(mouseData);
     }
 
     @Override
     public void wheelMoved(int moveAmount) {
-        robotExecutor.wheelMove(moveAmount);
     }
-
-
 }

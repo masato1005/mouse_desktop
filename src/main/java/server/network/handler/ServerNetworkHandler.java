@@ -3,7 +3,6 @@ package server.network.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import common.data.MouseData;
-import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
@@ -31,8 +30,7 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
             switch (data.getDataType()) {
                 case MOUSE -> {
                     MouseData mouseData = mapper.treeToValue(data.getData(), MouseData.class);
-                    if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL)
-                        mouse.receiveData(mouseData);
+                    mouse.receiveData(mouseData);
                 }
                 case WALL_TYPE ->
                     mouse.setWallType(mapper.treeToValue(data.getData(), WallType.class));
@@ -53,9 +51,8 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
     @Override
     public void successConnect() {
         gui.removeWaitingServer();
-        gui.openInvisibleWindow();
+        gui.initInvisibleWindow();
         gui.successConnectGui();
-
         mouse.start();
     }
 

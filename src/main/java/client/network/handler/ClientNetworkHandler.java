@@ -6,6 +6,7 @@ import client.mouse.ClientMouseManager;
 import client.network.ClientNetworkManager;
 import client.network.listener.ClientNetworkListener;
 import common.data.MouseData;
+import common.eventtype.MouseEventType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
 import common.keyboard.KeyboardManager;
@@ -31,7 +32,9 @@ public class ClientNetworkHandler extends NetworkHandler implements ClientNetwor
                 MouseData mouseData;
                 try {
                     mouseData = mapper.treeToValue(data.getData(), MouseData.class);
-                    mouse.receiveData(mouseData);
+                    if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL) {
+                        mouse.receiveData(mouseData);
+                    }
                 } catch (JsonProcessingException | IllegalArgumentException e) {
                     errorListener.happenError("Jsonへの変換でエラーが発生しました");
                 }
