@@ -18,17 +18,20 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import common.main.AppLauncher;
+import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ChoiceServerOrClient extends JFrame {
 	private int option = -1;
 	private final AppLauncher listener;
+	private final ErrorListener errorListener;
 
 	final JPanel pane;
 
-	public ChoiceServerOrClient(AppLauncher listener) {
+	public ChoiceServerOrClient(AppLauncher listener, ErrorListener errorListener) {
 		super("ChoiceServerOrClient");
 		this.listener = listener;
+		this.errorListener = errorListener;
 		// メインパネル
 		pane = (JPanel) getContentPane();
 		pane.setLayout(new BorderLayout());
@@ -95,7 +98,7 @@ public class ChoiceServerOrClient extends JFrame {
 					if (option == 0)
 						listener.chooseClient();
 				} catch (Exception e1) {
-					new ErrorExitGui("Client・Server選択処理で不具合が発生しました");
+					errorListener.happenError("Client・Server選択処理で不具合が発生しました");
 				}
 			}
 		}

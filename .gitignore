@@ -1,6 +1,8 @@
 out/
 bin/
 src/bin/
+/build/
+/.gradle/
 
 *.class
 

@@ -1,6 +1,6 @@
-package common.Event;
+package common.event;
 
-import common.EventType.GuiEventType;
+import common.eventtype.GuiEventType;
 
 public class GuiEvent {
 	private final GuiEventType type;

@@ -1,6 +1,6 @@
 package common.data;
 
-import common.EventType.MouseEventType;
+import common.eventtype.MouseEventType;
 
 
 public class MouseData {

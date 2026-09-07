@@ -1,4 +1,4 @@
-package common.Keyboard.contents;
+package common.keyboard.contents;
 
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;

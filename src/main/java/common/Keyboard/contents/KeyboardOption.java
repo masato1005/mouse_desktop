@@ -1,4 +1,4 @@
-package common.Keyboard.contents;
+package common.keyboard.contents;
 
 public class KeyboardOption {
 

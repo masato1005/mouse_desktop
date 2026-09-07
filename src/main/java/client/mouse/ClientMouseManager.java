@@ -1,52 +1,26 @@
 package client.mouse;
 
-import common.EventType.WallType;
-import common.Listener.MouseEventListener;
-import common.Listener.implemented.ImplementedMouseListener;
 import common.data.MouseData;
-import common.main.ErrorHandle;
-import common.main.ErrorListener;
+import common.eventtype.WallType;
+import common.mouse.MouseManager;
 import server.mouse.MouseCallback;
 
-public class ClientMouseManager implements ErrorHandle, MouseCallback{
-    private final ImplementedMouseListener eventListener = new ImplementedMouseListener();
-    
+public class ClientMouseManager extends MouseManager implements MouseCallback{
     private ClientCursorLocater clientMouse;
-    private ErrorListener errorListener;
 
-    public void setEventListener(MouseEventListener eventListener) {
-        this.eventListener.setListener(eventListener);
+    @Override
+    public void start() {
+        clientMouse = new ClientCursorLocater(listener, errorListener,this);
     }
 
-    public void setErrorListener(ErrorListener errorListener) {
-        this.errorListener = errorListener;
-    }
-
+    @Override
     public void setWallType(WallType wallType) {
         clientMouse.setWallType(wallType);
     }
 
-    public void start() {
-        clientMouse = new ClientCursorLocater(eventListener, errorListener,this);
-    }
-
+    @Override
     public void receiveData(MouseData mouseData){
         clientMouse.update(mouseData);
-    }
-
-    @Override
-    public void errorHandle() {
-        
-    }
-
-    @Override
-    public void receivedCursor() {
-        
-    }
-
-    @Override
-    public void touchWall(MouseData mouseData){
-        
     }
 
     @Override
@@ -62,6 +36,11 @@ public class ClientMouseManager implements ErrorHandle, MouseCallback{
     @Override
     public void buttonReleased(int buttonNumber) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void errorHandle() {
+
     }
 
 

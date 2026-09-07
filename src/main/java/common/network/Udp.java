@@ -6,17 +6,17 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-import common.Listener.NetworkListener;
 import common.main.ErrorListener;
+import common.network.listener.UdpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Udp {
     protected final int portNumber;
-    protected final NetworkListener listener;
+    private final UdpListener listener;
     protected final ErrorListener errorListener;
     protected DatagramSocket socket;
 
-    public Udp(int portNumber, NetworkListener netListener, ErrorListener errorCallback) {
+    public Udp(int portNumber, UdpListener netListener, ErrorListener errorCallback) {
         this.portNumber = portNumber;
         this.listener = netListener;
         this.errorListener = errorCallback;
@@ -64,11 +64,6 @@ public abstract class Udp {
     protected void receive(DatagramPacket receivePacket) throws IOException {
     }
 
-    public void close() {
-        if (socket != null)
-            socket.close();
-    }
-
     protected String convertReceivePacketToString(DatagramPacket packet) {
 		String msg = new String(packet.getData(), 0, packet.getLength());
 		System.out.println("受信: " + msg);
@@ -78,5 +73,10 @@ public abstract class Udp {
 	protected Boolean checkConnectMassage(String password,String msg) {
 		return msg.equals(password);
 	}
+
+    public void close() {
+        if (socket != null)
+            socket.close();
+    }
 
 }

@@ -4,10 +4,15 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 
-import common.EventType.WallType;
-import common.Listener.MouseListener;
 import common.data.MouseData;
+import static common.eventtype.MouseEventType.LEFT_CLICK;
+import static common.eventtype.MouseEventType.MOVE;
+import static common.eventtype.MouseEventType.RIGHT_CLICK;
+import static common.eventtype.MouseEventType.TOUCH_WALL;
+import static common.eventtype.MouseEventType.WHEEL_CLICK;
+import common.eventtype.WallType;
 import common.main.ErrorListener;
+import common.mouse.listener.MouseListener;
 import server.mouse.MouseCallback;
 
 public class ClientCursorLocater {
@@ -37,6 +42,10 @@ public class ClientCursorLocater {
         this.mouseCallback = mouseCallback;
     }
 
+    public void setWallType(WallType wallType) {
+        this.wallType = wallType.getOppositeWall();
+    }
+
     public void update(MouseData mouseData) {
         if (checkCoolTime())
             return;
@@ -45,33 +54,46 @@ public class ClientCursorLocater {
             case MOVE -> moveProcess(mouseData);
             case LEFT_CLICK -> updateButton(InputEvent.BUTTON1_DOWN_MASK, mouseData.isPressed());
             case WHEEL_CLICK -> updateButton(InputEvent.BUTTON2_DOWN_MASK, mouseData.isPressed());
-             case RIGHT_CLICK -> updateButton(InputEvent.BUTTON3_DOWN_MASK, mouseData.isPressed());
+            case RIGHT_CLICK -> updateButton(InputEvent.BUTTON3_DOWN_MASK, mouseData.isPressed());
             default -> {
             }
 
         }
     }
 
-    public void setWallType(WallType wallType) {
-        this.wallType = wallType.getOppositeWall();
-    }
-
     public boolean checkCoolTime() {
         return System.nanoTime() < sendTime + RETURN_MOVE_WAIT_NANOS;
+    }
+
+    private void moveProcess(MouseData mouseData) {
+        if (haveMouse) {
+            haveMouseProcess(mouseData);
+
+        } else {
+            notHaveMouseProcess(mouseData);
+        }
+    }
+
+    private void haveMouseProcess(MouseData mouseData) {
+        updateCursorLocate(mouseData);
+        boolean touchWall = checkTouchWall();
+        if (touchWall) {
+            haveMouse = false;
+            listener.openInvisibleWindow();
+            MouseData sendMouse = new MouseData(mouseX, mouseY);
+            sendMouse.setMouseEventType(TOUCH_WALL);
+            listener.mouseTouchWall(sendMouse);
+            sendTime = System.nanoTime();
+            return;
+        }
+        draw();
+        checkEscapeCoolTimeArea();
     }
 
     private void updateCursorLocate(MouseData mouseData) {
         mouseX = mouseX + mouseData.getDx();
         mouseY = mouseY + mouseData.getDy();
         checkOutWall();
-    }
-
-    private boolean checkTouchWall() {
-        if (justGetMouse)
-            return false;
-        MouseData mouseData = new MouseData(mouseX, mouseY);
-        boolean touchWall = wallType.isTouchWall(mouseData, WALL_RANGE, SCREEN_SIZE);
-        return touchWall;
     }
 
     private void checkOutWall() {
@@ -85,17 +107,16 @@ public class ClientCursorLocater {
             mouseY = 0;
     }
 
-    private void draw() {
-        mouseCallback.mouseMoved(new MouseData(mouseX,mouseY));
+    private boolean checkTouchWall() {
+        if (justGetMouse)
+            return false;
+        MouseData mouseData = new MouseData(mouseX, mouseY);
+        boolean touchWall = wallType.isTouchWall(mouseData, WALL_RANGE, SCREEN_SIZE);
+        return touchWall;
     }
 
-    private void moveProcess(MouseData mouseData) {
-        if (haveMouse) {
-            haveMouseProcess(mouseData);
-
-        } else {
-            notHaveMouseProcess(mouseData);
-        }
+    private void draw() {
+        mouseCallback.mouseMoved(new MouseData(mouseX, mouseY));
     }
 
     private boolean checkEscapeCoolTimeArea() {
@@ -106,20 +127,6 @@ public class ClientCursorLocater {
             return true;
         }
         return false;
-    }
-
-    private void haveMouseProcess(MouseData mouseData) {
-        updateCursorLocate(mouseData);
-        boolean touchWall = checkTouchWall();
-        if (touchWall) {
-            haveMouse = false;
-            listener.openInvisibleWindow();
-            mouseCallback.touchWall(new MouseData(mouseX,mouseY));
-            sendTime = System.nanoTime();
-            return;
-        }
-        draw();
-        checkEscapeCoolTimeArea();
     }
 
     private void notHaveMouseProcess(MouseData mouseData) {
@@ -136,10 +143,10 @@ public class ClientCursorLocater {
         mouseY = MouseXAndMouseY.getMouseY();
     }
 
-    private void updateButton(int buttonNumber, boolean pressed){
-        if(pressed){
+    private void updateButton(int buttonNumber, boolean pressed) {
+        if (pressed) {
             mouseCallback.buttonPressed(buttonNumber);
-        }else{
+        } else {
             mouseCallback.buttonReleased(buttonNumber);
         }
     }

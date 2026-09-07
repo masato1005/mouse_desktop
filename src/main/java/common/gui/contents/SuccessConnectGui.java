@@ -12,12 +12,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import common.Listener.GuiListener;
+import common.gui.listener.SuccessGuiListener;
 
 public class SuccessConnectGui extends JFrame{
-	private final GuiListener listener;
+	private final SuccessGuiListener listener;
 
-	public SuccessConnectGui(GuiListener listener) {
+	public SuccessConnectGui(SuccessGuiListener listener) {
 		super("Success");
 		this.listener = listener;
 

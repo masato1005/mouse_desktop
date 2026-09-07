@@ -3,39 +3,23 @@ package server.mouse;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import common.EventType.WallType;
-import common.Listener.MouseEventListener;
-import common.Listener.implemented.ImplementedMouseListener;
 import common.data.MouseData;
-import common.main.ErrorHandle;
-import common.main.ErrorListener;
+import common.eventtype.WallType;
+import common.mouse.MouseManager;
 
-public class ServerMouseManager implements ErrorHandle, MouseCallback {
-    private final ImplementedMouseListener eventListener = new ImplementedMouseListener();
+public class ServerMouseManager extends MouseManager implements MouseCallback {
     private final int START_TIME = 0;
     private final int TIMER_RATE = 16;
 
     @SuppressWarnings("FieldMayBeFinal")
     private Timer mouseTimer = new Timer(true);
 
-    private ServerCursorLocater serverMouse;
-    private ErrorListener errorListener;
+    private ServerCursorLocater cursorLocater;
 
-    public void setEventListener(MouseEventListener eventListener) {
-        this.eventListener.setListener(eventListener);
-    }
-
-    public void setErrorListener(ErrorListener errorListener) {
-        this.errorListener = errorListener;
-    }
-
-    public void setWallType(WallType wallType) {
-        serverMouse.setWallType(wallType);
-    }
-
+    @Override
     public void start() {
-        serverMouse = new ServerCursorLocater(eventListener, errorListener, this);
-        startTimer(serverMouse::updateAndCheck);
+        cursorLocater = new ServerCursorLocater(listener, errorListener, this);
+        startTimer(cursorLocater::updateAndCheck);
     }
 
     private void startTimer(Runnable task) {
@@ -48,8 +32,9 @@ public class ServerMouseManager implements ErrorHandle, MouseCallback {
         mouseTimer.scheduleAtFixedRate(timerTask, START_TIME, TIMER_RATE);
     }
 
-    private void stopTimer() {
-        mouseTimer.cancel();
+    @Override
+    public void setWallType(WallType wallType) {
+        cursorLocater.setWallType(wallType);
     }
 
     @Override
@@ -57,14 +42,8 @@ public class ServerMouseManager implements ErrorHandle, MouseCallback {
         stopTimer();
     }
 
-    @Override
-    public void receivedCursor() {
-
-    }
-
-    @Override
-    public void touchWall(MouseData mouseData) {
-
+    private void stopTimer() {
+        mouseTimer.cancel();
     }
 
     @Override
@@ -80,6 +59,11 @@ public class ServerMouseManager implements ErrorHandle, MouseCallback {
     @Override
     public void buttonReleased(int buttonNumber) {
 
+    }
+
+    @Override
+    public void receiveData(MouseData mouseData) {
+        cursorLocater.receiveCursor(mouseData);
     }
 
 }

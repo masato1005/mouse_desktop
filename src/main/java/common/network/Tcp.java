@@ -10,9 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import common.Json.InputConvertedData;
-import common.Listener.NetworkListener;
+import common.json.InputConvertedData;
 import common.main.ErrorListener;
+import common.network.listener.TcpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class Tcp {
@@ -21,13 +21,33 @@ public abstract class Tcp {
     protected PrintWriter out;
     protected final ObjectMapper mapper = new ObjectMapper();
     protected Socket socket = null;
-    protected final NetworkListener listener;
+    private final TcpListener listener;
     protected final ErrorListener errorListener;
 
-    public Tcp(int portNumber, NetworkListener listener, ErrorListener errorListener) {
+    public Tcp(int portNumber, TcpListener listener, ErrorListener errorListener) {
         this.portNumber = portNumber;
         this.listener = listener;
         this.errorListener = errorListener;
+    }
+
+    protected boolean makeIn() {
+        try {
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            return true;
+        } catch (IOException e) {
+            errorListener.happenError("受信機能の起動に失敗しました");
+            return false;
+        }
+    }
+
+    protected boolean makeOut() {
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+            return true;
+        } catch (IOException e) {
+            errorListener.happenError("送信機能の起動に失敗しました");
+            return false;
+        }
     }
 
     public void receive() {
@@ -83,23 +103,4 @@ public abstract class Tcp {
         }
     }
 
-    protected boolean makeIn() {
-        try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            return true;
-        } catch (IOException e) {
-            errorListener.happenError("受信機能の起動に失敗しました");
-            return false;
-        }
-    }
-
-    protected boolean makeOut() {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            return true;
-        } catch (IOException e) {
-            errorListener.happenError("送信機能の起動に失敗しました");
-            return false;
-        }
-    }
 }

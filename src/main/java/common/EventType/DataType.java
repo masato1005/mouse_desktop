@@ -1,4 +1,4 @@
-package common.EventType;
+package common.eventtype;
 
 public enum DataType {
 	MOUSE,

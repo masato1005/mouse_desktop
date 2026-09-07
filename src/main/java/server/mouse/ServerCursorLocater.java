@@ -4,10 +4,12 @@ import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 
-import common.EventType.WallType;
-import common.Listener.MouseListener;
+import common.data.Modifiers;
 import common.data.MouseData;
+import common.eventtype.MouseEventType;
+import common.eventtype.WallType;
 import common.main.ErrorListener;
+import common.mouse.listener.MouseListener;
 
 public class ServerCursorLocater {
     private final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
@@ -45,18 +47,18 @@ public class ServerCursorLocater {
         updateMovement();
 
         if (!haveMouse) {
-            mouseCallback.receivedCursor();
+            mouseCallback.mouseMoved(new MouseData(mouseX, mouseY));
             return;
         }
 
         boolean touchWall = checkTouchWall();
-        if(touchWall){
-            mouseCallback.touchWall(new MouseData(mouseX,mouseY));
+        if (touchWall) {
+            MouseData sendMouse = new MouseData(MouseEventType.TOUCH_WALL, mouseX, mouseY, dx, dy, 0, false, new Modifiers());
+            listener.mouseTouchWall(sendMouse);
             return;
         }
 
         checkEscapeCoolTimeArea();
-
     }
 
     private void updateCursorLocate() {
@@ -71,16 +73,6 @@ public class ServerCursorLocater {
         dy = mouseY - preMouseY;
     }
 
-    private boolean checkEscapeCoolTimeArea() {
-        MouseData mouseData = new MouseData(mouseX, mouseY);
-        boolean escape = wallType.checkEscapeCoolTimeArea(mouseData, WALL_COOL_TIME_RANGE, SCREEN_SIZE);
-        if (escape) {
-            justGetMouse = false;
-            return true;
-        }
-        return false;
-    }
-
     private boolean checkTouchWall() {
         if (justGetMouse)
             return false;
@@ -92,6 +84,32 @@ public class ServerCursorLocater {
             return true;
         }
         return false;
+    }
+
+    private boolean checkEscapeCoolTimeArea() {
+        MouseData mouseData = new MouseData(mouseX, mouseY);
+        boolean escape = wallType.checkEscapeCoolTimeArea(mouseData, WALL_COOL_TIME_RANGE, SCREEN_SIZE);
+        if (escape) {
+            justGetMouse = false;
+            return true;
+        }
+        return false;
+    }
+
+    public void receiveCursor(MouseData mouseData) {
+        MouseData receiveMouse = wallType.getLocate(mouseData, SCREEN_SIZE);
+        mouseX = receiveMouse.getMouseX();
+        mouseY = receiveMouse.getMouseY();
+
+        mouseCallback.mouseMoved(receiveMouse);
+
+        this.preMouseX = mouseX;
+        this.preMouseY = mouseY;
+
+        haveMouse = true;
+        justGetMouse = true;
+
+        listener.closeInvisibleWindow();
     }
 
 }

@@ -4,33 +4,31 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.SocketException;
 
-import common.Listener.NetworkListener;
 import common.main.ErrorListener;
 import common.network.Udp;
+import server.network.listener.ServerUdpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpServer extends Udp {
-
+	private ServerUdpListener listener;
 	private volatile boolean running = false;
 
-	public UdpServer(int portNumber, NetworkListener listener, ErrorListener errorCallback) {
+	public UdpServer(int portNumber, ServerUdpListener listener, ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
+		this.listener = listener;
 	}
 
-	@Override
-	protected void receive(DatagramPacket receivePacket) throws IOException {
+	public boolean makeServer() {
 		try {
-			socket.receive(receivePacket);
-		} catch (IOException e) {
-			errorListener.happenError("メッセージの取得に失敗しました");
-			throw e;
+			makeSocket();
+			byte[] receiveBuffer = makeReceiveBuffer();
+			DatagramPacket receivePacket = makeReceivePacket(receiveBuffer);
+			return waitMessage(receivePacket);
+		} catch (SocketException e) {
+			return false;
+		} finally {
+			close();
 		}
-	}
-
-	private void waitingClient() {
-		running = true;
-		listener.waitingClient();
-		System.out.println("待機中...");
 	}
 
 	private boolean waitMessage(DatagramPacket receivePacket) {
@@ -59,16 +57,19 @@ public class UdpServer extends Udp {
 		return false;
 	}
 
-	public boolean makeServer() {
+	private void waitingClient() {
+		running = true;
+		listener.waitingClient();
+		System.out.println("待機中...");
+	}
+
+	@Override
+	protected void receive(DatagramPacket receivePacket) throws IOException {
 		try {
-			makeSocket();
-			byte[] receiveBuffer = makeReceiveBuffer();
-			DatagramPacket receivePacket = makeReceivePacket(receiveBuffer);
-			return waitMessage(receivePacket);
-		} catch (SocketException e) {
-			return false;
-		} finally {
-			close();
+			socket.receive(receivePacket);
+		} catch (IOException e) {
+			errorListener.happenError("メッセージの取得に失敗しました");
+			throw e;
 		}
 	}
 

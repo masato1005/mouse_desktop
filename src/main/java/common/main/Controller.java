@@ -1,36 +1,21 @@
 package common.main;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import common.Event.GuiEvent;
-import common.Event.NetworkEvent;
-import common.Event.OriginalMouseEvent;
-import common.EventType.DataType;
-import common.EventType.MouseEventType;
-import common.EventType.WallType;
-import common.Json.InputConvertedData;
-import common.Json.JsonConverter;
-import common.Keyboard.KeyboardManager;
-import common.Listener.GuiEventListener;
-import common.Listener.KeyboardEventListener;
-import common.Listener.MouseEventListener;
-import common.Listener.NetworkEventListener;
-import common.Mouse.MouseManager;
+import common.keyboard.KeyboardManager;
+import common.keyboard.handler.KeyboardHandler;
 import common.gui.GuiManager;
+import common.gui.handler.GuiHandler;
+import common.main.handler.ErrorHandler;
+import common.mouse.MouseManager;
+import common.mouse.handler.MouseHandler;
 import common.network.NetworkManager;
+import common.network.handler.NetworkHandler;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public abstract class Controller
-		implements NetworkEventListener, GuiEventListener, MouseEventListener, KeyboardEventListener, ErrorListener {
+public abstract class Controller {
 	protected final NetworkManager network;
 	protected final GuiManager gui;
 	protected final MouseManager mouse;
 	protected final KeyboardManager keyboard;
-
-	protected final JsonConverter jsonConverter = new JsonConverter();
-	protected final ObjectMapper mapper = new ObjectMapper();
-
-	protected Boolean updating = true;
 
 	public Controller(int portNumber, NetworkManager network, GuiManager gui, MouseManager mouse,
 			KeyboardManager keyboard) {
@@ -45,101 +30,29 @@ public abstract class Controller
 		startManagers();
 	}
 
+	private void initializeListeners() {
+		ErrorHandler errorHandler = new ErrorHandler(network, gui, mouse, keyboard);
+		NetworkHandler networkHandler = createNetworkHandler(errorHandler);
+		GuiHandler guiHandler = createGuiHandler(errorHandler);
+		MouseHandler mouseHandler = new MouseHandler(network, gui, errorHandler);
+		KeyboardHandler keyboardHandler = new KeyboardHandler();
+
+		network.setEventListener(networkHandler);
+		gui.setEventListener(guiHandler);
+		mouse.setEventListener(mouseHandler);
+		keyboard.setEventListener(keyboardHandler);
+
+		network.setErrorListener(errorHandler);
+		gui.setErrorListener(errorHandler);
+		mouse.setErrorListener(errorHandler);
+		keyboard.setErrorListener(errorHandler);
+	}
+
+	protected abstract NetworkHandler createNetworkHandler(ErrorListener errorListener);
+
+	protected abstract GuiHandler createGuiHandler(ErrorListener errorListener);
+
 	protected void startManagers() {
 	}
 
-	private void initializeListeners() {
-		network.setEventListener(this);
-		gui.setEventListener(this);
-		mouse.setEventListener(this);
-		keyboard.setEventListener(this);
-
-		network.setErrorListener(this);
-		gui.setErrorListener(this);
-		mouse.setErrorListener(this);
-		keyboard.setErrorListener(this);
-	}
-
-	@Override
-	public void onGuiEvent(GuiEvent e) {
-		switch (e.getType()) {
-			case CHOOSE_APPTYPE -> {
-				network.start();
-			}
-			case STOP_UDP_SERVER -> {
-				stopUdpServer();
-			}
-			case RETRY -> retryProcess();
-
-			case CHOOSE_WALL -> {
-				mouse.setScannerWallType((WallType) e.getData());
-				network.sendData(jsonConverter.dataConverter(DataType.WALL_TYPE, (WallType) e.getData()));
-			}
-			case PUSH_SUCCESS_OK -> viewChoiceWallTypeGui();
-
-			case MOVE_WHEEL -> mouse.moveWheel((int) e.getData());
-			case LEFT_CLICK -> mouse.clickMouse(MouseEventType.LEFT_CLICK, (boolean) e.getData());
-			case WHEEL_CLICK -> mouse.clickMouse(MouseEventType.WHEEL_CLICK, (boolean) e.getData());
-			case RIGHT_CLICK -> mouse.clickMouse(MouseEventType.RIGHT_CLICK, (boolean) e.getData());
-			case SYSTEM_EXIT -> network.systemExit();
-			default -> {
-			}
-		}
-	}
-
-	protected void retryProcess() {
-	}
-
-	protected void timeoutProcess() {
-	}
-
-	protected void stopUdpServer() {
-	}
-
-	protected void viewChoiceWallTypeGui() {
-	}
-
-	@Override
-	public void onNetworkEvent(NetworkEvent e) {
-		switch (e.getType()) {
-			case WAITING_CLIENT -> gui.showWaitingServerGui();
-			case TIMEOUT -> timeoutProcess();
-
-			case SUCCESSCONNECT -> {
-				successConnect();
-			}
-			case RECEIVEDATA -> {
-				InputConvertedData data = (InputConvertedData) e.getData();
-
-				receiveData(data);
-
-			}
-			case ERROR -> updating = false;
-		}
-	}
-
-	protected void successConnect() {
-	}
-
-	protected void receiveData(InputConvertedData data) {
-	}
-
-	@Override
-	public void onMouseEvent(OriginalMouseEvent e) {
-		switch (e.getType()) {
-			case MOVE -> network.sendData(e.getData());
-			case SEND_MOUSE -> gui.openInvisibleWindow();
-			case CLOSE_INVISIBLE_WINDOW -> gui.closeInvisibleWindow();
-			default -> {
-			}
-		}
-	}
-
-	@Override
-	public void happenError(String errorMassage) {
-		network.errorHandle();
-		gui.errorHandle(errorMassage);
-		mouse.errorHandle();
-		keyboard.errorHandle();
-	}
 }

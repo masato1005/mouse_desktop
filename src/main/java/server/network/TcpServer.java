@@ -3,15 +3,15 @@ package server.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import common.Listener.NetworkListener;
 import common.main.ErrorListener;
 import common.network.Tcp;
+import server.network.listener.ServerTcpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class TcpServer extends Tcp {
 	private ServerSocket server;
 
-	public TcpServer(int portNumber, NetworkListener listener, ErrorListener errorCallback) {
+	public TcpServer(int portNumber, ServerTcpListener listener, ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
 	}
 

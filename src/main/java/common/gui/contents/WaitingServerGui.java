@@ -13,14 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import common.Listener.GuiListener;
+import common.gui.listener.WaitingGuiListener;
 
 public class WaitingServerGui extends JFrame{
-	private final GuiListener listener;
+	private final WaitingGuiListener listener;
 	//private JPanel pane;
 	//private JLabel label;
 	
-	public WaitingServerGui(GuiListener listener) {
+	public WaitingServerGui(WaitingGuiListener listener) {
 		super("待機中");
 		this.listener = listener;
 		

@@ -3,10 +3,14 @@ package common.network;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import common.Listener.NetworkEventListener;
-import common.Listener.implemented.ImplementedNetworkListener;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import common.data.MouseData;
+import common.eventtype.DataType;
+import common.json.JsonConverter;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
+import common.network.listener.NetworkListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
@@ -17,6 +21,7 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 	private boolean acceptAddTask = false;
 
 	protected ErrorListener errorListener;
+	protected NetworkListener listener;
 
 	private final Thread networkThread = new Thread(() -> {
 		while (threadRunning) {
@@ -31,12 +36,6 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 		}
 	});
 
-	public void setErrorListener(ErrorListener errorListener) {
-		this.errorListener = errorListener;
-	}
-
-	protected final ImplementedNetworkListener listener = new ImplementedNetworkListener();
-
 	public NetworkManager(int portNumber) {
 		this.portNumber = portNumber;
 		threadStart();
@@ -48,19 +47,15 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 		networkThread.start();
 	}
 
-	private void threadStop() {
-		threadRunning = false;
-		acceptAddTask = false;
-		tasks.clear();
-		networkThread.interrupt();
+	public void setEventListener(NetworkListener networkListener) {
+		this.listener = networkListener;
 	}
 
-	public void setEventListener(NetworkEventListener eventListener) {
-		listener.setListener(eventListener);
+	public void setErrorListener(ErrorListener errorListener) {
+		this.errorListener = errorListener;
 	}
 
-	public void start() {
-	}
+	public abstract void start();
 
 	protected void addTask(Runnable task) {
 		if (acceptAddTask)
@@ -76,8 +71,16 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 		}
 	}
 
-	protected void send(String json) {
+	public void touchWall(MouseData mouseData){
+		try {
+            String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
+            send(json);
+        } catch (JsonProcessingException e) {
+            errorListener.happenError("Json処理で不具合が発生しました");
+        }
 	}
+
+	protected abstract void send(String json);
 
 	public void systemExit() {
 		close();
@@ -88,8 +91,14 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 		closeUdpAndTcp();
 	}
 
-	protected void closeUdpAndTcp() {
+	private void threadStop() {
+		threadRunning = false;
+		acceptAddTask = false;
+		tasks.clear();
+		networkThread.interrupt();
 	}
+
+	protected abstract void closeUdpAndTcp();
 
 	@Override
 	public void errorHandle() {

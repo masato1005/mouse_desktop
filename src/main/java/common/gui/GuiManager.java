@@ -5,32 +5,30 @@ import java.awt.Toolkit;
 
 import javax.swing.SwingUtilities;
 
-import common.Listener.GuiEventListener;
-import common.Listener.GuiListener;
-import common.Listener.implemented.ImplementedGuiListener;
 import common.gui.contents.ChoiceWarpWall;
 import common.gui.contents.ErrorExitGui;
 import common.gui.contents.InvisibleWindow;
 import common.gui.contents.SuccessConnectGui;
 import common.gui.contents.TimeoutGui;
 import common.gui.contents.WaitingServerGui;
+import common.gui.listener.GuiListener;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class GuiManager implements ErrorHandle {
 	private WaitingServerGui waitingServerGui;
-	private final ImplementedGuiListener listener = new ImplementedGuiListener();
+	private GuiListener listener;
 	InvisibleWindow invisibleWindow = null;
 
 	private ErrorListener errorListener;
 
-	public void setErrorListener(ErrorListener errorListener) {
-		this.errorListener = errorListener;
+	public void setEventListener(GuiListener listener) {
+		this.listener = listener;
 	}
 
-	public void setEventListener(GuiEventListener eventListener) {
-		listener.setListener(eventListener);
+	public void setErrorListener(ErrorListener errorListener) {
+		this.errorListener = errorListener;
 	}
 
 	public GuiListener getListener() {

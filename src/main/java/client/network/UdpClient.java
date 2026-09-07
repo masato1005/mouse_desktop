@@ -7,9 +7,9 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-import common.Listener.NetworkListener;
 import common.main.ErrorListener;
 import common.network.Udp;
+import common.network.listener.UdpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpClient extends Udp {
@@ -17,10 +17,40 @@ public class UdpClient extends Udp {
 	private String clientIP;
 	private final TimeoutCallback timeoutCallback;
 
-	public UdpClient(int portNumber, NetworkListener listener, TimeoutCallback timeoutCallback,
+	public UdpClient(int portNumber, UdpListener listener, TimeoutCallback timeoutCallback,
 			ErrorListener errorCallback) {
 		super(portNumber, listener, errorCallback);
 		this.timeoutCallback = timeoutCallback;
+	}
+
+	public boolean makeConnection() {
+		try {
+			getIpAddress();
+			makeSocket();
+			allowBroadcast();
+			setTimeout();
+
+			String sendMsg = "DISCOVER_SERVER";
+			byte[] sendData = makeMassageData(sendMsg);
+			String opponentName = "255.255.255.255";
+			DatagramPacket sendPacket = makeSendPacket(sendData, InetAddress.getByName(opponentName));
+
+			send(sendPacket);
+
+			byte[] ReceiveBuffer = makeReceiveBuffer();
+			DatagramPacket receivePacket = makeReceivePacket(ReceiveBuffer);
+			receive(receivePacket);
+			String msg = convertReceivePacketToString(receivePacket);
+			String password = "SERVER_HERE";
+			if (!checkConnectMassage(password,msg))
+				return false;
+			return true;
+
+		} catch (IOException e) {
+			return false;
+		} finally {
+			close();
+		}
 	}
 
 	private void getIpAddress() throws UnknownHostException {
@@ -64,36 +94,6 @@ public class UdpClient extends Udp {
 		} catch (IOException e) {
 			errorListener.happenError("メッセージの受信に失敗しました");
 			throw e;
-		}
-	}
-
-	public boolean makeConnection() {
-		try {
-			getIpAddress();
-			makeSocket();
-			allowBroadcast();
-			setTimeout();
-
-			String sendMsg = "DISCOVER_SERVER";
-			byte[] sendData = makeMassageData(sendMsg);
-			String opponentName = "255.255.255.255";
-			DatagramPacket sendPacket = makeSendPacket(sendData, InetAddress.getByName(opponentName));
-
-			send(sendPacket);
-
-			byte[] ReceiveBuffer = makeReceiveBuffer();
-			DatagramPacket receivePacket = makeReceivePacket(ReceiveBuffer);
-			receive(receivePacket);
-			String msg = convertReceivePacketToString(receivePacket);
-			String password = "SERVER_HERE";
-			if (!checkConnectMassage(password,msg))
-				return false;
-			return true;
-
-		} catch (IOException e) {
-			return false;
-		} finally {
-			close();
 		}
 	}
 

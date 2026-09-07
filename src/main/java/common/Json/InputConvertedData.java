@@ -1,9 +1,9 @@
-package common.Json;
+package common.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import common.EventType.DataType;
+import common.eventtype.DataType;
 
 public class InputConvertedData {
 	private static final ObjectMapper mapper = new ObjectMapper();

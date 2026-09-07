@@ -15,15 +15,15 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import common.Listener.GuiListener;
+import common.gui.listener.MouseGuiListener;
 
 public class InvisibleWindow extends JFrame {
 
     private final int width;
     private final int height;
-    private final GuiListener listener;
+    private final MouseGuiListener listener;
 
-    public InvisibleWindow(int width, int height, GuiListener listener) {
+    public InvisibleWindow(int width, int height, MouseGuiListener listener) {
         super();
         this.width = width;
         this.height = height;

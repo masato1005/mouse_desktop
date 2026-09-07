@@ -1,6 +1,7 @@
 package server.network;
 
 import common.network.NetworkManager;
+import server.network.listener.ServerNetworkListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ServerNetworkManager extends NetworkManager {
@@ -9,6 +10,10 @@ public class ServerNetworkManager extends NetworkManager {
 
     public ServerNetworkManager(int portNumber) {
         super(portNumber);
+    }
+
+    private ServerNetworkListener serverListener() {
+        return (ServerNetworkListener) listener;
     }
 
     @Override
@@ -30,12 +35,12 @@ public class ServerNetworkManager extends NetworkManager {
     }
 
     private boolean makeUdpServe() {
-        udp = new UdpServer(portNumber, listener, errorListener);
+        udp = new UdpServer(portNumber, serverListener(), errorListener);
         return udp.makeServer();
     }
 
     private boolean makeTcpServer() {
-        tcp = new TcpServer(portNumber, listener, errorListener);
+        tcp = new TcpServer(portNumber, serverListener(), errorListener);
         return tcp.makeServer();
     }
 

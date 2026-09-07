@@ -1,4 +1,4 @@
-package common.EventType;
+package common.eventtype;
 
 public enum AppType {
 	SERVER,
