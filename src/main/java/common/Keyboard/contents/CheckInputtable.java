@@ -100,14 +100,6 @@ public final class CheckInputtable implements AutoCloseable {
          */
         UNKNOWN;
 
-        public boolean allowsRobotInput() {
-            return this == EDITABLE ||
-                    this == LIKELY_EDITABLE;
-        }
-
-        public boolean definitelyEditable() {
-            return this == EDITABLE;
-        }
     }
 
     public void start() {
@@ -394,16 +386,6 @@ public final class CheckInputtable implements AutoCloseable {
              */
             publish(InputState.UNKNOWN);
         }
-    }
-
-    public InputState getCurrentState() {
-        return currentState.get();
-    }
-
-    public boolean canUseRobot() {
-        return currentState
-                .get()
-                .allowsRobotInput();
     }
 
     @Override

@@ -78,17 +78,15 @@ public class GuiManager implements ErrorHandle {
 	}
 
 	public void openInvisibleWindow() {
-		if (invisibleWindow == null) {
-			SwingUtilities.invokeLater(() -> {
-				initInvisibleWindow();
-			});
-
-		}
-		SwingUtilities.invokeLater(() -> {
-			invisibleWindow.openWindow();
-		});
-
-	}
+    SwingUtilities.invokeLater(() -> {
+        if (invisibleWindow == null) {
+            Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+            invisibleWindow =
+                    new InvisibleWindow(size.width, size.height, listener);
+        }
+        invisibleWindow.openWindow();
+    });
+}
 
 	public void closeInvisibleWindow() {
 		if (invisibleWindow != null) {

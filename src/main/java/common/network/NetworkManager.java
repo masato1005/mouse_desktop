@@ -13,12 +13,12 @@ import common.main.ErrorListener;
 import common.network.listener.NetworkListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
-public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
+public abstract class NetworkManager implements ErrorHandle {
 	protected final int portNumber;
 
 	private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
-	private boolean threadRunning = false;
-	private boolean acceptAddTask = false;
+	private volatile boolean threadRunning = false;
+	private volatile boolean acceptAddTask = false;
 
 	protected ErrorListener errorListener;
 	protected NetworkListener listener;
@@ -32,6 +32,8 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 					break;
 			} catch (InterruptedException e) {
 				break;
+			}catch(RuntimeException e){
+				errorListener.happenError("ネットワーク処理中にエラーが発生しました");
 			}
 		}
 	});
@@ -105,8 +107,4 @@ public abstract class NetworkManager implements ErrorHandle, ThreadStopper {
 		close();
 	}
 
-	@Override
-	public void threadStopper() {
-		close();
-	}
 }

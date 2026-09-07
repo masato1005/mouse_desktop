@@ -12,8 +12,8 @@ import static common.eventtype.MouseEventType.TOUCH_WALL;
 import static common.eventtype.MouseEventType.WHEEL_CLICK;
 import common.eventtype.WallType;
 import common.main.ErrorListener;
+import common.mouse.listener.MouseCallback;
 import common.mouse.listener.MouseListener;
-import server.mouse.MouseCallback;
 
 public class ClientCursorLocater {
     private final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
@@ -47,25 +47,42 @@ public class ClientCursorLocater {
     }
 
     public void update(MouseData mouseData) {
-        if (checkCoolTime())
+        if (mouseData.getMouseEventType() == MOVE
+                && !haveMouse
+                && checkCoolTime()) {
             return;
+        }
 
         switch (mouseData.getMouseEventType()) {
-            case MOVE -> moveProcess(mouseData);
+            case MOVE -> moveMouseProcess(mouseData);
             case LEFT_CLICK -> updateButton(InputEvent.BUTTON1_DOWN_MASK, mouseData.isPressed());
             case WHEEL_CLICK -> updateButton(InputEvent.BUTTON2_DOWN_MASK, mouseData.isPressed());
             case RIGHT_CLICK -> updateButton(InputEvent.BUTTON3_DOWN_MASK, mouseData.isPressed());
+            case CLOSE_INVISIBLE_WINDOW -> {
+            }
+            case DRAG -> {
+            }
+            case SEND_MOUSE -> {
+            }
+            case TOUCH_WALL -> {
+                /* 実装不要 */ }
+            case WHEEL_MOVE -> moveWheelProcess(mouseData);
+
             default -> {
             }
 
         }
     }
 
+    private void moveWheelProcess(MouseData mouseData) {
+        mouseCallback.wheelMoved(mouseData.getWheelAmount());
+    }
+
     public boolean checkCoolTime() {
         return System.nanoTime() < sendTime + RETURN_MOVE_WAIT_NANOS;
     }
 
-    private void moveProcess(MouseData mouseData) {
+    private void moveMouseProcess(MouseData mouseData) {
         if (haveMouse) {
             haveMouseProcess(mouseData);
 
@@ -97,13 +114,13 @@ public class ClientCursorLocater {
     }
 
     private void checkOutWall() {
-        if (mouseX > SCREEN_WIDTH)
+        if (mouseX >= SCREEN_WIDTH)
             mouseX = SCREEN_WIDTH - 1;
-        if (mouseX < 0)
+        if (mouseX <= 0)
             mouseX = 0;
-        if (mouseY > SCREEN_HEIGHT)
+        if (mouseY >= SCREEN_HEIGHT)
             mouseY = SCREEN_HEIGHT - 1;
-        if (mouseY < 0)
+        if (mouseY <= 0)
             mouseY = 0;
     }
 

@@ -9,6 +9,7 @@ import common.data.MouseData;
 import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
 import common.main.ErrorListener;
+import common.mouse.listener.MouseCallback;
 import common.mouse.listener.MouseListener;
 
 public class ServerCursorLocater {

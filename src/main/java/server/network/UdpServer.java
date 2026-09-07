@@ -10,7 +10,7 @@ import server.network.listener.ServerUdpListener;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpServer extends Udp {
-	private ServerUdpListener listener;
+	private final ServerUdpListener listener;
 	private volatile boolean running = false;
 
 	public UdpServer(int portNumber, ServerUdpListener listener, ErrorListener errorCallback) {
@@ -68,13 +68,11 @@ public class UdpServer extends Udp {
 		try {
 			socket.receive(receivePacket);
 		} catch (IOException e) {
+			if (!running)
+				return;
 			errorListener.happenError("メッセージの取得に失敗しました");
 			throw e;
 		}
-	}
-
-	public boolean isRunning() {
-		return running;
 	}
 
 	@Override

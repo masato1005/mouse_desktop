@@ -2,11 +2,12 @@ package server.network.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import common.data.MouseData;
+import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
+import common.gui.GuiManager;
 import common.json.InputConvertedData;
 import common.keyboard.KeyboardManager;
-import common.data.MouseData;
-import common.gui.GuiManager;
 import common.main.ErrorListener;
 import common.network.handler.NetworkHandler;
 import server.mouse.ServerMouseManager;
@@ -24,13 +25,15 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
         this.mouse = mouse;
     }
 
-    
-
     @Override
     public void receiveData(InputConvertedData data) {
         try {
             switch (data.getDataType()) {
-                case MOUSE -> mouse.receiveData(mapper.treeToValue(data.getData(), MouseData.class));
+                case MOUSE -> {
+                    MouseData mouseData = mapper.treeToValue(data.getData(), MouseData.class);
+                    if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL)
+                        mouse.receiveData(mouseData);
+                }
                 case WALL_TYPE ->
                     mouse.setWallType(mapper.treeToValue(data.getData(), WallType.class));
                 case SYSTEM_EXIT -> System.exit(0);
@@ -50,9 +53,10 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
     @Override
     public void successConnect() {
         gui.removeWaitingServer();
-        gui.initInvisibleWindow();
         gui.openInvisibleWindow();
         gui.successConnectGui();
+
+        mouse.start();
     }
 
 }

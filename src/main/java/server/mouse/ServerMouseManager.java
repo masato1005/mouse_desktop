@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import common.data.MouseData;
 import common.eventtype.WallType;
 import common.mouse.MouseManager;
+import common.mouse.listener.MouseCallback;
 
 public class ServerMouseManager extends MouseManager implements MouseCallback {
     private final int START_TIME = 0;
@@ -48,7 +49,7 @@ public class ServerMouseManager extends MouseManager implements MouseCallback {
 
     @Override
     public void mouseMoved(MouseData mouseData) {
-
+        robotExecutor.mouseMoved(mouseData);
     }
 
     @Override
@@ -64,6 +65,11 @@ public class ServerMouseManager extends MouseManager implements MouseCallback {
     @Override
     public void receiveData(MouseData mouseData) {
         cursorLocater.receiveCursor(mouseData);
+    }
+
+    @Override
+    public void wheelMoved(int moveAmount) {
+        
     }
 
 }

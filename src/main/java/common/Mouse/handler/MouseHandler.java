@@ -57,11 +57,6 @@ public class MouseHandler implements MouseListener {
     }
 
     @Override
-    public void mouseDragged() {
-        // TODO 自動生成されたメソッド・スタブ
-    }
-
-    @Override
     public void openInvisibleWindow() {
         gui.openInvisibleWindow();
     }

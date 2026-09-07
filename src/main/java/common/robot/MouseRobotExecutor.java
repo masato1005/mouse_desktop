@@ -10,5 +10,5 @@ public interface MouseRobotExecutor {
 
     public void buttonReleased(int buttonNumber);
 
-    
+    public void wheelMove(int moveAmount);
 }

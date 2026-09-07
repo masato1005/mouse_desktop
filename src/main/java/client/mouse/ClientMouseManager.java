@@ -3,7 +3,7 @@ package client.mouse;
 import common.data.MouseData;
 import common.eventtype.WallType;
 import common.mouse.MouseManager;
-import server.mouse.MouseCallback;
+import common.mouse.listener.MouseCallback;
 
 public class ClientMouseManager extends MouseManager implements MouseCallback{
     private ClientCursorLocater clientMouse;
@@ -25,22 +25,27 @@ public class ClientMouseManager extends MouseManager implements MouseCallback{
 
     @Override
     public void mouseMoved(MouseData mouseData) {
-        
+        robotExecutor.mouseMoved(mouseData);
     }
 
     @Override
     public void buttonPressed(int buttonNumber) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        robotExecutor.buttonPressed(buttonNumber);
     }
 
     @Override
     public void buttonReleased(int buttonNumber) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        robotExecutor.buttonReleased(buttonNumber);
     }
 
     @Override
     public void errorHandle() {
 
+    }
+
+    @Override
+    public void wheelMoved(int moveAmount) {
+        robotExecutor.wheelMove(moveAmount);
     }
 
 

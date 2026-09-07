@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 import common.main.ErrorListener;
 import common.network.Udp;
@@ -14,7 +13,6 @@ import common.network.listener.UdpListener;
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class UdpClient extends Udp {
 	private String serverIP;
-	private String clientIP;
 	private final TimeoutCallback timeoutCallback;
 
 	public UdpClient(int portNumber, UdpListener listener, TimeoutCallback timeoutCallback,
@@ -25,7 +23,6 @@ public class UdpClient extends Udp {
 
 	public boolean makeConnection() {
 		try {
-			getIpAddress();
 			makeSocket();
 			allowBroadcast();
 			setTimeout();
@@ -39,27 +36,17 @@ public class UdpClient extends Udp {
 
 			byte[] ReceiveBuffer = makeReceiveBuffer();
 			DatagramPacket receivePacket = makeReceivePacket(ReceiveBuffer);
-			receive(receivePacket);
-			String msg = convertReceivePacketToString(receivePacket);
-			String password = "SERVER_HERE";
-			if (!checkConnectMassage(password,msg))
-				return false;
-			return true;
-
+			while (true) {
+				receive(receivePacket);
+				String msg = convertReceivePacketToString(receivePacket);
+				String password = "SERVER_HERE";
+				if (checkConnectMassage(password, msg))
+					return true;
+			}
 		} catch (IOException e) {
 			return false;
 		} finally {
 			close();
-		}
-	}
-
-	private void getIpAddress() throws UnknownHostException {
-		try {
-			InetAddress local = InetAddress.getLocalHost();
-			this.clientIP = local.getHostAddress();
-		} catch (UnknownHostException e) {
-			errorListener.happenError("ホストのIPアドレスを取得できませんでした");
-			throw e;
 		}
 	}
 
@@ -99,10 +86,6 @@ public class UdpClient extends Udp {
 
 	public String getServerIP() {
 		return serverIP;
-	}
-
-	public String getClientIP() {
-		return clientIP;
 	}
 
 }

@@ -7,10 +7,10 @@ import common.data.MouseData;
 import common.main.ErrorListener;
 
 public class RobotExecutor implements MouseRobotExecutor {
-    private ErrorListener errorListener;
+    private final ErrorListener errorListener;
     private Robot robot;
 
-    public void Robot(ErrorListener errorListener) {
+    public RobotExecutor(ErrorListener errorListener) {
         this.errorListener = errorListener;
     }
 
@@ -26,9 +26,15 @@ public class RobotExecutor implements MouseRobotExecutor {
         }
     }
 
+    public boolean isRobotNull(){
+        if(robot == null)
+            return true;
+        return false;
+    }
+
     @Override
     public void mouseMoved(MouseData mouseData) {
-        robot.mouseMove(mouseData.getMouseX(),mouseData.getMouseY());
+        robot.mouseMove(mouseData.getMouseX(), mouseData.getMouseY());
     }
 
     @Override
@@ -41,4 +47,8 @@ public class RobotExecutor implements MouseRobotExecutor {
         robot.mouseRelease(buttonNumber);
     }
 
+    @Override
+    public void wheelMove(int moveAmount) {
+        robot.mouseWheel(moveAmount);
+    }
 }

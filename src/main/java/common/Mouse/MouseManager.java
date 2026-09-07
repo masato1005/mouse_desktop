@@ -1,17 +1,18 @@
 package common.mouse;
 
-import common.eventtype.MouseEventType;
-import common.eventtype.WallType;
 import common.data.Modifiers;
 import common.data.MouseData;
+import common.eventtype.MouseEventType;
+import common.eventtype.WallType;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseListener;
+import common.robot.RobotExecutor;
 
 public abstract class MouseManager implements ErrorHandle {
 	protected MouseListener listener;
-
 	protected ErrorListener errorListener;
+	protected RobotExecutor robotExecutor;
 
 	public void setEventListener(MouseListener listener) {
 		this.listener = listener;
@@ -19,6 +20,10 @@ public abstract class MouseManager implements ErrorHandle {
 
 	public void setErrorListener(ErrorListener errorListener) {
 		this.errorListener = errorListener;
+	}
+
+	public void setRobotExecuter(RobotExecutor robotExecutor){
+		this.robotExecutor = robotExecutor;
 	}
 
 	public abstract void start();
@@ -44,18 +49,6 @@ public abstract class MouseManager implements ErrorHandle {
 	public void moveWheel(int amount) {
 		MouseData mouseData = new MouseData(MouseEventType.WHEEL_MOVE, 0, 0, 0, 0, amount, false, new Modifiers());
 		listener.mouseWheelMoved(mouseData);
-	}
-
-	public void returnMouse(MouseData mouseData) {
-		listener.mouseMoved(mouseData);
-	}
-
-	public void openInvisibleWindow() {
-		listener.openInvisibleWindow();
-	}
-
-	public void closeInvisibleWindow() {
-		listener.closeInvisibleWindow();
 	}
 
 	@Override
