@@ -44,16 +44,18 @@ public class ClientCursorLocater {
     }
 
     public void updateAndCheck() {
-        updateCursorLocate();
-        updateMovement();
-
         if (!haveMouse) {
-            mouseCallback.mouseMoved(new MouseData(mouseX, mouseY));
+            notHaveCursorProcess();
             return;
         }
 
+        updateCursorLocate();
+        updateMovement();
+
         boolean touchWall = checkTouchWall();
         if (touchWall) {
+            preMouseX = SCREEN_WIDTH / 2;
+            preMouseY = SCREEN_HEIGHT / 2;
             MouseData sendMouse = new MouseData(
                     MouseEventType.TOUCH_WALL,
                     mouseX,
@@ -64,6 +66,7 @@ public class ClientCursorLocater {
                     false,
                     new Modifiers());
             listener.mouseTouchWall(sendMouse);
+            lockCursorToCenter();
             return;
         }
 
@@ -90,7 +93,6 @@ public class ClientCursorLocater {
         boolean touchWall = wallType.isTouchWall(mouseData, WALL_RANGE, SCREEN_SIZE);
         if (touchWall) {
             haveMouse = false;
-            listener.openInvisibleWindow();
             return true;
         }
         return false;
@@ -120,5 +122,28 @@ public class ClientCursorLocater {
         justGetMouse = true;
 
         listener.closeInvisibleWindow();
+    }
+
+    private void notHaveCursorProcess() {
+        updateCursorLocate();
+        updateMovement();
+        MouseData sendData = new MouseData(MouseEventType.MOVE,
+                    mouseX,
+                    mouseY,
+                    dx,
+                    dy,
+                    0,
+                    false,
+                    new Modifiers());
+        listener.mouseMoved(sendData);
+        lockCursorToCenter();
+    }
+
+    private void lockCursorToCenter() {
+        mouseX = SCREEN_WIDTH / 2;
+        mouseY = SCREEN_HEIGHT / 2;
+
+        MouseData lockMouseData = new MouseData(mouseX, mouseY);
+        mouseCallback.mouseMoved(lockMouseData);
     }
 }
