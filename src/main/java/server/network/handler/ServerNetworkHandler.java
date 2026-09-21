@@ -50,6 +50,7 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
 
     @Override
     public void successConnect() {
+        network.startSendThread();
         gui.removeWaitingServer();
         gui.initInvisibleWindow();
         gui.successConnectGui();

@@ -1,5 +1,6 @@
 package common.network;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,6 +20,10 @@ public abstract class NetworkManager implements ErrorHandle {
 	private final BlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
 	private volatile boolean threadRunning = false;
 	private volatile boolean acceptAddTask = false;
+	private static final int SEND_QUEUE_CAPACITY = 512;
+	private final BlockingQueue<String> sendQueue = new ArrayBlockingQueue<>(SEND_QUEUE_CAPACITY);
+	private volatile boolean sendThreadRunning = false;
+	private volatile boolean acceptSend = false;
 
 	protected ErrorListener errorListener;
 	protected NetworkListener listener;
@@ -32,8 +37,21 @@ public abstract class NetworkManager implements ErrorHandle {
 					break;
 			} catch (InterruptedException e) {
 				break;
-			}catch(RuntimeException e){
+			} catch (RuntimeException e) {
 				errorListener.happenError("ネットワーク処理中にエラーが発生しました");
+			}
+		}
+	});
+
+	private Thread sendThread = new Thread(() -> {
+		while (sendThreadRunning) {
+			try {
+				String sendData = sendQueue.take();
+				send(sendData);
+				if (!sendThreadRunning)
+					break;
+			} catch (InterruptedException e) {
+				break;
 			}
 		}
 	});
@@ -41,6 +59,12 @@ public abstract class NetworkManager implements ErrorHandle {
 	public NetworkManager(int portNumber) {
 		this.portNumber = portNumber;
 		threadStart();
+	}
+
+	public void startSendThread() {
+		sendThreadRunning = true;
+		acceptSend = true;
+		sendThread.start();
 	}
 
 	private void threadStart() {
@@ -64,22 +88,26 @@ public abstract class NetworkManager implements ErrorHandle {
 			tasks.add(task);
 	}
 
-	public void sendData(Object data) {
+	public void addSendQueue(Object data) {
+		if (acceptSend == false || sendThreadRunning == false)
+			return;
 		if (!(data instanceof String)) {
 			System.out.println("dataの内容が適切な形になっていません");
 		} else {
 			String json = data.toString();
-			send(json);
+			boolean addSuccess = sendQueue.offer(json);
+			if (!addSuccess)
+				errorListener.happenError("送信キューが上限に達しました");
 		}
 	}
 
-	public void touchWall(MouseData mouseData){
+	public void touchWall(MouseData mouseData) {
 		try {
-            String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
-            send(json);
-        } catch (JsonProcessingException e) {
-            errorListener.happenError("Json処理で不具合が発生しました");
-        }
+			String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
+			addSendQueue(json);
+		} catch (JsonProcessingException e) {
+			errorListener.happenError("Json処理で不具合が発生しました");
+		}
 	}
 
 	protected abstract void send(String json);
@@ -98,6 +126,12 @@ public abstract class NetworkManager implements ErrorHandle {
 		acceptAddTask = false;
 		tasks.clear();
 		networkThread.interrupt();
+
+		sendThreadRunning = false;
+		acceptSend = false;
+		sendQueue.clear();
+		sendThread.interrupt();
+
 	}
 
 	protected abstract void closeUdpAndTcp();

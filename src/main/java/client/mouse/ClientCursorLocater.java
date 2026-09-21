@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 
-import common.data.Modifiers;
 import common.data.MouseData;
 import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
@@ -63,8 +62,7 @@ public class ClientCursorLocater {
                     dx,
                     dy,
                     0,
-                    false,
-                    new Modifiers());
+                    false);
             listener.mouseTouchWall(sendMouse);
             lockCursorToCenter();
             return;
@@ -133,8 +131,7 @@ public class ClientCursorLocater {
                     dx,
                     dy,
                     0,
-                    false,
-                    new Modifiers());
+                    false);
         listener.mouseMoved(sendData);
         lockCursorToCenter();
     }

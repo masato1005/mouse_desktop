@@ -1,11 +1,12 @@
 package server;
 
-import common.keyboard.KeyboardManager;
 import common.gui.GuiManager;
 import common.gui.handler.GuiHandler;
+import common.keyboard.KeyboardManager;
 import common.main.AppCallback;
 import common.main.Controller;
 import common.main.ErrorListener;
+import common.mouse.handler.MouseHandler;
 import common.network.handler.NetworkHandler;
 import server.gui.handler.ServerGuiHandler;
 import server.mouse.ServerMouseManager;
@@ -37,5 +38,10 @@ public class ServerController extends Controller {
     @Override
     protected GuiHandler createGuiHandler(ErrorListener errorListener) {
         return new ServerGuiHandler(serverNetwork, gui, mouse, appCallback, errorListener);
+    }
+
+    @Override
+    protected MouseHandler createMouseHandler(ErrorListener errorListener) {
+        return new MouseHandler(network, gui, errorListener);
     }
 }

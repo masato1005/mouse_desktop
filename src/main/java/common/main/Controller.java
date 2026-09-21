@@ -35,7 +35,7 @@ public abstract class Controller {
 		ErrorHandler errorHandler = new ErrorHandler(network, gui, mouse, keyboard);
 		NetworkHandler networkHandler = createNetworkHandler(errorHandler);
 		GuiHandler guiHandler = createGuiHandler(errorHandler);
-		MouseHandler mouseHandler = new MouseHandler(network, gui, errorHandler);
+		MouseHandler mouseHandler = createMouseHandler(errorHandler);
 		KeyboardHandler keyboardHandler = new KeyboardHandler();
 
 		RobotExecutor robotExecutor = new RobotExecutor(errorHandler);
@@ -59,6 +59,8 @@ public abstract class Controller {
 	protected abstract NetworkHandler createNetworkHandler(ErrorListener errorListener);
 
 	protected abstract GuiHandler createGuiHandler(ErrorListener errorListener);
+
+	protected abstract MouseHandler createMouseHandler(ErrorListener errorListener);
 
 	protected void startManagers() {
 	}

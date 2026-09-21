@@ -53,7 +53,7 @@ public abstract class GuiHandler implements GuiListener {
     protected void chooseWall(WallType wallType) {
         mouse.setWallType(wallType);
         try {
-            network.sendData(JsonConverter.toJson(DataType.WALL_TYPE, wallType));
+            network.addSendQueue(JsonConverter.toJson(DataType.WALL_TYPE, wallType));
         } catch (JsonProcessingException e) {
             errorListener.happenError("Json処理で不具合が発生しました");
         }

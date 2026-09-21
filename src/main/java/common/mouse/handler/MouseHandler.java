@@ -11,9 +11,9 @@ import common.mouse.listener.MouseListener;
 import common.network.NetworkManager;
 
 public class MouseHandler implements MouseListener {
-    private final NetworkManager network;
-    private final GuiManager gui;
-    private final ErrorListener errorListener;
+    protected final NetworkManager network;
+    protected final GuiManager gui;
+    protected final ErrorListener errorListener;
 
     public MouseHandler(NetworkManager network, GuiManager gui, ErrorListener errorListener) {
         this.network = network;
@@ -29,7 +29,7 @@ public class MouseHandler implements MouseListener {
     private void sendMouseData(MouseData mouseData) {
         try {
             String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
-            network.sendData(json);
+            network.addSendQueue(json);
         } catch (JsonProcessingException e) {
             errorListener.happenError("Json処理で不具合が発生しました");
         }

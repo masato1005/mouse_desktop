@@ -3,6 +3,7 @@ package common.keyboard;
 import common.keyboard.listener.KeyboardListener;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
+import common.robot.KeyboardRobotExecutor;
 
 
 /*
@@ -20,9 +21,6 @@ INPUT_ENABLE
     │
     ▼
 ┌──────────── PC ────────────────┐
-
-inputEnabled = true
-    ↓
 PCキーボード入力
     ↓
 Windows IME
@@ -59,9 +57,10 @@ TCP
     ↓
 実際の入力欄へ入力
  */
-public class KeyboardManager implements ErrorHandle {
+public abstract class KeyboardManager implements ErrorHandle {
 	private KeyboardListener listener;
     private ErrorListener errorListener;
+    protected KeyboardRobotExecutor robotExecuter;
 
 	public void setEventListener(KeyboardListener listener) {
 		this.listener = listener;
@@ -71,8 +70,10 @@ public class KeyboardManager implements ErrorHandle {
         this.errorListener = errorListener;
     }
 
+    public abstract void start();
+
+    public abstract void close();
+
     @Override
-    public void errorHandle() {
-        
-    }
+    public abstract void errorHandle();
 }

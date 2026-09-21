@@ -1,18 +1,18 @@
 package common.mouse;
 
-import common.data.Modifiers;
 import common.data.MouseData;
 import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseListener;
+import common.robot.MouseRobotExecutor;
 import common.robot.RobotExecutor;
 
 public abstract class MouseManager implements ErrorHandle {
 	protected MouseListener listener;
 	protected ErrorListener errorListener;
-	protected RobotExecutor robotExecutor;
+	protected MouseRobotExecutor robotExecutor;
 
 	public void setEventListener(MouseListener listener) {
 		this.listener = listener;
@@ -37,7 +37,7 @@ public abstract class MouseManager implements ErrorHandle {
 	}
 
 	public void clickMouse(MouseEventType type, boolean pressed) {
-		MouseData mouseData = new MouseData(type, 0, 0, 0, 0, 0, pressed, new Modifiers());
+		MouseData mouseData = new MouseData(type, 0, 0, 0, 0, 0, pressed);
 		switch (type) {
 			case LEFT_CLICK -> listener.mouseLeftClicked(mouseData);
 			case WHEEL_CLICK -> listener.mouseWheelClicked(mouseData);
@@ -47,7 +47,7 @@ public abstract class MouseManager implements ErrorHandle {
 	}
 
 	public void moveWheel(int amount) {
-		MouseData mouseData = new MouseData(MouseEventType.WHEEL_MOVE, 0, 0, 0, 0, amount, false, new Modifiers());
+		MouseData mouseData = new MouseData(MouseEventType.WHEEL_MOVE, 0, 0, 0, 0, amount, false);
 		listener.mouseWheelMoved(mouseData);
 	}
 

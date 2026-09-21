@@ -2,6 +2,7 @@ package client.network.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import client.keyboard.ClientKeyboardManager;
 import client.mouse.ClientMouseManager;
 import client.network.ClientNetworkManager;
 import client.network.listener.ClientNetworkListener;
@@ -9,7 +10,6 @@ import common.data.MouseData;
 import common.eventtype.MouseEventType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
-import common.keyboard.KeyboardManager;
 import common.main.ErrorListener;
 import common.network.handler.NetworkHandler;
 
@@ -17,12 +17,14 @@ public class ClientNetworkHandler extends NetworkHandler implements ClientNetwor
 
     private final ClientNetworkManager network;
     private final ClientMouseManager mouse;
+    private final ClientKeyboardManager keyboard;
 
     public ClientNetworkHandler(ClientNetworkManager network, GuiManager gui, ClientMouseManager mouse,
-            KeyboardManager keyboard, ErrorListener errorListener) {
+            ClientKeyboardManager keyboard, ErrorListener errorListener) {
         super(network, gui, mouse, keyboard, errorListener);
         this.network = network;
         this.mouse = mouse;
+        this.keyboard = keyboard;
     }
 
     @Override
@@ -34,6 +36,7 @@ public class ClientNetworkHandler extends NetworkHandler implements ClientNetwor
                     mouseData = mapper.treeToValue(data.getData(), MouseData.class);
                     if (mouseData.getMouseEventType() == MouseEventType.TOUCH_WALL) {
                         mouse.receiveData(mouseData);
+                        keyboard.changeCursorOwner(true);
                     }
                 } catch (JsonProcessingException | IllegalArgumentException e) {
                     errorListener.happenError("Jsonへの変換でエラーが発生しました");
@@ -58,7 +61,9 @@ public class ClientNetworkHandler extends NetworkHandler implements ClientNetwor
 
     @Override
     public void successConnect() {
+        network.startSendThread();
         gui.initInvisibleWindow();
+        keyboard.start();
         mouse.start();
         gui.successConnectGui();
     }

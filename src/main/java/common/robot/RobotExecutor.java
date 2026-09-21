@@ -6,7 +6,7 @@ import java.awt.Robot;
 import common.data.MouseData;
 import common.main.ErrorListener;
 
-public class RobotExecutor implements MouseRobotExecutor {
+public class RobotExecutor implements MouseRobotExecutor,KeyboardRobotExecutor {
     private final ErrorListener errorListener;
     private Robot robot;
 

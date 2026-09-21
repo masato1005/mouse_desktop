@@ -9,14 +9,15 @@ package common.main;
 */
 
 import client.ClientController;
+import client.keyboard.ClientKeyboardManager;
 import client.mouse.ClientMouseManager;
 import client.network.ClientNetworkManager;
-import common.keyboard.KeyboardManager;
 import common.gui.GuiManager;
 import common.gui.contents.ChoiceServerOrClient;
 import common.main.handler.StartupErrorHandler;
 import common.platform.WindowsExitHotkey;
 import server.ServerController;
+import server.keyboard.ServerKeyboardManager;
 import server.mouse.ServerMouseManager;
 import server.network.ServerNetworkManager;
 
@@ -49,7 +50,7 @@ public class AppLauncher implements AppCallback {
 			gui = new GuiManager();
 		ServerNetworkManager network = new ServerNetworkManager(portNumber);
 		ServerMouseManager mouse = new ServerMouseManager();
-		KeyboardManager keyboard = new KeyboardManager();
+		ServerKeyboardManager keyboard = new ServerKeyboardManager();
 		ServerController controller = new ServerController(portNumber, network, gui, mouse, keyboard, this);
 		if (exitHotkey == null) {
 			exitHotkey = new WindowsExitHotkey(this::forceExit);
@@ -67,7 +68,7 @@ public class AppLauncher implements AppCallback {
 			gui = new GuiManager();
 		ClientNetworkManager network = new ClientNetworkManager(portNumber);
 		ClientMouseManager mouse = new ClientMouseManager();
-		KeyboardManager keyboard = new KeyboardManager();
+		ClientKeyboardManager keyboard = new ClientKeyboardManager();
 		ClientController controller = new ClientController(portNumber, network, gui, mouse, keyboard);
 		if (exitHotkey == null) {
 			exitHotkey = new WindowsExitHotkey(this::forceExit);

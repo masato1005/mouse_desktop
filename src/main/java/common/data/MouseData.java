@@ -14,8 +14,6 @@ public class MouseData {
     
     private boolean pressed;
 
-    private Modifiers modifiers;
-
     public MouseData() {
     }
 
@@ -25,7 +23,7 @@ public class MouseData {
     }
 
     public MouseData(MouseEventType mouseEventType, int mouseX, int mouseY, int dx, int dy, int wheelAmount,
-            boolean pressed, Modifiers modifiers) {
+            boolean pressed) {
         this.mouseEventType = mouseEventType;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
@@ -33,7 +31,6 @@ public class MouseData {
         this.dy = dy;
         this.WheelAmount = wheelAmount;
         this.pressed = pressed;
-        this.modifiers = modifiers;
     }
 
     public MouseEventType getMouseEventType() {
@@ -92,11 +89,4 @@ public class MouseData {
         this.pressed = pressed;
     }
 
-    public Modifiers getModifiers() {
-        return modifiers;
-    }
-
-    public void setModifiers(Modifiers modifiers) {
-        this.modifiers = modifiers;
-    }    
 }
