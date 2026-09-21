@@ -21,7 +21,13 @@ public abstract class NetworkManager implements ErrorHandle {
 	private volatile boolean threadRunning = false;
 	private volatile boolean acceptAddTask = false;
 	private static final int SEND_QUEUE_CAPACITY = 512;
-	private final BlockingQueue<String> sendQueue = new ArrayBlockingQueue<>(SEND_QUEUE_CAPACITY);
+
+	public record OutboundData(
+			DataType dataType,
+			Object data) {
+	}
+
+	private final BlockingQueue<OutboundData> sendQueue = new ArrayBlockingQueue<>(SEND_QUEUE_CAPACITY);
 	private volatile boolean sendThreadRunning = false;
 	private volatile boolean acceptSend = false;
 
@@ -43,13 +49,20 @@ public abstract class NetworkManager implements ErrorHandle {
 		}
 	});
 
-	private Thread sendThread = new Thread(() -> {
+	private final Thread sendThread = new Thread(() -> {
 		while (sendThreadRunning) {
 			try {
-				String sendData = sendQueue.take();
-				send(sendData);
-				if (!sendThreadRunning)
+				OutboundData outbound = sendQueue.take();
+				try {
+					String sendData = JsonConverter.toJson(outbound.dataType(), outbound.data());
+					send(sendData);
+					if (!sendThreadRunning)
+						break;
+				} catch (JsonProcessingException e) {
+					errorListener.happenError("JSON変換に失敗しました");
 					break;
+				}
+
 			} catch (InterruptedException e) {
 				break;
 			}
@@ -88,26 +101,18 @@ public abstract class NetworkManager implements ErrorHandle {
 			tasks.add(task);
 	}
 
-	public void addSendQueue(Object data) {
+	public void addSendQueue(DataType dataType, Object data) {
 		if (acceptSend == false || sendThreadRunning == false)
 			return;
-		if (!(data instanceof String)) {
-			System.out.println("dataの内容が適切な形になっていません");
-		} else {
-			String json = data.toString();
-			boolean addSuccess = sendQueue.offer(json);
-			if (!addSuccess)
-				errorListener.happenError("送信キューが上限に達しました");
-		}
+
+		boolean addSuccess = sendQueue.offer(new OutboundData(dataType, data));
+		if (!addSuccess)
+			errorListener.happenError("送信キューが上限に達しました");
+
 	}
 
 	public void touchWall(MouseData mouseData) {
-		try {
-			String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
-			addSendQueue(json);
-		} catch (JsonProcessingException e) {
-			errorListener.happenError("Json処理で不具合が発生しました");
-		}
+		addSendQueue(DataType.MOUSE, mouseData);
 	}
 
 	protected abstract void send(String json);

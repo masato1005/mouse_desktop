@@ -1,13 +1,10 @@
 package common.gui.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import common.eventtype.DataType;
 import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
 import common.gui.GuiManager;
 import common.gui.listener.GuiListener;
-import common.json.JsonConverter;
 import common.main.ErrorListener;
 import common.mouse.MouseManager;
 import common.network.NetworkManager;
@@ -52,12 +49,7 @@ public abstract class GuiHandler implements GuiListener {
 
     protected void chooseWall(WallType wallType) {
         mouse.setWallType(wallType);
-        try {
-            network.addSendQueue(JsonConverter.toJson(DataType.WALL_TYPE, wallType));
-        } catch (JsonProcessingException e) {
-            errorListener.happenError("Json処理で不具合が発生しました");
-        }
-
+        network.addSendQueue(DataType.WALL_TYPE, wallType);
     }
 
     @Override

@@ -109,6 +109,7 @@ public final class WindowsKeyboardHooker implements AutoCloseable {
         }
     }
 
+    @SuppressWarnings("UseSpecificCatch")
     private void runMessageLoop() {
         User32 user32 = User32.INSTANCE;
         hookThreadId = Kernel32.INSTANCE.GetCurrentThreadId();

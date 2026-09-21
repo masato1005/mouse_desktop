@@ -1,11 +1,8 @@
 package common.mouse.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import common.data.MouseData;
 import common.eventtype.DataType;
 import common.gui.GuiManager;
-import common.json.JsonConverter;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseListener;
 import common.network.NetworkManager;
@@ -27,13 +24,7 @@ public class MouseHandler implements MouseListener {
     }
 
     private void sendMouseData(MouseData mouseData) {
-        try {
-            String json = JsonConverter.toJson(DataType.MOUSE, mouseData);
-            network.addSendQueue(json);
-        } catch (JsonProcessingException e) {
-            errorListener.happenError("Json処理で不具合が発生しました");
-        }
-        
+        network.addSendQueue(DataType.MOUSE, mouseData);
     }
 
     @Override
