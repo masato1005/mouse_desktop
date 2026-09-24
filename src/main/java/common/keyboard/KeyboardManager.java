@@ -58,7 +58,7 @@ TCP
 実際の入力欄へ入力
  */
 public abstract class KeyboardManager implements ErrorHandle {
-	private KeyboardListener listener;
+	protected KeyboardListener listener;
     private ErrorListener errorListener;
     protected KeyboardRobotExecutor robotExecuter;
 

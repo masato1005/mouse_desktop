@@ -3,6 +3,7 @@ package client.mouse;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import client.mouse.listener.ClientMouseListener;
 import common.data.MouseData;
 import common.eventtype.WallType;
 import common.mouse.MouseManager;
@@ -11,6 +12,7 @@ import common.mouse.listener.MouseCallback;
 public class ClientMouseManager extends MouseManager implements MouseCallback {
     private final int START_TIME = 0;
     private final int TIMER_RATE = 16;
+    private ClientMouseListener clientListener;
 
     @SuppressWarnings("FieldMayBeFinal")
     private Timer mouseTimer = new Timer(true);
@@ -19,7 +21,7 @@ public class ClientMouseManager extends MouseManager implements MouseCallback {
 
     @Override
     public void start() {
-        cursorLocater = new ClientCursorLocater(listener, errorListener, this);
+        cursorLocater = new ClientCursorLocater(clientListener, errorListener, this);
         startTimer(cursorLocater::updateAndCheck);
     }
 
@@ -67,5 +69,9 @@ public class ClientMouseManager extends MouseManager implements MouseCallback {
 
     @Override
     public void wheelMoved(int moveAmount) {
+    }
+
+    public void setListener(ClientMouseListener clientListener){
+        this.clientListener = clientListener;
     }
 }

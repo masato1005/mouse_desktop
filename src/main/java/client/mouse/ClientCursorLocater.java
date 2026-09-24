@@ -4,16 +4,16 @@ import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
 
+import client.mouse.listener.ClientMouseListener;
 import common.data.MouseData;
 import common.eventtype.MouseEventType;
 import common.eventtype.WallType;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseCallback;
-import common.mouse.listener.MouseListener;
 
 public class ClientCursorLocater {
     private final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
-    private final MouseListener listener;
+    private final ClientMouseListener listener;
     private final ErrorListener errorListener;
     private final MouseCallback mouseCallback;
 
@@ -32,7 +32,7 @@ public class ClientCursorLocater {
     private boolean justGetMouse = false;
     private WallType wallType = WallType.WEST;
 
-    public ClientCursorLocater(MouseListener listener, ErrorListener errorListener, MouseCallback mouseCallback) {
+    public ClientCursorLocater(ClientMouseListener listener, ErrorListener errorListener, MouseCallback mouseCallback) {
         this.listener = listener;
         this.errorListener = errorListener;
         this.mouseCallback = mouseCallback;
@@ -67,7 +67,6 @@ public class ClientCursorLocater {
             lockCursorToCenter();
             return;
         }
-
         checkEscapeCoolTimeArea();
     }
 

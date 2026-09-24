@@ -10,6 +10,7 @@ import common.mouse.handler.MouseHandler;
 import common.network.handler.NetworkHandler;
 import server.gui.handler.ServerGuiHandler;
 import server.mouse.ServerMouseManager;
+import server.mouse.handler.ServerMouseHandler;
 import server.network.ServerNetworkManager;
 import server.network.handler.ServerNetworkHandler;
 
@@ -17,11 +18,13 @@ import server.network.handler.ServerNetworkHandler;
 public class ServerController extends Controller {
     private final AppCallback appCallback;
     private final ServerNetworkManager serverNetwork;
+    private final ServerMouseManager serverMouse;
 
     public ServerController(int portNumber, ServerNetworkManager network, GuiManager gui, ServerMouseManager mouse,
             KeyboardManager keyboard, AppCallback appCallback) {
         super(portNumber, network, gui, mouse, keyboard);
         this.serverNetwork = network;
+        this.serverMouse = mouse;
         this.appCallback = appCallback;
     }
 
@@ -31,17 +34,19 @@ public class ServerController extends Controller {
 	}
 
     @Override
-    protected NetworkHandler createNetworkHandler(ErrorListener errorListener) {
+    protected NetworkHandler initializeNetworkHandler(ErrorListener errorListener) {
         return new ServerNetworkHandler(serverNetwork, gui, (ServerMouseManager) mouse, keyboard, errorListener);
     }
 
     @Override
-    protected GuiHandler createGuiHandler(ErrorListener errorListener) {
+    protected GuiHandler initializeGuiHandler(ErrorListener errorListener) {
         return new ServerGuiHandler(serverNetwork, gui, mouse, appCallback, errorListener);
     }
 
     @Override
-    protected MouseHandler createMouseHandler(ErrorListener errorListener) {
-        return new MouseHandler(network, gui, errorListener);
+    protected MouseHandler initializeMouseHandler(ErrorListener errorListener) {
+        ServerMouseHandler handler = new ServerMouseHandler(serverNetwork, gui, errorListener);
+        serverMouse.setListener(handler);
+        return handler;
     }
 }

@@ -1,13 +1,14 @@
 package client.network;
 
-import common.network.NetworkManager;
 import client.network.listener.ClientNetworkListener;
+import common.network.NetworkManager;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public class ClientNetworkManager extends NetworkManager implements TimeoutCallback {
     private UdpClient udp;
     private TcpClient tcp;
     private String serverIP;
+    private ClientNetworkListener clientListener;
 
     public ClientNetworkManager(int portNumber) {
         super(portNumber);
@@ -35,12 +36,12 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
     }
 
     private boolean makeUdpClient() {
-        udp = new UdpClient(portNumber, clientListener(), this, errorListener);
+        udp = new UdpClient(portNumber, clientListener, this, errorListener);
         return udp.makeConnection();
     }
 
     private boolean makeTcpClient() {
-        tcp = new TcpClient(portNumber, clientListener(), serverIP,errorListener);
+        tcp = new TcpClient(portNumber, clientListener, serverIP,errorListener);
         return tcp.connect();
     }
 
@@ -60,10 +61,10 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
     @Override
     public void timeoutCallback() {
         System.out.println("接続失敗");
-        clientListener().timeout();
+        clientListener.timeout();
     }
 
-    private ClientNetworkListener clientListener() {
-        return (ClientNetworkListener) listener;
+    public void setListener(ClientNetworkListener clientListener){
+        this.clientListener = clientListener;
     }
 }

@@ -33,9 +33,9 @@ public abstract class Controller {
 
 	private void initializeListeners() {
 		ErrorHandler errorHandler = new ErrorHandler(network, gui, mouse, keyboard);
-		NetworkHandler networkHandler = createNetworkHandler(errorHandler);
-		GuiHandler guiHandler = createGuiHandler(errorHandler);
-		MouseHandler mouseHandler = createMouseHandler(errorHandler);
+		NetworkHandler networkHandler = initializeNetworkHandler(errorHandler);
+		GuiHandler guiHandler = initializeGuiHandler(errorHandler);
+		MouseHandler mouseHandler = initializeMouseHandler(errorHandler);
 		KeyboardHandler keyboardHandler = new KeyboardHandler();
 
 		RobotExecutor robotExecutor = new RobotExecutor(errorHandler);
@@ -56,13 +56,11 @@ public abstract class Controller {
 		mouse.setRobotExecuter(robotExecutor);
 	}
 
-	protected abstract NetworkHandler createNetworkHandler(ErrorListener errorListener);
+	protected abstract NetworkHandler initializeNetworkHandler(ErrorListener errorListener);
 
-	protected abstract GuiHandler createGuiHandler(ErrorListener errorListener);
+	protected abstract GuiHandler initializeGuiHandler(ErrorListener errorListener);
 
-	protected abstract MouseHandler createMouseHandler(ErrorListener errorListener);
+	protected abstract MouseHandler initializeMouseHandler(ErrorListener errorListener);
 
-	protected void startManagers() {
-	}
-
+	protected abstract void startManagers();
 }

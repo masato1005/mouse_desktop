@@ -13,7 +13,7 @@ import static common.eventtype.MouseEventType.WHEEL_CLICK;
 import common.eventtype.WallType;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseCallback;
-import common.mouse.listener.MouseListener;
+import server.mouse.listener.ServerMouseListener;
 
 public class ServerCursorLocater {
     private final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
@@ -23,7 +23,7 @@ public class ServerCursorLocater {
     private final int WALL_RANGE = 3;
     private final int WALL_COOL_TIME_RANGE = 10;
 
-    private final MouseListener listener;
+    private final ServerMouseListener listener;
     private final ErrorListener errorListener;
     private final MouseCallback mouseCallback;
 
@@ -36,7 +36,8 @@ public class ServerCursorLocater {
 
     private WallType wallType = WallType.WEST;
 
-    public ServerCursorLocater(MouseListener listener, ErrorListener errorListener, MouseCallback mouseCallback) {
+    public ServerCursorLocater(ServerMouseListener listener, ErrorListener errorListener,
+            MouseCallback mouseCallback) {
         this.listener = listener;
         this.errorListener = errorListener;
         this.mouseCallback = mouseCallback;

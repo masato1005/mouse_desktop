@@ -1,10 +1,19 @@
 package client.keyboard;
 
+import client.keyboard.listener.ClientKeyboardListener;
+import client.keyboard.listener.hookerListener;
+import common.data.KeyboardData;
+import common.eventtype.KeyboardEventType;
 import common.keyboard.KeyboardManager;
 import common.keyboard.WindowsKeyboardHooker;
 
-public class ClientKeyboardManager extends KeyboardManager {
+public class ClientKeyboardManager extends KeyboardManager implements hookerListener {
     protected WindowsKeyboardHooker hooker;
+    private ClientKeyboardListener clientListener;
+
+    public void setClientLeyboardListener(ClientKeyboardListener clientListener){
+        this.clientListener = clientListener;
+    }
 
     @Override
     public void start() {
@@ -13,7 +22,7 @@ public class ClientKeyboardManager extends KeyboardManager {
 
     private void hookerStart() {
         if (hooker == null)
-            hooker = new WindowsKeyboardHooker();
+            hooker = new WindowsKeyboardHooker(this::onEvent);
         hooker.start();
     }
 
@@ -27,7 +36,7 @@ public class ClientKeyboardManager extends KeyboardManager {
     }
 
     private void hookerClose() {
-        if(hooker == null)
+        if (hooker == null)
             return;
         hooker.setLocalInputSuppressed(false);
         hooker.close();
@@ -36,6 +45,25 @@ public class ClientKeyboardManager extends KeyboardManager {
     @Override
     public void errorHandle() {
         close();
+    }
+
+    @Override
+    public void onEvent(WindowsKeyboardHooker.HookEvent event) {
+        KeyboardEventType eventType;
+        switch (event.action()) {
+            case DOWN -> {
+                eventType = KeyboardEventType.KEY_DOWN;
+                KeyboardData data = new KeyboardData(eventType, event.keyName(), event.virtualKeyCode(),
+                        event.scanCode(), event.repeat());
+                
+            }
+            case UP -> {
+                eventType = KeyboardEventType.KEY_UP;
+                KeyboardData data = new KeyboardData(eventType, event.keyName(), event.virtualKeyCode(),
+                        event.scanCode(), event.repeat());
+            }
+        }
+
     }
 
 }

@@ -33,17 +33,21 @@ public class ClientController extends Controller {
 	}
 
     @Override
-    protected NetworkHandler createNetworkHandler(ErrorListener errorListener) {
-        return new ClientNetworkHandler(clientNetwork, gui, (ClientMouseManager) mouse, clientKeyboard, errorListener);
+    protected NetworkHandler initializeNetworkHandler(ErrorListener errorListener) {
+        ClientNetworkHandler handler = new ClientNetworkHandler(clientNetwork, gui, (ClientMouseManager) mouse, clientKeyboard, errorListener);
+        clientNetwork.setListener(handler);
+        return handler;
     }
 
     @Override
-    protected GuiHandler createGuiHandler(ErrorListener errorListener) {
+    protected GuiHandler initializeGuiHandler(ErrorListener errorListener) {
         return new ClientGuiHandler(clientNetwork, gui, mouse, errorListener);
     }
 
     @Override
-    protected MouseHandler createMouseHandler(ErrorListener errorListener) {
-        return new ClientMouseHandler(clientNetwork, gui, clientKeyboard, errorListener);
+    protected MouseHandler initializeMouseHandler(ErrorListener errorListener) {
+        ClientMouseHandler handler = new ClientMouseHandler(clientNetwork, gui, clientKeyboard, errorListener);
+        clientMouse.setListener(handler);
+        return handler;
     }
 }
