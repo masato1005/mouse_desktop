@@ -41,7 +41,10 @@ public class ClientNetworkHandler extends NetworkHandler implements ClientNetwor
                 } catch (JsonProcessingException | IllegalArgumentException e) {
                     errorListener.happenError("Jsonへの変換でエラーが発生しました");
                 }
+            }
 
+            case KEYBOARD -> {
+                
             }
             case SYSTEM_EXIT -> System.exit(0);
             default -> {

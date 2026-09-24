@@ -2,13 +2,14 @@ package server.network.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import common.data.KeyboardData;
 import common.data.MouseData;
 import common.eventtype.WallType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
-import common.keyboard.KeyboardManager;
 import common.main.ErrorListener;
 import common.network.handler.NetworkHandler;
+import server.keyboard.ServerKeyboardManager;
 import server.mouse.ServerMouseManager;
 import server.network.ServerNetworkManager;
 import server.network.listener.ServerNetworkListener;
@@ -16,12 +17,14 @@ import server.network.listener.ServerNetworkListener;
 public class ServerNetworkHandler extends NetworkHandler implements ServerNetworkListener {
     private final ServerNetworkManager network;
     private final ServerMouseManager mouse;
+    private final ServerKeyboardManager keyboard;
 
     public ServerNetworkHandler(ServerNetworkManager network, GuiManager gui, ServerMouseManager mouse,
-            KeyboardManager keyboard, ErrorListener errorListener) {
+            ServerKeyboardManager keyboard, ErrorListener errorListener) {
         super(network, gui, mouse, keyboard, errorListener);
         this.network = network;
         this.mouse = mouse;
+        this.keyboard = keyboard;
     }
 
     @Override
@@ -35,6 +38,15 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
                 case WALL_TYPE ->
                     mouse.setWallType(mapper.treeToValue(data.getData(), WallType.class));
                 case SYSTEM_EXIT -> System.exit(0);
+                case KEYBOARD -> {
+                    KeyboardData keyboardData;
+                    try {
+                        keyboardData = mapper.treeToValue(data.getData(), KeyboardData.class);
+                        keyboard.receiveData(keyboardData);
+                    } catch (JsonProcessingException | IllegalArgumentException e) {
+                        errorListener.happenError("Jsonへの変換でエラーが発生しました");
+                    }
+                }
                 default -> {
                 }
             }

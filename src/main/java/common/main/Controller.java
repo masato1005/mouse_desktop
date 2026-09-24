@@ -9,6 +9,7 @@ import common.mouse.MouseManager;
 import common.mouse.handler.MouseHandler;
 import common.network.NetworkManager;
 import common.network.handler.NetworkHandler;
+import common.robot.KeyboardRobotExecutor;
 import common.robot.RobotExecutor;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
@@ -36,7 +37,7 @@ public abstract class Controller {
 		NetworkHandler networkHandler = initializeNetworkHandler(errorHandler);
 		GuiHandler guiHandler = initializeGuiHandler(errorHandler);
 		MouseHandler mouseHandler = initializeMouseHandler(errorHandler);
-		KeyboardHandler keyboardHandler = new KeyboardHandler();
+		KeyboardHandler keyboardHandler = initializeKeyboardHandler(errorHandler);
 
 		RobotExecutor robotExecutor = new RobotExecutor(errorHandler);
 		robotExecutor.start();
@@ -54,7 +55,10 @@ public abstract class Controller {
 		keyboard.setErrorListener(errorHandler);
 
 		mouse.setRobotExecuter(robotExecutor);
+		setKeyboardRobot(robotExecutor);
 	}
+
+	protected void setKeyboardRobot(KeyboardRobotExecutor robotExecutor){}
 
 	protected abstract NetworkHandler initializeNetworkHandler(ErrorListener errorListener);
 
@@ -62,5 +66,7 @@ public abstract class Controller {
 
 	protected abstract MouseHandler initializeMouseHandler(ErrorListener errorListener);
 
+	protected abstract KeyboardHandler initializeKeyboardHandler(ErrorListener errorListener);
+	
 	protected abstract void startManagers();
 }

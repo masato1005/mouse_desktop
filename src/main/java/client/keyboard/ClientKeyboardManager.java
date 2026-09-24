@@ -3,6 +3,7 @@ package client.keyboard;
 import client.keyboard.listener.ClientKeyboardListener;
 import client.keyboard.listener.hookerListener;
 import common.data.KeyboardData;
+import common.eventtype.DataType;
 import common.eventtype.KeyboardEventType;
 import common.keyboard.KeyboardManager;
 import common.keyboard.WindowsKeyboardHooker;
@@ -11,7 +12,7 @@ public class ClientKeyboardManager extends KeyboardManager implements hookerList
     protected WindowsKeyboardHooker hooker;
     private ClientKeyboardListener clientListener;
 
-    public void setClientLeyboardListener(ClientKeyboardListener clientListener){
+    public void setListener(ClientKeyboardListener clientListener) {
         this.clientListener = clientListener;
     }
 
@@ -55,12 +56,15 @@ public class ClientKeyboardManager extends KeyboardManager implements hookerList
                 eventType = KeyboardEventType.KEY_DOWN;
                 KeyboardData data = new KeyboardData(eventType, event.keyName(), event.virtualKeyCode(),
                         event.scanCode(), event.repeat());
-                
+                DataType dataType = DataType.KEYBOARD;
+                clientListener.happenKeyboardEvent(dataType, data);
             }
             case UP -> {
                 eventType = KeyboardEventType.KEY_UP;
                 KeyboardData data = new KeyboardData(eventType, event.keyName(), event.virtualKeyCode(),
                         event.scanCode(), event.repeat());
+                DataType dataType = DataType.KEYBOARD;
+                clientListener.happenKeyboardEvent(dataType, data);
             }
         }
 

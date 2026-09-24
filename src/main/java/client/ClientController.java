@@ -2,12 +2,14 @@ package client;
 
 import client.gui.handler.ClientGuiHandler;
 import client.keyboard.ClientKeyboardManager;
+import client.keyboard.handler.ClientKeyboardHandler;
 import client.mouse.ClientMouseManager;
 import client.mouse.handler.ClientMouseHandler;
 import client.network.ClientNetworkManager;
 import client.network.handler.ClientNetworkHandler;
 import common.gui.GuiManager;
 import common.gui.handler.GuiHandler;
+import common.keyboard.handler.KeyboardHandler;
 import common.main.Controller;
 import common.main.ErrorListener;
 import common.mouse.handler.MouseHandler;
@@ -48,6 +50,13 @@ public class ClientController extends Controller {
     protected MouseHandler initializeMouseHandler(ErrorListener errorListener) {
         ClientMouseHandler handler = new ClientMouseHandler(clientNetwork, gui, clientKeyboard, errorListener);
         clientMouse.setListener(handler);
+        return handler;
+    }
+
+    @Override
+    protected KeyboardHandler initializeKeyboardHandler(ErrorListener errorListener) {
+        ClientKeyboardHandler handler = new ClientKeyboardHandler(clientNetwork, gui, clientKeyboard, errorListener);
+        clientKeyboard.setListener(handler);
         return handler;
     }
 }
