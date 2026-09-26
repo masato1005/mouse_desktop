@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import common.data.MouseData;
-import common.eventtype.DataType;
+import common.eventType.DataType;
 import common.json.JsonConverter;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;

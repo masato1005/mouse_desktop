@@ -1,4 +1,4 @@
-package common.eventtype;
+package common.eventType;
 
 import java.awt.Dimension;
 

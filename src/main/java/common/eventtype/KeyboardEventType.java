@@ -1,4 +1,4 @@
-package common.eventtype;
+package common.eventType;
 
 public enum KeyboardEventType {
     KEY_DOWN,

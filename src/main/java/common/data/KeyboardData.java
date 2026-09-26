@@ -1,6 +1,6 @@
 package common.data;
 
-import common.eventtype.KeyboardEventType;
+import common.eventType.KeyboardEventType;
 
 public class KeyboardData {
     private KeyboardEventType eventType;
@@ -13,6 +13,8 @@ public class KeyboardData {
         this.eventType = eventType;
         this.keyName = keyName;
     }
+
+    public KeyboardData(){}
 
     public KeyboardData(KeyboardEventType eventType,String keyName,int virtualKeyCode,int scanCode,boolean repeat){
         this.eventType = eventType;

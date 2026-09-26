@@ -18,22 +18,27 @@ public class ServerKeyboardManager extends KeyboardManager {
     }
 
     public void receiveData(KeyboardData data) {
-        
+        switch (data.getEventType()) {
+            case KEY_DOWN -> robot.pressedKey(data);
+            case KEY_UP -> robot.ReleasedKey(data);
+            case RELEASE_ALL -> {
+            }
+        }
     }
 
     @Override
     public void start() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     @Override
     public void errorHandle() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
 }

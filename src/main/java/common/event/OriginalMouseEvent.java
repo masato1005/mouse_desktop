@@ -1,6 +1,6 @@
 package common.event;
 
-import common.eventtype.MouseEventType;
+import common.eventType.MouseEventType;
 
 public class OriginalMouseEvent {
 	private final MouseEventType type;

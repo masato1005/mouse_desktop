@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import common.data.KeyboardData;
 import common.data.MouseData;
-import common.eventtype.WallType;
+import common.eventType.WallType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
 import common.main.ErrorListener;

@@ -3,7 +3,7 @@ package common.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import common.eventtype.DataType;
+import common.eventType.DataType;
 
 public class InputConvertedData {
 	private static final ObjectMapper mapper = new ObjectMapper();

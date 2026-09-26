@@ -1,7 +1,7 @@
 package server.mouse;
 
 import common.data.MouseData;
-import common.eventtype.WallType;
+import common.eventType.WallType;
 import common.mouse.MouseManager;
 import common.mouse.listener.MouseCallback;
 import server.mouse.listener.ServerMouseListener;

@@ -1,8 +1,8 @@
 package common.gui.handler;
 
-import common.eventtype.DataType;
-import common.eventtype.MouseEventType;
-import common.eventtype.WallType;
+import common.eventType.DataType;
+import common.eventType.MouseEventType;
+import common.eventType.WallType;
 import common.gui.GuiManager;
 import common.gui.listener.GuiListener;
 import common.main.ErrorListener;

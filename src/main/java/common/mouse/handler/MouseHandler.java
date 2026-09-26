@@ -1,7 +1,7 @@
 package common.mouse.handler;
 
 import common.data.MouseData;
-import common.eventtype.DataType;
+import common.eventType.DataType;
 import common.gui.GuiManager;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseListener;

@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import client.mouse.listener.ClientMouseListener;
 import common.data.MouseData;
-import common.eventtype.WallType;
+import common.eventType.WallType;
 import common.mouse.MouseManager;
 import common.mouse.listener.MouseCallback;
 

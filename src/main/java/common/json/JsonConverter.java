@@ -3,7 +3,7 @@ package common.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import common.eventtype.DataType;
+import common.eventType.DataType;
 
 @SuppressWarnings("ResultOfObjectAllocationIgnored")
 public final class JsonConverter {

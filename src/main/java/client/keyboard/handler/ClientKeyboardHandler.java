@@ -3,7 +3,7 @@ package client.keyboard.handler;
 import client.keyboard.ClientKeyboardManager;
 import client.keyboard.listener.ClientKeyboardListener;
 import client.network.ClientNetworkManager;
-import common.eventtype.DataType;
+import common.eventType.DataType;
 import common.gui.GuiManager;
 import common.keyboard.handler.KeyboardHandler;
 import common.main.ErrorListener;

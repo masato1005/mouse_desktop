@@ -1,6 +1,6 @@
 package common.event;
 
-import common.eventtype.NetworkEventType;
+import common.eventType.NetworkEventType;
 
 public class NetworkEvent {
 	private final NetworkEventType type;

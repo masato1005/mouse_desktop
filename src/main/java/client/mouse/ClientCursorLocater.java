@@ -6,8 +6,8 @@ import java.awt.Toolkit;
 
 import client.mouse.listener.ClientMouseListener;
 import common.data.MouseData;
-import common.eventtype.MouseEventType;
-import common.eventtype.WallType;
+import common.eventType.MouseEventType;
+import common.eventType.WallType;
 import common.main.ErrorListener;
 import common.mouse.listener.MouseCallback;
 

@@ -7,7 +7,7 @@ import client.mouse.ClientMouseManager;
 import client.network.ClientNetworkManager;
 import client.network.listener.ClientNetworkListener;
 import common.data.MouseData;
-import common.eventtype.MouseEventType;
+import common.eventType.MouseEventType;
 import common.gui.GuiManager;
 import common.json.InputConvertedData;
 import common.main.ErrorListener;

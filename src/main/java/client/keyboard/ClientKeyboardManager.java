@@ -3,8 +3,8 @@ package client.keyboard;
 import client.keyboard.listener.ClientKeyboardListener;
 import client.keyboard.listener.hookerListener;
 import common.data.KeyboardData;
-import common.eventtype.DataType;
-import common.eventtype.KeyboardEventType;
+import common.eventType.DataType;
+import common.eventType.KeyboardEventType;
 import common.keyboard.KeyboardManager;
 import common.keyboard.WindowsKeyboardHooker;
 

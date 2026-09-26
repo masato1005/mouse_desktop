@@ -3,10 +3,11 @@ package common.robot;
 import java.awt.AWTException;
 import java.awt.Robot;
 
+import common.data.KeyboardData;
 import common.data.MouseData;
 import common.main.ErrorListener;
 
-public class RobotExecutor implements MouseRobotExecutor,KeyboardRobotExecutor {
+public class RobotExecutor implements MouseRobotExecutor, KeyboardRobotExecutor {
     private final ErrorListener errorListener;
     private Robot robot;
 
@@ -26,10 +27,8 @@ public class RobotExecutor implements MouseRobotExecutor,KeyboardRobotExecutor {
         }
     }
 
-    public boolean isRobotNull(){
-        if(robot == null)
-            return true;
-        return false;
+    public boolean isRobotNull() {
+        return robot == null;
     }
 
     @Override
@@ -50,5 +49,15 @@ public class RobotExecutor implements MouseRobotExecutor,KeyboardRobotExecutor {
     @Override
     public void wheelMove(int moveAmount) {
         robot.mouseWheel(moveAmount);
+    }
+
+    @Override
+    public void pressedKey(KeyboardData keyboardData) {
+        robot.keyPress(keyboardData.getVirtualKeyCode());
+    }
+
+    @Override
+    public void ReleasedKey(KeyboardData keyboardData) {
+        robot.keyRelease(keyboardData.getVirtualKeyCode());
     }
 }

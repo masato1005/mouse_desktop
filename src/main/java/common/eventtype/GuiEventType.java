@@ -1,4 +1,4 @@
-package common.eventtype;
+package common.eventType;
 
 public enum GuiEventType {
 	CHOOSE_APPTYPE,
