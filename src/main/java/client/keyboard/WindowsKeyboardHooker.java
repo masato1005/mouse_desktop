@@ -1,4 +1,4 @@
-package common.keyboard;
+package client.keyboard;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -207,7 +207,8 @@ public final class WindowsKeyboardHooker implements AutoCloseable {
                 toKeyName(keyboardEvent.vkCode),
                 keyboardEvent.vkCode,
                 keyboardEvent.scanCode,
-                repeat);
+                repeat,
+                (keyboardEvent.flags & 0x01) != 0);
 
         try {
             listener.onKeyEvent(event);
@@ -402,7 +403,8 @@ public final class WindowsKeyboardHooker implements AutoCloseable {
             String keyName,
             int virtualKeyCode,
             int scanCode,
-            boolean repeat) {
+            boolean repeat,
+            boolean extendedKey) {
     }
 
     @FunctionalInterface

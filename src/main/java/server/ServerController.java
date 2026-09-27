@@ -8,7 +8,7 @@ import common.main.Controller;
 import common.main.ErrorListener;
 import common.mouse.handler.MouseHandler;
 import common.network.handler.NetworkHandler;
-import common.robot.KeyboardRobotExecutor;
+import common.windows.KeyboardWindowsExecutor;
 import server.gui.handler.ServerGuiHandler;
 import server.keyboard.ServerKeyboardManager;
 import server.keyboard.handler.ServerKeyboardHandler;
@@ -34,7 +34,7 @@ public class ServerController extends Controller {
     }
 
     @Override
-    protected void setKeyboardRobot(KeyboardRobotExecutor robotExecutor){
+    protected void setKeyboardRobot(KeyboardWindowsExecutor robotExecutor){
         severKeyboard.setRobot(robotExecutor);
     }
 

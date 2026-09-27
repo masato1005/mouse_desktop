@@ -8,20 +8,24 @@ public class KeyboardData {
     private int virtualKeyCode;
     private int scanCode;
     private boolean repeat;
+    private boolean extendedKey;
 
-    public KeyboardData(KeyboardEventType eventType,String keyName){
+    public KeyboardData(KeyboardEventType eventType, String keyName) {
         this.eventType = eventType;
         this.keyName = keyName;
     }
 
-    public KeyboardData(){}
+    public KeyboardData() {
+    }
 
-    public KeyboardData(KeyboardEventType eventType,String keyName,int virtualKeyCode,int scanCode,boolean repeat){
+    public KeyboardData(KeyboardEventType eventType, String keyName, int virtualKeyCode, int scanCode, boolean repeat,
+            boolean extendedKey) {
         this.eventType = eventType;
         this.keyName = keyName;
         this.virtualKeyCode = virtualKeyCode;
         this.scanCode = scanCode;
         this.repeat = repeat;
+        this.extendedKey = extendedKey;
     }
 
     public KeyboardEventType getEventType() {
@@ -62,5 +66,13 @@ public class KeyboardData {
 
     public void setRepeat(boolean repeat) {
         this.repeat = repeat;
+    }
+
+    public void setExtendedKey(boolean extendedKey) {
+        this.extendedKey = extendedKey;
+    }
+
+    public boolean isExtendedKey() {
+        return extendedKey;
     }
 }

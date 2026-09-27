@@ -5,8 +5,7 @@
       "type": "java",
       "name": "AppLauncher",
       "request": "launch",
-      "mainClass": "common.main.AppLauncher",
-      "projectName": "ShareOneMouse-mouse"
+      "mainClass": "common.main.AppLauncher"
     }
   ]
 }

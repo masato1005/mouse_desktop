@@ -3,7 +3,7 @@ package common.keyboard;
 import common.keyboard.listener.KeyboardListener;
 import common.main.ErrorHandle;
 import common.main.ErrorListener;
-import common.robot.KeyboardRobotExecutor;
+import common.windows.KeyboardWindowsExecutor;
 
 
 /*
@@ -59,8 +59,8 @@ TCP
  */
 public abstract class KeyboardManager implements ErrorHandle {
 	protected KeyboardListener listener;
-    private ErrorListener errorListener;
-    protected KeyboardRobotExecutor robotExecuter;
+    protected ErrorListener errorListener;
+    protected KeyboardWindowsExecutor robotExecuter;
 
 	public void setEventListener(KeyboardListener listener) {
 		this.listener = listener;
