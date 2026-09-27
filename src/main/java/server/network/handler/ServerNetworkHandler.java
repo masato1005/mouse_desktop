@@ -29,6 +29,7 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
 
     @Override
     public void receiveData(InputConvertedData data) {
+        System.out.println(2);
         try {
             switch (data.getDataType()) {
                 case MOUSE -> {
@@ -40,7 +41,7 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
                 case SYSTEM_EXIT -> System.exit(0);
                 case KEYBOARD -> {
                     KeyboardData keyboardData;
-                    System.out.println(4);
+                    System.out.println(3);
                     try {
                         keyboardData = mapper.treeToValue(data.getData(), KeyboardData.class);
                         System.out.println(keyboardData);
