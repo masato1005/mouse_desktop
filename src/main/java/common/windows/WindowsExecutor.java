@@ -39,6 +39,7 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
             flags |= KEYBDINPUT.KEYEVENTF_KEYUP;
         }
         System.out.println(2);
+        keyboard.dwFlags = new DWORD(flags);
         keyboard.time = new DWORD(0);
         keyboard.dwExtraInfo = new ULONG_PTR(KeyboardInjectionMarker.VALUE);
 
