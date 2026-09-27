@@ -18,7 +18,6 @@ public class ServerKeyboardManager extends KeyboardManager {
     }
 
     public void receiveData(KeyboardData data) {
-        System.out.println(1);
         try {
             switch (data.getEventType()) {
                 case KEY_DOWN -> winExecutor.pressedKey(data);

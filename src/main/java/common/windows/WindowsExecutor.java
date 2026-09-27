@@ -19,6 +19,7 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
     }
 
     private void sendScanCode(int scanCode, boolean extended, boolean keyUp) {
+        System.out.println(1);
         INPUT[] inputs = (INPUT[]) new INPUT().toArray(1);
         INPUT input = inputs[0];
 
@@ -37,7 +38,7 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
         if (keyUp) {
             flags |= KEYBDINPUT.KEYEVENTF_KEYUP;
         }
-
+        System.out.println(2);
         keyboard.time = new DWORD(0);
         keyboard.dwExtraInfo = new ULONG_PTR(KeyboardInjectionMarker.VALUE);
 
@@ -49,23 +50,22 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
                 new DWORD(inputs.length),
                 inputs,
                 input.size());
-
+            System.out.println(3);
         if (sent.intValue() != inputs.length) {
             int error = Kernel32.INSTANCE.GetLastError();
             throw new IllegalStateException(
                     "SendInput failed: " + error);
         }
+        System.out.println(4);
     }
 
     @Override
     public void pressedKey(KeyboardData keyboardData)throws IllegalStateException {
-        System.out.println(2);
         sendScanCode(keyboardData.getScanCode(), keyboardData.isExtendedKey(), false);
     }
 
     @Override
     public void ReleasedKey(KeyboardData keyboardData) throws IllegalStateException{
-        System.out.println(3);
         sendScanCode(keyboardData.getScanCode(), keyboardData.isExtendedKey(), true);
     }
 
