@@ -47,6 +47,7 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
 
     @Override
     protected void send(String json) {
+        System.out.println(2);
         tcp.send(json);
     }
 
@@ -60,7 +61,6 @@ public class ClientNetworkManager extends NetworkManager implements TimeoutCallb
 
     @Override
     public void timeoutCallback() {
-        System.out.println("接続失敗");
         clientListener.timeout();
     }
 

@@ -66,7 +66,6 @@ public class WaitingServerGui extends JFrame{
 	class StopAction implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("停止");
 			dispose();
 			listener.pushStop();
 		}

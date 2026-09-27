@@ -56,6 +56,7 @@ public class ClientKeyboardManager extends KeyboardManager implements hookerList
                 KeyboardData data = new KeyboardData(eventType, event.keyName(), event.virtualKeyCode(),
                         event.scanCode(), event.repeat(),event.extendedKey());
                 DataType dataType = DataType.KEYBOARD;
+                System.out.println(1);
                 clientListener.happenKeyboardEvent(dataType, data);
             }
             case UP -> {

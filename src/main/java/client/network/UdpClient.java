@@ -73,7 +73,6 @@ public class UdpClient extends Udp {
 		try {
 			socket.receive(receivePacket);
 			serverIP = receivePacket.getAddress().getHostAddress();
-			System.out.println("サーバー発見: " + serverIP);
 		} catch (SocketTimeoutException e) {
 			close();
 			timeoutCallback.timeoutCallback();

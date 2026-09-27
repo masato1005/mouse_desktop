@@ -35,7 +35,6 @@ public class TcpClient extends Tcp {
 			errorListener.happenError("ソケットの生成で不具合が発生しました");
 			return false;
 		}
-		System.out.println("接続完了");
 		return true;
 	}
 }

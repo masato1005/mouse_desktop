@@ -69,7 +69,6 @@ public class GuiManager implements ErrorHandle {
 	}
 
 	public void initInvisibleWindow() {
-		System.out.println(2);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		SwingUtilities.invokeLater(() -> {
 			invisibleWindow = new InvisibleWindow(screenSize.width, screenSize.height, listener);

@@ -40,8 +40,10 @@ public class ServerNetworkHandler extends NetworkHandler implements ServerNetwor
                 case SYSTEM_EXIT -> System.exit(0);
                 case KEYBOARD -> {
                     KeyboardData keyboardData;
+                    System.out.println(4);
                     try {
                         keyboardData = mapper.treeToValue(data.getData(), KeyboardData.class);
+                        System.out.println(keyboardData);
                         keyboard.receiveData(keyboardData);
                     } catch (JsonProcessingException | IllegalArgumentException e) {
                         errorListener.happenError("Jsonへの変換でエラーが発生しました");

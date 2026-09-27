@@ -59,6 +59,7 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
 
     @Override
     public void pressedKey(KeyboardData keyboardData)throws IllegalStateException {
+        
         sendScanCode(keyboardData.getScanCode(), keyboardData.isExtendedKey(), false);
     }
 

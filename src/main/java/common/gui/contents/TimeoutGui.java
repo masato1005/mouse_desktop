@@ -67,7 +67,6 @@ public class TimeoutGui extends JFrame {
 	class RetryAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("再試行");
 			dispose();
 			listener.retry();
 		}

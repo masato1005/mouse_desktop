@@ -59,7 +59,7 @@ public abstract class Tcp {
                     listener.receiveError();
                     break;
                 }
-                System.out.println("受信JSON: " + json);
+                System.out.println(3);
                 convertJsonToData(json);
             }
         } catch (IOException e) {

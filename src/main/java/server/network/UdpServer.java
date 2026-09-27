@@ -60,7 +60,6 @@ public class UdpServer extends Udp {
 	private void waitingClient() {
 		running = true;
 		listener.waitingClient();
-		System.out.println("待機中...");
 	}
 
 	@Override

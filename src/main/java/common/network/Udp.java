@@ -46,7 +46,6 @@ public abstract class Udp {
             errorListener.happenError("メッセージの送信に失敗しました");
             throw e;
         }
-        System.out.println("探索送信");
     }
 
     protected byte[] makeMassageData(String msg) {
@@ -66,7 +65,6 @@ public abstract class Udp {
 
     protected String convertReceivePacketToString(DatagramPacket packet) {
 		String msg = new String(packet.getData(), 0, packet.getLength());
-		System.out.println("受信: " + msg);
 		return msg;
 	}
 

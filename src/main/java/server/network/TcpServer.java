@@ -34,7 +34,6 @@ public class TcpServer extends Tcp {
 			errorListener.happenError("ソケットの生成で不具合が発生しました");
 			return false;
 		}
-		System.out.println("接続待機中...");
 
 		socket = null;
 		try {
@@ -43,7 +42,6 @@ public class TcpServer extends Tcp {
 			errorListener.happenError("接続が中断されました");
 			return false;
 		}
-		System.out.println("接続されました");
 		return true;
 	}
 
