@@ -69,7 +69,6 @@ public abstract class Tcp {
 
     private void convertJsonToData(String Json) throws JsonMappingException, JsonProcessingException {
         InputConvertedData data = mapper.readValue(Json, InputConvertedData.class);
-        System.out.println(1);
         listener.receiveData(data);
     }
 
