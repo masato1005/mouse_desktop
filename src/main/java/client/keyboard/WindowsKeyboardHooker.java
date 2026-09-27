@@ -18,6 +18,8 @@ import com.sun.jna.platform.win32.WinUser.HHOOK;
 import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
 import com.sun.jna.platform.win32.WinUser.LowLevelKeyboardProc;
 
+import common.windows.KeyboardInjectionMarker;
+
 /** Windows全体のキー押下・解放を監視する低レベルキーボードフック。 */
 public final class WindowsKeyboardHooker implements AutoCloseable {
     private static final int WM_QUIT = 0x0012;
@@ -181,8 +183,9 @@ public final class WindowsKeyboardHooker implements AutoCloseable {
             return callNextHook(code, message, keyboardEvent);
         }
 
-        /* RobotやSendInputなどによる注入入力は再送信しない。 */
-        if ((keyboardEvent.flags & LLKHF_INJECTED) != 0) {
+        /* 自アプリがSendInputで生成した入力だけは再送信しない。 */
+        if ((keyboardEvent.flags & LLKHF_INJECTED) != 0
+                && keyboardEvent.dwExtraInfo.longValue() == KeyboardInjectionMarker.VALUE) {
             return callNextHook(code, message, keyboardEvent);
         }
 

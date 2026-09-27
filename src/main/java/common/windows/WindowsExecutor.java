@@ -39,7 +39,7 @@ public class WindowsExecutor implements KeyboardWindowsExecutor {
         }
 
         keyboard.time = new DWORD(0);
-        keyboard.dwExtraInfo = new ULONG_PTR(0);
+        keyboard.dwExtraInfo = new ULONG_PTR(KeyboardInjectionMarker.VALUE);
 
         input.input.setType(KEYBDINPUT.class);
         input.input.ki = keyboard;
