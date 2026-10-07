@@ -10,3 +10,7 @@ src/bin/
 
 .settings/
 (1).settings/
+
+# Gradle build outputs and local cache
+/build/
+/.gradle/
